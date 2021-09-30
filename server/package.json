@@ -1,0 +1,62 @@
+{
+  "name": "@endeavor/server",
+  "version": "0.1.0",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "./dist/server.js",
+  "scripts": {
+    "watch": "tsc-watch --onSuccess \"npm run start\"",
+    "start": "JWT_ACCESS_SECRET=${JWT_ACCESS_SECRET:-$(node -p 'require(\"./package.json\").config.jwt_access_secret')} DATABASE=${DATABASE:-$(node -p 'require(\"./package.json\").config.dev_db')} NODE_PATH=dist node ./dist/server.js",
+    "build": "tsc",
+    "gen:db-types": "DATABASE=$(node -p 'require(\"./package.json\").config.dev_db') npx zapatos",
+    "migrate": "DATABASE_URL=${DATABASE:-$(node -p 'require(\"./package.json\").config.dev_db')} SHADOW_DATABASE_URL=$(node -p 'require(\"./package.json\").config.shadow_db') npx graphile-migrate"
+  },
+  "config": {
+    "dev_db": "postgres://postgres:@localhost:5432/endeavor",
+    "shadow_db": "postgres://postgres:@localhost:5432/endeavor_shadow",
+    "root_db": "postgres://postgres:postgres@localhost:5432/postgres",
+    "jwt_access_secret": "DEV_jwt_access_secret"
+  },
+  "dependencies": {
+    "@urql/introspection": "^0.3.0",
+    "apollo-server-express": "^3.3.0",
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "gqtx": "^0.8.0-beta.0",
+    "graphql": "^15.6.0",
+    "jest": "^27.2.4",
+    "jsonwebtoken": "^8.5.1",
+    "node-fetch": "^2.0.0",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.13",
+    "@types/jest": "^27.0.2",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/node": "^16.10.2",
+    "@types/node-fetch": "^2.0.0",
+    "@types/pg": "^8.6.1",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-jest": "^24.5.0",
+    "prettier": "^2.4.1",
+    "tsc-watch": "^4.5.0",
+    "typescript": "^4.4.3",
+    "zapatos": "^5.0.0"
+  },
+  "eslintConfig": {
+    "extends": ".custom-eslintrc.json",
+    "overrides": [
+      {
+        "files": [
+          "**/*.ts?(x)"
+        ],
+        "rules": {
+          "@typescript-eslint/no-unused-vars": "off"
+        }
+      }
+    ]
+  }
+}
