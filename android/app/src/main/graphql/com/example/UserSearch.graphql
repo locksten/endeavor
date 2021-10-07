@@ -1,0 +1,7 @@
+query UserSearch($userSearchSearchTerm: String!) {
+    userSearch(searchTerm: $userSearchSearchTerm) {
+        id
+        username
+        createdAt
+    }
+}
