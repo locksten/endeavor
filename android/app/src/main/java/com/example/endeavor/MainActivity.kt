@@ -10,8 +10,10 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -62,7 +64,7 @@ fun B() {
         Modifier
             .fillMaxSize()
             .background(color = Theme.colors.background)
-    ) { CUserSearchList("b") }
+    ) { CRNG() }
 }
 
 @Composable
@@ -78,5 +80,18 @@ fun BottomNav(selected: String? = "A", onClick: (destination: String) -> Unit) {
             selected = selected == "A",
             onClick = { onClick("B") },
             icon = { Text("B") })
+    }
+}
+
+@Composable
+fun CRNG() {
+    val num = gqlProduce(RNGQuery()).value?.rngNum
+    if (num != null) {
+        Text(
+            text = num.toString(),
+            color = Theme.colors.text,
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp
+        )
     }
 }

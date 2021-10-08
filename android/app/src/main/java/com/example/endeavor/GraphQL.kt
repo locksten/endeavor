@@ -1,8 +1,6 @@
 package com.example.endeavor
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloRequest
@@ -17,20 +15,20 @@ import com.apollographql.apollo3.network.http.HttpNetworkTransport
 
 class Gql constructor(private val client: ApolloClient) {
     suspend fun <D : Query.Data> query(query: Query<D>): D? {
-        val response = try {
-            Result.success(client.query(ApolloRequest(query).withFetchPolicy(FetchPolicy.CacheFirst)))
+        return try {
+            val response =
+                client.query(ApolloRequest(query).withFetchPolicy(FetchPolicy.CacheFirst))
+            if (!response.hasErrors()) {
+                response.data
+            } else null
         } catch (e: ApolloException) {
-            return null
-        }.getOrNull()
-        return if (response != null && !response.hasErrors()) {
-            response.data
-        } else {
             null
         }
     }
 }
 
 val LocalGQL = staticCompositionLocalOf<Gql> { null!! }
+val LocalGQLClient = staticCompositionLocalOf<ApolloClient> { null!! }
 
 @Composable
 fun EndeavorGQL(content: @Composable () -> Unit) {
@@ -50,8 +48,24 @@ fun EndeavorGQL(content: @Composable () -> Unit) {
     val gql = Gql(apolloClient)
 
     CompositionLocalProvider(
-        LocalGQL provides gql
+        LocalGQL provides gql,
+        LocalGQLClient provides apolloClient
     ) {
         content()
+    }
+}
+
+@Composable
+fun <D : Query.Data> gqlProduce(query: Query<D>): State<D?> {
+    val client = LocalGQLClient.current
+    return produceState<D?>(null, query) {
+        value = try {
+            val response = client.query(ApolloRequest(query).withFetchPolicy(FetchPolicy.CacheFirst))
+            if (!response.hasErrors()) {
+                response.data
+            } else null
+        } catch (e: ApolloException) {
+            null
+        }
     }
 }

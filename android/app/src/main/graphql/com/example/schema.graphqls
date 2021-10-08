@@ -1,4 +1,6 @@
 type Query {
+  RNG: Int!
+
   me: Me
 
   userById(id: ID!): User

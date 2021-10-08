@@ -9,9 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
@@ -76,18 +73,8 @@ fun UserList(users: List<UserSearchQuery.UserSearch>) {
 
 @Composable
 fun CUserSearchList(searchTerm: String) {
-    val gql = LocalGQL.current
-
-    val users = remember {
-        mutableStateOf<List<UserSearchQuery.UserSearch>?>(null)
-    }
-
-    LaunchedEffect(searchTerm) {
-        users.value = gql.query(UserSearchQuery(searchTerm))?.userSearch
-    }
-
-    val value = users.value
-    if (value != null) {
-        UserList(value.orEmpty())
+    val users = gqlProduce(UserSearchQuery(searchTerm)).value?.userSearch
+    if (users != null) {
+        UserList(users)
     }
 }

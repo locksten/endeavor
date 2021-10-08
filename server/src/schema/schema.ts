@@ -5,8 +5,15 @@ import { queryMe } from "schema/me"
 import { t } from "schema/typesFactory"
 import { queryUserById, queryUserByName, queryUserSearch } from "schema/user"
 
+const queryRNG = t.field("RNG", {
+  type: t.NonNull(t.Int),
+  resolve: async () => {
+    return Math.floor(Math.random() * 100)
+  },
+})
+
 const query = t.queryType({
-  fields: [queryMe, queryUserById, queryUserByName, queryUserSearch],
+  fields: [queryRNG, queryMe, queryUserById, queryUserByName, queryUserSearch],
 })
 
 const mutation = t.mutationType({
