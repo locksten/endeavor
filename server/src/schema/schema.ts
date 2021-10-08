@@ -2,6 +2,7 @@ import { buildGraphQLSchema } from "gqtx"
 import { mutationLogin } from "schema/auth/login"
 import { mutationRegister } from "schema/auth/register"
 import { queryMe } from "schema/me"
+import { mutationCreateTask, mutationDeleteTask } from "schema/task"
 import { t } from "schema/typesFactory"
 import { queryUserById, queryUserByName, queryUserSearch } from "schema/user"
 
@@ -17,7 +18,12 @@ const query = t.queryType({
 })
 
 const mutation = t.mutationType({
-  fields: () => [mutationRegister, mutationLogin],
+  fields: () => [
+    mutationRegister,
+    mutationLogin,
+    mutationCreateTask,
+    mutationDeleteTask,
+  ],
 })
 
 export const schema = buildGraphQLSchema({

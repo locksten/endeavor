@@ -22,6 +22,262 @@ declare module 'zapatos/schema' {
   /* --- tables --- */
 
   /**
+   * **Task**
+   * - Table in database
+   */
+  export namespace Task {
+    export type Table = 'Task';
+    export interface Selectable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id: number;
+      /**
+      * **Task.isCompleted**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      isCompleted: boolean;
+    }
+    export interface JSONSelectable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id: number;
+      /**
+      * **Task.isCompleted**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      isCompleted: boolean;
+    }
+    export interface Whereable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Task.isCompleted**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      isCompleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Task.isCompleted**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      isCompleted: boolean | db.Parameter<boolean> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Task.isCompleted**
+      * - `bool` in database
+      * - `NOT NULL`, no default
+      */
+      isCompleted?: boolean | db.Parameter<boolean> | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'Task_id_key';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **Todo**
+   * - Table in database
+   */
+  export namespace Todo {
+    export type Table = 'Todo';
+    export interface Selectable {
+      /**
+      * **Todo.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Todo.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **Todo.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **Todo.difficulty**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      difficulty: number;
+      /**
+      * **Todo.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt: Date | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **Todo.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Todo.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **Todo.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **Todo.difficulty**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      difficulty: number;
+      /**
+      * **Todo.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt: db.TimestampTzString | null;
+    }
+    export interface Whereable {
+      /**
+      * **Todo.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Todo.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Todo.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Todo.difficulty**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Todo.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **Todo.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **Todo.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Todo.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **Todo.difficulty**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      difficulty: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Todo.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **Todo.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Todo.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Todo.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **Todo.difficulty**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Todo.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'Todo_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **User**
    * - Table in database
    */
@@ -166,50 +422,66 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = User.Table;
-  export type Selectable = User.Selectable;
-  export type JSONSelectable = User.JSONSelectable;
-  export type Whereable = User.Whereable;
-  export type Insertable = User.Insertable;
-  export type Updatable = User.Updatable;
-  export type UniqueIndex = User.UniqueIndex;
-  export type Column = User.Column;
-  export type AllBaseTables = [User.Table];
+  export type Table = Task.Table | Todo.Table | User.Table;
+  export type Selectable = Task.Selectable | Todo.Selectable | User.Selectable;
+  export type JSONSelectable = Task.JSONSelectable | Todo.JSONSelectable | User.JSONSelectable;
+  export type Whereable = Task.Whereable | Todo.Whereable | User.Whereable;
+  export type Insertable = Task.Insertable | Todo.Insertable | User.Insertable;
+  export type Updatable = Task.Updatable | Todo.Updatable | User.Updatable;
+  export type UniqueIndex = Task.UniqueIndex | Todo.UniqueIndex | User.UniqueIndex;
+  export type Column = Task.Column | Todo.Column | User.Column;
+  export type AllBaseTables = [Task.Table, Todo.Table, User.Table];
   export type AllForeignTables = [];
   export type AllViews = [];
   export type AllMaterializedViews = [];
-  export type AllTablesAndViews = [User.Table];
+  export type AllTablesAndViews = [Task.Table, Todo.Table, User.Table];
 
 
   export type SelectableForTable<T extends Table> = {
+    Task: Task.Selectable;
+    Todo: Todo.Selectable;
     User: User.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
+    Task: Task.JSONSelectable;
+    Todo: Todo.JSONSelectable;
     User: User.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
+    Task: Task.Whereable;
+    Todo: Todo.Whereable;
     User: User.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
+    Task: Task.Insertable;
+    Todo: Todo.Insertable;
     User: User.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
+    Task: Task.Updatable;
+    Todo: Todo.Updatable;
     User: User.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
+    Task: Task.UniqueIndex;
+    Todo: Todo.UniqueIndex;
     User: User.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
+    Task: Task.Column;
+    Todo: Todo.Column;
     User: User.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
+    Task: Task.SQL;
+    Todo: Todo.SQL;
     User: User.SQL;
   }[T];
 
