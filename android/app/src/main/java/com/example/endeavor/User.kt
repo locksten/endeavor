@@ -76,12 +76,14 @@ fun UserList(users: List<UserSearchQuery.UserSearch>) {
 
 @Composable
 fun CUserSearchList(searchTerm: String) {
+    val gql = LocalGQL.current
+
     val users = remember {
         mutableStateOf<List<UserSearchQuery.UserSearch>?>(null)
     }
 
     LaunchedEffect(searchTerm) {
-        users.value = gqlQuery(UserSearchQuery(searchTerm))?.userSearch
+        users.value = gql.query(UserSearchQuery(searchTerm))?.userSearch
     }
 
     val value = users.value

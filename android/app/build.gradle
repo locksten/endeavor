@@ -69,6 +69,8 @@ android {
 dependencies {
 
     implementation 'com.apollographql.apollo3:apollo-runtime:3.0.0-alpha07'
+    implementation 'com.apollographql.apollo3:apollo-normalized-cache:3.0.0-alpha07'
+    implementation 'com.apollographql.apollo3:apollo-normalized-cache-sqlite:3.0.0-alpha07'
 
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
 
