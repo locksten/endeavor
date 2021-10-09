@@ -8,6 +8,9 @@ class MyColors(isDarkTheme: Boolean) {
     val text = if (isDarkTheme) MyRawColors.gray50 else MyRawColors.gray800
     val background = if (isDarkTheme) MyRawColors.gray900 else MyRawColors.gray50
 
+    val onDanger = if (isDarkTheme) MyRawColors.red300 else MyRawColors.red300
+    val danger = if (isDarkTheme) MyRawColors.red900 else MyRawColors.red900
+
     /*
     val onPrimary = if (isDarkTheme) MyRawColors.purple400 else MyRawColors.purple800
     val primaryVariant = if (isDarkTheme) MyRawColors.green400 else MyRawColors.green800

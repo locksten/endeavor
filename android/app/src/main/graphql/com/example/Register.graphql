@@ -1,0 +1,17 @@
+mutation Register($registerUsername: String!, $registerPassword: String!) {
+  register(username: $registerUsername, password: $registerPassword) {
+    ... on SuccessfulLoginResult {
+      user {
+        id
+        username
+        createdAt
+      }
+      authTokens {
+        accessToken
+      }
+    }
+    ... on FailedRegistrationResult {
+      reason
+    }
+  }
+}

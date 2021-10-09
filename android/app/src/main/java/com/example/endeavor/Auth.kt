@@ -50,6 +50,27 @@ class Authentication(private val context: Context) {
         return (authToken.map { it != null }).collectAsState(false)
     }
 
+
+    suspend fun register(client: ApolloClient, username: String, password: String): String? {
+        val response = client.mutate(RegisterMutation(username, password)).await().data?.register
+        val success = response?.asSuccessfulLoginResult
+        val failure = response?.asFailedRegistrationResult
+
+        return when {
+            failure?.reason != null -> {
+                failure.reason
+            }
+            success != null -> {
+                setAuthToken(success.authTokens.accessToken)
+                setUsername(success.user.username)
+                null
+            }
+            else -> {
+                "Unknown error"
+            }
+        }
+    }
+
     suspend fun logIn(client: ApolloClient, username: String, password: String): String? {
         val response = client.mutate(LogInMutation(username, password)).await().data?.login
         val success = response?.asSuccessfulLoginResult
