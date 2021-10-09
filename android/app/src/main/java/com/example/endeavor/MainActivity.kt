@@ -1,16 +1,15 @@
 package com.example.endeavor
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -85,13 +84,23 @@ fun BottomNav(selected: String? = "A", onClick: (destination: String) -> Unit) {
 
 @Composable
 fun CRNG() {
-    val num = gqlProduce(RNGQuery()).value?.rngNum
-    if (num != null) {
-        Text(
-            text = num.toString(),
-            color = Theme.colors.text,
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp
-        )
+    val num = gqlWatchQuery(RNGQuery())?.rngNum
+
+    Log.i("endeavor", "rng " + num.toString())
+
+    Column {
+        if (num != null) {
+            Text(
+                text = num.toString(),
+                color = Theme.colors.text,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp
+            )
+        }
+        Button(onClick = {
+        }) {
+            Text("Do Something...")
+        }
     }
+
 }

@@ -9,14 +9,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.apollographql.apollo.coroutines.toFlow
 import com.example.endeavor.ui.theme.EndeavorTheme
 import com.example.endeavor.ui.theme.Theme
+import kotlinx.coroutines.flow.map
 
 @Preview(
     name = "Light Mode",
@@ -35,8 +40,8 @@ fun UsersPreview() {
 }
 
 val testUsers = listOf(
-    UserSearchQuery.UserSearch("1", "username", "date"),
-    UserSearchQuery.UserSearch("2", "username2", "date")
+    UserSearchQuery.UserSearch(id = "1",username =  "username", createdAt = "date"),
+    UserSearchQuery.UserSearch(id = "2",username = "username2", createdAt = "date")
 )
 
 @Composable
@@ -73,8 +78,6 @@ fun UserList(users: List<UserSearchQuery.UserSearch>) {
 
 @Composable
 fun CUserSearchList(searchTerm: String) {
-    val users = gqlProduce(UserSearchQuery(searchTerm)).value?.userSearch
-    if (users != null) {
-        UserList(users)
-    }
+    val users = gqlWatchQuery(UserSearchQuery(searchTerm))?.userSearch
+    users?.let { UserList(it) }
 }

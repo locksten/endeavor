@@ -2,53 +2,26 @@ package com.example.endeavor
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.ApolloRequest
-import com.apollographql.apollo3.api.Query
-import com.apollographql.apollo3.cache.normalized.FetchPolicy
-import com.apollographql.apollo3.cache.normalized.sql.SqlNormalizedCacheFactory
-import com.apollographql.apollo3.cache.normalized.withFetchPolicy
-import com.apollographql.apollo3.cache.normalized.withNormalizedCache
-import com.apollographql.apollo3.exception.ApolloException
-import com.apollographql.apollo3.network.http.ApolloClientAwarenessInterceptor
-import com.apollographql.apollo3.network.http.HttpNetworkTransport
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Operation
+import com.apollographql.apollo.api.Query
+import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
+import com.apollographql.apollo.coroutines.toFlow
+import com.apollographql.apollo.fetcher.ApolloResponseFetchers
+import kotlinx.coroutines.flow.map
 
-class Gql constructor(private val client: ApolloClient) {
-    suspend fun <D : Query.Data> query(query: Query<D>): D? {
-        return try {
-            val response =
-                client.query(ApolloRequest(query).withFetchPolicy(FetchPolicy.CacheFirst))
-            if (!response.hasErrors()) {
-                response.data
-            } else null
-        } catch (e: ApolloException) {
-            null
-        }
-    }
-}
-
-val LocalGQL = staticCompositionLocalOf<Gql> { null!! }
 val LocalGQLClient = staticCompositionLocalOf<ApolloClient> { null!! }
 
 @Composable
 fun EndeavorGQL(content: @Composable () -> Unit) {
     val cacheFactory = SqlNormalizedCacheFactory(LocalContext.current)
-    val apolloClient = ApolloClient(
-        networkTransport = HttpNetworkTransport(
-            serverUrl = "http://192.168.0.118:4000/graphql",
-            interceptors = listOf(
-                ApolloClientAwarenessInterceptor(
-                    BuildConfig.APPLICATION_ID,
-                    BuildConfig.VERSION_NAME
-                )
-            ),
-        ),
-    ).withNormalizedCache(cacheFactory)
-
-    val gql = Gql(apolloClient)
+    val apolloClient =
+        ApolloClient.builder().defaultResponseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
+            .serverUrl("http://192.168.0.118:4000/graphql").normalizedCache(
+                cacheFactory
+            ).build()
 
     CompositionLocalProvider(
-        LocalGQL provides gql,
         LocalGQLClient provides apolloClient
     ) {
         content()
@@ -56,16 +29,12 @@ fun EndeavorGQL(content: @Composable () -> Unit) {
 }
 
 @Composable
-fun <D : Query.Data> gqlProduce(query: Query<D>): State<D?> {
+fun <D : Operation.Data, T, V : Operation.Variables> gqlWatchQuery(query: Query<D, T, V>): T? {
     val client = LocalGQLClient.current
-    return produceState<D?>(null, query) {
-        value = try {
-            val response = client.query(ApolloRequest(query).withFetchPolicy(FetchPolicy.CacheFirst))
-            if (!response.hasErrors()) {
-                response.data
-            } else null
-        } catch (e: ApolloException) {
-            null
+    val response = remember {
+        client.query(query).watcher().toFlow().map {
+            it.data
         }
-    }
+    }.collectAsState(initial = null)
+    return response.value
 }

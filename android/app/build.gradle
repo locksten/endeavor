@@ -2,7 +2,7 @@
 //}
 
 plugins {
-    id("com.apollographql.apollo3").version("3.0.0-alpha07")
+    id("com.apollographql.apollo").version("2.5.9")
     id 'com.android.application'
     id 'kotlin-android'
 }
@@ -68,9 +68,10 @@ android {
 
 dependencies {
 
-    implementation 'com.apollographql.apollo3:apollo-runtime:3.0.0-alpha07'
-    implementation 'com.apollographql.apollo3:apollo-normalized-cache:3.0.0-alpha07'
-    implementation 'com.apollographql.apollo3:apollo-normalized-cache-sqlite:3.0.0-alpha07'
+    implementation 'com.apollographql.apollo:apollo-runtime:2.5.9'
+    implementation("com.apollographql.apollo:apollo-coroutines-support:2.5.9")
+    implementation 'com.apollographql.apollo:apollo-normalized-cache:2.5.9'
+    implementation 'com.apollographql.apollo:apollo-normalized-cache-sqlite:2.5.9'
 
     implementation "androidx.navigation:navigation-compose:2.4.0-alpha10"
 
