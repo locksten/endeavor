@@ -22,7 +22,6 @@ class AuthorizationInterceptor(private val auth: Authentication) : Interceptor {
 
         val token = auth.getAuthToken()
         if (token != null) {
-            Log.i("enlog", "Adding token to request: Bearer $token")
             requestBuilder.addHeader("Authorization", "Bearer $token")
         }
 
