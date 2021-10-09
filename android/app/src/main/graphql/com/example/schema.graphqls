@@ -1,66 +1,64 @@
 type Query {
   RNG: Int!
-
   me: Me
-
   userById(id: ID!): User
-
   userByName(username: String!): User
-
   userSearch(searchTerm: String!): [User!]!
 }
 
 type Me {
   id: ID!
-
   user: User!
+  tasks: [Task!]!
 }
 
 type User {
   id: ID!
-
   _type: String!
-
   username: String!
-
   createdAt: Date!
 }
 
 scalar Date
 
-type Mutation {
-  register(username: String!, password: String!): RegistrationResult!
-
-  login(username: String!, password: String!): LoginResult!
+type Task {
+  id: ID!
+  _type: String!
+  isCompleted: Boolean!
+  title: String!
+  difficulty: Int!
+  createdAt: Date!
 }
 
-union RegistrationResult = SuccessfulLoginResult|FailedRegistrationResult
+type Mutation {
+  register(username: String!, password: String!): RegistrationResult!
+  login(username: String!, password: String!): LoginResult!
+  createTask(title: String!, difficulty: Int!): Task
+  deleteTask(id: ID!): ID!
+}
+
+union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult
 
 type SuccessfulLoginResult {
   _type: String!
-
   user: User!
-
   authTokens: AuthTokens!
 }
 
 type AuthTokens {
   _type: String!
-
   accessToken: String!
 }
 
 type FailedRegistrationResult {
   _type: String!
-
   reason: String!
 }
 
-union LoginResult = SuccessfulLoginResult|FailedLoginResult
+union LoginResult = SuccessfulLoginResult | FailedLoginResult
 
 type FailedLoginResult {
   _type: String!
-
   reason: String!
 }
 

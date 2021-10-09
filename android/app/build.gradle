@@ -1,3 +1,5 @@
+import com.apollographql.apollo.gradle.internal.ApolloDownloadSchemaTask
+
 //buildscript {
 //}
 
@@ -20,14 +22,18 @@ apollo {
     }
 }
 
+tasks.register("downloadGraphQLSchema", ApolloDownloadSchemaTask) {
+    endpoint = "http://localhost:4000/graphql"
+    schemaRelativeToProject = "src/main/graphql/com/example/schema.json"
+}
+
 
 android {
-    compileSdk 31
-
     defaultConfig {
         applicationId "com.example.endeavor"
         minSdk 24
         targetSdk 31
+        compileSdk 31
         versionCode 1
         versionName "1.0"
 

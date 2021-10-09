@@ -1,0 +1,11 @@
+query Tasks {
+    me {
+        tasks {
+            id
+            isCompleted
+            title
+            difficulty
+            createdAt
+        }
+    }
+}

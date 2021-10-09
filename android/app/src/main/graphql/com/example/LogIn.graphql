@@ -1,0 +1,16 @@
+mutation LogIn($loginUsername: String!, $loginPassword: String!) {
+  login(username: $loginUsername, password: $loginPassword) {
+    ... on SuccessfulLoginResult {
+      authTokens {
+        accessToken
+      }
+      user {
+        id
+        username
+      }
+    }
+    ... on FailedLoginResult {
+      reason
+    }
+  }
+}
