@@ -3,7 +3,7 @@ package com.example.endeavor.ui
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
@@ -126,12 +126,12 @@ fun Task(task: TasksQuery.Task) {
 fun TaskList(tasks: List<TasksQuery.Task>) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 12.dp)
+        modifier = Modifier.fillMaxSize()
     ) {
-        items(tasks.sortedBy { it.id }) {
-            Task(it)
+        itemsIndexed(tasks.sortedBy { it.id }) { index, task ->
+            if (index == 0) Spacer(Modifier.height(12.dp))
+            Task(task)
+            if (index == tasks.size - 1) Spacer(Modifier.height(12.dp))
         }
     }
 }

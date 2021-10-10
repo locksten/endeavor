@@ -9,12 +9,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.endeavor.LocalAuth
 import com.example.endeavor.RNGQuery
@@ -31,9 +33,11 @@ sealed class MainScreenTab(val route: String, val label: String, val icon: Image
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     Scaffold(bottomBar = {
         BottomNav(
-            navController.currentDestination?.route
+            currentDestination?.route
         ) { destination ->
             navController.navigate(route = destination) {
                 popUpTo(navController.graph.startDestinationId) {
