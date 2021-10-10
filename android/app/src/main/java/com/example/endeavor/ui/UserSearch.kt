@@ -51,7 +51,6 @@ fun User(user: UserSearchQuery.UserSearch) {
     ) {
         Text(
             text = user.username,
-            color = Theme.colors.text,
             fontWeight = FontWeight.Bold,
             fontSize = 25.sp
         )

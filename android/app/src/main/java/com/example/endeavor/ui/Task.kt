@@ -1,79 +1,110 @@
 package com.example.endeavor.ui
 
-import android.util.Log
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
+import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.apollographql.apollo.cache.normalized.CacheKey
-import com.apollographql.apollo.cache.normalized.NormalizedCache
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.coroutines.toFlow
-import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.CreateTaskMutation
-import com.example.endeavor.LocalGQLClient
 import com.example.endeavor.TasksQuery
 import com.example.endeavor.gqlWatchQuery
+import com.example.endeavor.ui.theme.EndeavorTheme
 import com.example.endeavor.ui.theme.Theme
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
 
-/*
 @Preview(
     name = "Light Mode",
+    showBackground = true,
     device = Devices.PIXEL_2
 )
 @Preview(
     name = "Dark Mode",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
+    showBackground = true,
     device = Devices.PIXEL_2
 )
 @Composable
-fun UsersPreview() {
+fun TasksPreview() {
     EndeavorTheme {
-        UserList(testUsers)
+        TaskList(testTasks)
     }
 }
 
-val testUsers = listOf(
-    UserSearchQuery.UserSearch(id = "1", username = "username", createdAt = "date"),
-    UserSearchQuery.UserSearch(id = "2", username = "username2", createdAt = "date")
+val testTasks = listOf(
+    TasksQuery.Task(
+        title = "Title A",
+        isCompleted = false,
+        difficulty = 8,
+        createdAt = "",
+        id = "",
+        __typename = "Task"
+    ),
+    TasksQuery.Task(
+        title = "Title B",
+        isCompleted = false,
+        difficulty = 8,
+        createdAt = "",
+        id = "",
+        __typename = "Task"
+    ),
+    TasksQuery.Task(
+        title = "Title C",
+        isCompleted = true,
+        difficulty = 8,
+        createdAt = "",
+        id = "",
+        __typename = "Task"
+    ),
+    TasksQuery.Task(
+        title = "Title D",
+        isCompleted = false,
+        difficulty = 8,
+        createdAt = "",
+        id = "",
+        __typename = "Task"
+    ),
 )
-*/
 
 @Composable
 fun Task(task: TasksQuery.Task) {
     Row(
         Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-        Arrangement.SpaceBetween,
+            .height(IntrinsicSize.Min)
+            .padding(horizontal = 16.dp),
+        Arrangement.Start,
     ) {
+        Checkbox(
+            checked = task.isCompleted,
+            onCheckedChange = {},
+            modifier = Modifier.fillMaxHeight(),
+            colors = CheckboxDefaults.colors(
+                uncheckedColor = Theme.colors.onBackground,
+                checkmarkColor = Theme.colors.onBackground,
+                checkedColor = Color.Transparent
+            )
+        )
+        Spacer(Modifier.width(16.dp))
         Text(
             text = task.title,
-            color = Theme.colors.text,
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp
-        )
-        Text(
-            text = "${task.isCompleted}",
-            color = Theme.colors.primary,
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp
-        )
-        Text(
-            text = "id: ${task.id}",
-            color = Theme.colors.primary,
-            fontWeight = FontWeight.Bold,
+            color = if (task.isCompleted) {
+                Theme.rawColors.gray400
+            } else {
+                Theme.colors.onBackground
+            },
+            textDecoration = if (task.isCompleted) {
+                TextDecoration.LineThrough
+            } else {
+                null
+            },
             fontSize = 25.sp
         )
     }
@@ -82,7 +113,10 @@ fun Task(task: TasksQuery.Task) {
 @Composable
 fun TaskList(tasks: List<TasksQuery.Task>) {
     LazyColumn(
-        Modifier.fillMaxSize()
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 12.dp)
     ) {
         items(tasks) {
             Task(it)
@@ -92,37 +126,5 @@ fun TaskList(tasks: List<TasksQuery.Task>) {
 
 @Composable
 fun CTaskList() {
-    val scope = rememberCoroutineScope()
-    val gql = LocalGQLClient.current
-
-    val tasks = gqlWatchQuery(TasksQuery())?.me?.tasks
-
-    Column(verticalArrangement = Arrangement.Top) {
-        Box(
-            modifier = Modifier.weight(1f),
-        ) {
-            tasks?.let { TaskList(it) }
-        }
-        Button(
-            onClick = {
-                scope.launch {
-                    try {
-                        gql.mutate(
-                            CreateTaskMutation(
-                                createTaskTitle = "new Title",
-                                createTaskDifficulty = 9
-                            )
-                        ).await().data?.createTask
-                        gql.query(TasksQuery()).await()
-                    } catch (e: ApolloNetworkException) {
-                    }
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        ) {
-            Text("Create")
-        }
-    }
+    gqlWatchQuery(TasksQuery())?.me?.tasks?.let { TaskList(it) }
 }

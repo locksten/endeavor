@@ -4,19 +4,20 @@ import androidx.compose.ui.graphics.Color
 
 @Suppress("unused")
 class MyColors(isDarkTheme: Boolean) {
-    val primary = if (isDarkTheme) MyRawColors.amber500 else MyRawColors.amber500
-    val text = if (isDarkTheme) MyRawColors.gray50 else MyRawColors.gray800
+    val primary = if (isDarkTheme) MyRawColors.gray700 else MyRawColors.teal500
+    val onPrimary = if (isDarkTheme) MyRawColors.gray50 else MyRawColors.gray50
+
+    val secondary = if (isDarkTheme) MyRawColors.gray700 else MyRawColors.teal500
+    val onSecondary = if (isDarkTheme) MyRawColors.gray50 else MyRawColors.gray50
+
     val background = if (isDarkTheme) MyRawColors.gray900 else MyRawColors.gray50
+    val onBackground = if (isDarkTheme) MyRawColors.gray300 else MyRawColors.gray900
 
-    val onDanger = if (isDarkTheme) MyRawColors.red300 else MyRawColors.red300
+    val surface = if (isDarkTheme) MyRawColors.gray800 else MyRawColors.teal400
+    val onSurface = if (isDarkTheme) MyRawColors.gray200 else MyRawColors.gray900
+
     val danger = if (isDarkTheme) MyRawColors.red900 else MyRawColors.red900
-
-    /*
-    val onPrimary = if (isDarkTheme) MyRawColors.purple400 else MyRawColors.purple800
-    val primaryVariant = if (isDarkTheme) MyRawColors.green400 else MyRawColors.green800
-    val onPrimaryVariant = if (isDarkTheme) MyRawColors.purple400 else MyRawColors.purple800
-    val secondary = if (isDarkTheme) MyRawColors.amber700 else MyRawColors.amber300
-     */
+    val onDanger = if (isDarkTheme) MyRawColors.red300 else MyRawColors.red300
 }
 
 @Suppress("unused")

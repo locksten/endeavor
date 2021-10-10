@@ -2,12 +2,46 @@ package com.example.endeavor.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.coroutines.await
+import com.apollographql.apollo.exception.ApolloNetworkException
+import com.example.endeavor.CreateTaskMutation
+import com.example.endeavor.LocalGQLClient
+import com.example.endeavor.TasksQuery
+import com.example.endeavor.ui.theme.Theme
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
-val todoTabs = listOf("Habits", "Dailies", "Tasks")
+
+suspend fun createTask(gql: ApolloClient) {
+    try {
+        gql.mutate(
+            CreateTaskMutation(
+                createTaskTitle = "new Title",
+                createTaskDifficulty = 9
+            )
+        ).await().data?.createTask
+        gql.query(TasksQuery()).await()
+    } catch (e: ApolloNetworkException) {
+    }
+}
+
+sealed class TodoTab(
+    val label: String,
+    val onFabAdd: suspend (gql: ApolloClient) -> Unit,
+    val composable: @Composable () -> Unit
+) {
+    object Habits : TodoTab("Habits", { gql -> createTask(gql) }, { Text("Habits") })
+    object Dailies : TodoTab("Dailies", { gql -> createTask(gql) }, { Text("Dailies") })
+    object Tasks : TodoTab("Tasks", { gql -> createTask(gql) }, { CTaskList() })
+}
+
+val todoTabs = listOf(TodoTab.Habits, TodoTab.Dailies, TodoTab.Tasks)
 
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -18,13 +52,13 @@ fun Tabs(pagerState: PagerState) {
         selectedTabIndex = pagerState.currentPage,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                modifier = Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
             )
         }
     ) {
         todoTabs.forEachIndexed { index, tab ->
             Tab(
-                text = { Text(tab) },
+                text = { Text(tab.label) },
                 selected = index == pagerState.currentPage,
                 onClick = {
                     scope.launch {
@@ -41,21 +75,31 @@ fun Tabs(pagerState: PagerState) {
 @Composable
 fun TodosScreen() {
     val pagerState = rememberPagerState()
-    Scaffold {
+    Scaffold(floatingActionButton = { FloatingAddButton(pagerState.currentPage) }) {
         Column {
             Tabs(pagerState)
             HorizontalPager(
                 count = todoTabs.size,
                 state = pagerState,
                 modifier = Modifier.weight(1f)
-            ) { page ->
-                when (page) {
-                    0 -> Text("Habits")
-                    1 -> Text("Dailies")
-                    2 -> CTaskList()
-                }
+            ) {
+                todoTabs[it].composable()
             }
-
         }
+    }
+}
+
+@Composable
+fun FloatingAddButton(tab: Int) {
+    val scope = rememberCoroutineScope()
+    val gql = LocalGQLClient.current
+    FloatingActionButton(
+        onClick = {
+            scope.launch {
+                todoTabs[tab].onFabAdd(gql)
+            }
+        },
+    ) {
+        Icon(Icons.Filled.Add, "Create")
     }
 }

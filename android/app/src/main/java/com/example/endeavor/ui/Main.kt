@@ -96,7 +96,6 @@ fun CRNG() {
         if (num != null) {
             Text(
                 text = num.toString(),
-                color = Theme.colors.text,
                 fontWeight = FontWeight.Bold,
                 fontSize = 25.sp
             )
