@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,19 +20,30 @@ import com.example.endeavor.LocalAuth
 import com.example.endeavor.RNGQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.Theme
+import com.google.accompanist.pager.ExperimentalPagerApi
 
 sealed class MainScreenTab(val route: String, val label: String, val icon: ImageVector) {
-    object Tasks : MainScreenTab("tasks", "Tasks", Icons.Rounded.List)
+    object Todos : MainScreenTab("todos", "Todos", Icons.Rounded.List)
     object Character : MainScreenTab("character", "Character", Icons.Rounded.Person)
 }
 
+@ExperimentalPagerApi
+@ExperimentalMaterialApi
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(bottomBar = {
         BottomNav(
             navController.currentDestination?.route
-        ) { destination -> navController.navigate(route = destination) }
+        ) { destination ->
+            navController.navigate(route = destination) {
+                popUpTo(navController.graph.startDestinationId) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
     }) { padding ->
         Column(
             Modifier
@@ -45,12 +55,14 @@ fun MainScreen() {
                 navController,
                 startDestination = MainScreenTab.Character.route,
             ) {
-                composable(MainScreenTab.Tasks.route) { CTaskList() }
+                composable(MainScreenTab.Todos.route) { TodosScreen() }
                 composable(MainScreenTab.Character.route) { Character() }
             }
         }
     }
 }
+
+val mainTabs = listOf(MainScreenTab.Todos)
 
 @Composable
 fun BottomNav(
@@ -58,9 +70,8 @@ fun BottomNav(
     onClick: (String) -> Unit
 ) {
     val username = LocalAuth.current.loggedInUsernameState().value ?: "Character"
-    val tabs = listOf(MainScreenTab.Tasks)
     BottomNavigation {
-        tabs.forEach { tab ->
+        mainTabs.forEach { tab ->
             BottomNavigationItem(
                 label = { Text(tab.label) },
                 selected = selected == tab.route,
