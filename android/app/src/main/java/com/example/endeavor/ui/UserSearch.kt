@@ -67,8 +67,8 @@ fun User(user: UserSearchQuery.UserSearch) {
 @Composable
 fun UserList(users: List<UserSearchQuery.UserSearch>) {
     LazyColumn {
-        items(users) { user ->
-            User(user)
+        items(users) {
+            User(it)
         }
     }
 }

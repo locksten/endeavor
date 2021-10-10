@@ -22,8 +22,8 @@ export const MeType = t.objectType<Me>({
       resolve: async (me, _args, { pool }) => {
         return await db.sql<QTask.SQL | QTodo.SQL, Task[]>`
         SELECT ${"Todo"}.*, ${"Task"}.*
-        FROM ${"Todo"}
-        JOIN ${"Task"} ON ${"Todo"}.${"id"} = ${"Task"}.${"id"}
+        FROM ${"Task"}
+        JOIN ${"Todo"} ON ${"Todo"}.${"id"} = ${"Task"}.${"id"}
         WHERE ${{ userId: me.id }}
         `.run(pool)
       },

@@ -2,17 +2,22 @@ package com.example.endeavor.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.endeavor.LocalAuth
 import com.example.endeavor.RNGQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.Theme
@@ -29,10 +34,20 @@ fun MainScreen() {
         BottomNav(
             navController.currentDestination?.route
         ) { destination -> navController.navigate(route = destination) }
-    }) {
-        NavHost(navController, startDestination = MainScreenTab.Character.route) {
-            composable(MainScreenTab.Tasks.route) { CUserSearchList(searchTerm = "al") }
-            composable(MainScreenTab.Character.route) { AuthScreen() }
+    }) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(bottom = padding.calculateBottomPadding())
+        )
+        {
+            NavHost(
+                navController,
+                startDestination = MainScreenTab.Character.route,
+            ) {
+                composable(MainScreenTab.Tasks.route) { CTaskList() }
+                composable(MainScreenTab.Character.route) { Character() }
+            }
         }
     }
 }
@@ -42,7 +57,8 @@ fun BottomNav(
     selected: String? = MainScreenTab.Character.route,
     onClick: (String) -> Unit
 ) {
-    val tabs = listOf(MainScreenTab.Tasks, MainScreenTab.Character)
+    val username = LocalAuth.current.loggedInUsernameState().value ?: "Character"
+    val tabs = listOf(MainScreenTab.Tasks)
     BottomNavigation {
         tabs.forEach { tab ->
             BottomNavigationItem(
@@ -51,6 +67,11 @@ fun BottomNav(
                 onClick = { onClick(tab.route) },
                 icon = { Icon(tab.icon, tab.label) })
         }
+        BottomNavigationItem(
+            label = { Text(username) },
+            selected = selected == MainScreenTab.Character.route,
+            onClick = { onClick(MainScreenTab.Character.route) },
+            icon = { Icon(MainScreenTab.Character.icon, username) })
     }
 }
 
@@ -74,5 +95,4 @@ fun CRNG() {
             Text("Do Something...")
         }
     }
-
 }

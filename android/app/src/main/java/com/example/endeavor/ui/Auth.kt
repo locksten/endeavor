@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 fun AuthScreen() {
     val scope = rememberCoroutineScope()
     val passwordFocusRequester = remember { FocusRequester() }
-    val client = LocalGQLClient.current
+    val gql = LocalGQLClient.current
     val auth = LocalAuth.current
     var username by remember { mutableStateOf("alice") }
     var password by remember {
@@ -40,100 +40,84 @@ fun AuthScreen() {
         )
     }
     var error by remember { mutableStateOf<String?>(null) }
-    val isLoggedIn by auth.isLoggedIn()
-    val token by auth.authTokenState()
-    val loggedInUsername by auth.loggedInUsernameState()
 
-    if (isLoggedIn) {
-        Column {
-            Text("token: $token")
-            Text("username: $loggedInUsername")
-            Button(onClick = {
-                auth.logOut()
-            }) {
-                Text("Log out")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp)
+            .padding(top = 64.dp)
+    ) {
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .alpha(if (error == null) 0f else 1f)
+                    .background(Theme.colors.onDanger)
+                    .padding(8.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = error ?: "",
+                    color = Theme.colors.danger,
+                    fontWeight = FontWeight.Bold
+                )
             }
-        }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 32.dp)
-                .padding(top = 64.dp)
-        ) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .alpha(if (error == null) 0f else 1f)
-                        .background(Theme.colors.onDanger)
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = error ?: "",
-                        color = Theme.colors.danger,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                TextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text("Username") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(onNext = {
-                        passwordFocusRequester.requestFocus()
-                    })
-                )
-                TextField(
-                    value = password,
-                    onValueChange = {
-                        password = it
-                    },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Go
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(passwordFocusRequester),
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(onGo = {
+            TextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = {
+                    passwordFocusRequester.requestFocus()
+                })
+            )
+            TextField(
+                value = password,
+                onValueChange = {
+                    password = it
+                },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Go
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(passwordFocusRequester),
+                singleLine = true,
+                keyboardActions = KeyboardActions(onGo = {
+                    scope.launch {
+                        error = auth.logIn(gql, username, password.text)
+                    }
+                }),
+            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Button(
+                    onClick = {
                         scope.launch {
-                            error = auth.logIn(client, username, password.text)
+                            error = auth.register(gql, username, password.text)
                         }
-                    }),
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    },
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                error = auth.register(client, username, password.text)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Sign Up")
-                    }
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                error = auth.logIn(client, username, password.text)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Log In")
-                    }
+                    Text("Sign Up")
+                }
+                Button(
+                    onClick = {
+                        scope.launch {
+                            error = auth.logIn(gql, username, password.text)
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Log In")
                 }
             }
         }
     }
-
 }

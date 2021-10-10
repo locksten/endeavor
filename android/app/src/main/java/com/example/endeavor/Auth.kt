@@ -7,6 +7,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
+import com.apollographql.apollo.exception.ApolloNetworkException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import okhttp3.Interceptor
@@ -45,13 +46,19 @@ class Authentication(private val context: Context) {
 
 
     @Composable
-    fun isLoggedIn(): State<Boolean> {
-        return (authToken.map { it != null }).collectAsState(false)
+    fun isLoggedIn(): State<Boolean?> {
+        return (authToken.map {
+            it != null
+        }).collectAsState(null)
     }
 
 
     suspend fun register(client: ApolloClient, username: String, password: String): String? {
-        val response = client.mutate(RegisterMutation(username, password)).await().data?.register
+        val response = try {
+            client.mutate(RegisterMutation(username, password)).await().data?.register
+        } catch (e: ApolloNetworkException) {
+            return "Could not connect to the server"
+        }
         val success = response?.asSuccessfulLoginResult
         val failure = response?.asFailedRegistrationResult
 
@@ -71,7 +78,11 @@ class Authentication(private val context: Context) {
     }
 
     suspend fun logIn(client: ApolloClient, username: String, password: String): String? {
-        val response = client.mutate(LogInMutation(username, password)).await().data?.login
+        val response = try {
+            client.mutate(LogInMutation(username, password)).await().data?.login
+        } catch (e: ApolloNetworkException) {
+            return "Could not connect to the server"
+        }
         val success = response?.asSuccessfulLoginResult
         val failure = response?.asFailedLoginResult
 

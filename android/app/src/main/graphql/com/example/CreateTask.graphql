@@ -1,0 +1,9 @@
+mutation CreateTask($createTaskTitle: String!, $createTaskDifficulty: Int!) {
+  createTask(title: $createTaskTitle, difficulty: $createTaskDifficulty) {
+    id
+    isCompleted
+    title
+    difficulty
+    createdAt
+  }
+}

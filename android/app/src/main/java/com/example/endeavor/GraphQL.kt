@@ -8,7 +8,7 @@ import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo.coroutines.toFlow
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.catch
 import okhttp3.OkHttpClient
 
 
@@ -25,8 +25,8 @@ fun EndeavorGQL(content: @Composable () -> Unit) {
             .serverUrl("http://192.168.0.118:4000/graphql")
             .okHttpClient(
                 OkHttpClient.Builder()
-                .addInterceptor(AuthorizationInterceptor(authentication))
-                .build()
+                    .addInterceptor(AuthorizationInterceptor(authentication))
+                    .build()
             )
             .normalizedCache(
                 cacheFactory
@@ -42,11 +42,7 @@ fun EndeavorGQL(content: @Composable () -> Unit) {
 
 @Composable
 fun <D : Operation.Data, T, V : Operation.Variables> gqlWatchQuery(query: Query<D, T, V>): T? {
-    val client = LocalGQLClient.current
-    val response = remember {
-        client.query(query).watcher().toFlow().map {
-            it.data
-        }
-    }.collectAsState(initial = null)
-    return response.value
+    val gql = LocalGQLClient.current
+    return remember {gql.query(query).watcher().toFlow().catch {}}
+        .collectAsState(initial = null).value?.data
 }
