@@ -4,27 +4,30 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import com.apollographql.apollo.ApolloClient
-import com.example.endeavor.LocalGQLClient
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 
 sealed class TodoTab(
     val label: String,
-    val onFabAdd: suspend (gql: ApolloClient) -> Unit,
+    val creationModal: @Composable (onDismissRequest: () -> Unit) -> Unit,
     val composable: @Composable () -> Unit
 ) {
-    object Habits : TodoTab("Habits", { gql -> createTask(gql) }, { Text("Habits") })
-    object Dailies : TodoTab("Dailies", { gql -> createTask(gql) }, { Text("Dailies") })
-    object Tasks : TodoTab("Tasks", { gql -> createTask(gql) }, { CTaskList() })
+    @ExperimentalComposeUiApi
+    object Habits : TodoTab("Habits", { CCreateTaskModal(it) }, { Text("Habits") })
+    @ExperimentalComposeUiApi
+    object Dailies : TodoTab("Dailies", { CCreateTaskModal(it) }, { Text("Dailies") })
+    @ExperimentalComposeUiApi
+    object Tasks : TodoTab("Tasks", { CCreateTaskModal(it) }, { CTaskList() })
 }
 
+@ExperimentalComposeUiApi
 val todoTabs = listOf(TodoTab.Habits, TodoTab.Dailies, TodoTab.Tasks)
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -52,6 +55,7 @@ fun Tabs(pagerState: PagerState) {
     }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -71,17 +75,14 @@ fun TodosScreen() {
     }
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun FloatingAddButton(tab: Int) {
-    val scope = rememberCoroutineScope()
-    val gql = LocalGQLClient.current
+    var isDialogOpen by remember { mutableStateOf(false) }
     FloatingActionButton(
-        onClick = {
-            scope.launch {
-                todoTabs[tab].onFabAdd(gql)
-            }
-        },
+        onClick = { isDialogOpen = true },
     ) {
         Icon(Icons.Filled.Add, "Create")
+        if (isDialogOpen) todoTabs[tab].creationModal { isDialogOpen = false }
     }
 }

@@ -1,21 +1,27 @@
 package com.example.endeavor.ui
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.material.TextFieldDefaults.textFieldColors
+import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
@@ -107,17 +113,15 @@ fun Task(task: TasksQuery.Task) {
         Spacer(Modifier.width(16.dp))
         Text(
             text = task.title,
-            color = if (task.isCompleted) {
-                Theme.rawColors.gray400
-            } else {
-                Theme.colors.onBackground
-            },
             textDecoration = if (task.isCompleted) {
                 TextDecoration.LineThrough
             } else {
                 null
             },
-            fontSize = 25.sp
+            fontSize = 25.sp,
+            modifier = Modifier.alpha(
+                if (task.isCompleted) 0.5f else 1f,
+            )
         )
     }
 }
@@ -128,7 +132,7 @@ fun TaskList(tasks: List<TasksQuery.Task>) {
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        itemsIndexed(tasks.sortedBy { it.id }) { index, task ->
+        itemsIndexed(tasks.sortedByDescending { it.id }) { index, task ->
             if (index == 0) Spacer(Modifier.height(12.dp))
             Task(task)
             if (index == tasks.size - 1) Spacer(Modifier.height(12.dp))
@@ -151,12 +155,71 @@ suspend fun completeTask(gql: ApolloClient, id: String) {
     }
 }
 
-suspend fun createTask(gql: ApolloClient) {
+@ExperimentalComposeUiApi
+@Composable
+fun CCreateTaskModal(onDismissRequest: () -> Unit) {
+    val scope = rememberCoroutineScope()
+    val gql = LocalGQLClient.current
+    var title by remember { mutableStateOf("") }
+    val titleFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(true) {
+        titleFocusRequester.requestFocus()
+    }
+
+    Dialog(onDismissRequest) {
+        Box(
+            modifier = Modifier
+                .background(Theme.colors.background)
+                .fillMaxWidth()
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(16.dp)
+            ) {
+                TaskTitleTexField(title, titleFocusRequester) { title = it }
+                Button(
+                    onClick = {
+                        scope.launch {
+                            createTask(gql, title, 3)
+                            onDismissRequest()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Add")
+                }
+
+            }
+        }
+    }
+}
+
+@Composable
+private fun TaskTitleTexField(
+    title: String,
+    focusRequester: FocusRequester,
+    onChange: (String) -> Unit
+) {
+    TextField(
+        value = title,
+        onValueChange = onChange,
+        label = { Text("Title") },
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        colors = textFieldColors(textColor = Theme.colors.onBackground)
+    )
+}
+
+
+suspend fun createTask(gql: ApolloClient, title: String, difficulty: Int) {
     try {
         gql.mutate(
             CreateTaskMutation(
-                createTaskTitle = "new Title",
-                createTaskDifficulty = 9
+                createTaskTitle = title,
+                createTaskDifficulty = difficulty
             )
         ).await().data?.createTask
         gql.query(TasksQuery()).await()
