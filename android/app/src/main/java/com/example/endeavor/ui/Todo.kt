@@ -8,27 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.CreateTaskMutation
 import com.example.endeavor.LocalGQLClient
-import com.example.endeavor.TasksQuery
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
-
-suspend fun createTask(gql: ApolloClient) {
-    try {
-        gql.mutate(
-            CreateTaskMutation(
-                createTaskTitle = "new Title",
-                createTaskDifficulty = 9
-            )
-        ).await().data?.createTask
-        gql.query(TasksQuery()).await()
-    } catch (e: ApolloNetworkException) {
-    }
-}
 
 sealed class TodoTab(
     val label: String,

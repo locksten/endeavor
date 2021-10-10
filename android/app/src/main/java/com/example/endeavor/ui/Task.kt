@@ -8,6 +8,7 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextDecoration
@@ -15,10 +16,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.endeavor.TasksQuery
-import com.example.endeavor.gqlWatchQuery
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.coroutines.await
+import com.apollographql.apollo.exception.ApolloNetworkException
+import com.example.endeavor.*
 import com.example.endeavor.ui.theme.EndeavorTheme
 import com.example.endeavor.ui.theme.Theme
+import kotlinx.coroutines.launch
 
 @Preview(
     name = "Light Mode",
@@ -75,6 +79,8 @@ val testTasks = listOf(
 
 @Composable
 fun Task(task: TasksQuery.Task) {
+    val scope = rememberCoroutineScope()
+    val gql = LocalGQLClient.current
     Row(
         Modifier
             .fillMaxWidth()
@@ -84,7 +90,13 @@ fun Task(task: TasksQuery.Task) {
     ) {
         Checkbox(
             checked = task.isCompleted,
-            onCheckedChange = {},
+            onCheckedChange = {
+                if (it) {
+                    scope.launch {
+                        completeTask(gql, task.id)
+                    }
+                }
+            },
             modifier = Modifier.fillMaxHeight(),
             colors = CheckboxDefaults.colors(
                 uncheckedColor = Theme.colors.onBackground,
@@ -118,7 +130,7 @@ fun TaskList(tasks: List<TasksQuery.Task>) {
             .fillMaxSize()
             .padding(top = 12.dp)
     ) {
-        items(tasks) {
+        items(tasks.sortedBy { it.id }) {
             Task(it)
         }
     }
@@ -127,4 +139,27 @@ fun TaskList(tasks: List<TasksQuery.Task>) {
 @Composable
 fun CTaskList() {
     gqlWatchQuery(TasksQuery())?.me?.tasks?.let { TaskList(it) }
+}
+
+suspend fun completeTask(gql: ApolloClient, id: String) {
+    try {
+        gql.mutate(
+            CompleteTaskMutation(completeTaskId = id)
+        ).await().data?.completeTask
+        gql.query(TasksQuery()).await()
+    } catch (e: ApolloNetworkException) {
+    }
+}
+
+suspend fun createTask(gql: ApolloClient) {
+    try {
+        gql.mutate(
+            CreateTaskMutation(
+                createTaskTitle = "new Title",
+                createTaskDifficulty = 9
+            )
+        ).await().data?.createTask
+        gql.query(TasksQuery()).await()
+    } catch (e: ApolloNetworkException) {
+    }
 }

@@ -34,7 +34,8 @@ type Mutation {
   register(username: String!, password: String!): RegistrationResult!
   login(username: String!, password: String!): LoginResult!
   createTask(title: String!, difficulty: Int!): Task
-  deleteTask(id: ID!): ID!
+  deleteTask(id: ID!): ID
+  completeTask(id: ID!): Task
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult

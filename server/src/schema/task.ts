@@ -1,5 +1,5 @@
 import { AppContext } from "context"
-import { db, dc } from "database"
+import { db } from "database"
 import { ObjectType } from "gqtx/dist/types"
 import { DateType } from "schema/date"
 import { QTodo, Todo } from "schema/todo"
@@ -68,20 +68,37 @@ export const mutationCreateTask = t.field("createTask", {
 })
 
 export const mutationDeleteTask = t.field("deleteTask", {
-  type: t.NonNull(t.ID),
+  type: t.ID,
   args: {
     id: t.arg(t.NonNullInput(t.ID)),
   },
   resolve: async (_, { id }, { pool, auth }) => {
-    if (!auth.id) return null
-
-    const [{ id: deletedId }] = await db
+    const deletedIds = await db
       .deletes(
         "Todo",
         { userId: auth.id, id: Number(id) },
         { returning: ["id"] },
       )
       .run(pool)
-    return String(deletedId)
+    return deletedIds.length ? String(deletedIds[0].id) : null
+  },
+})
+
+export const mutationCompleteTask = t.field("completeTask", {
+  type: TaskType,
+  args: {
+    id: t.arg(t.NonNullInput(t.ID)),
+  },
+  resolve: async (_, { id }, { pool, auth }) => {
+    const updated = await db.sql<QTodo.SQL | QTask.SQL, [Todo & Task]>`
+    UPDATE ${"Task"} AS atask
+    SET ${"isCompleted"} = TRUE
+    FROM ${"Todo"} AS atodo
+    WHERE atask.${"id"} = atodo.${"id"}
+    AND atodo.${"id"} = ${db.param(id)} 
+    AND atodo.${"userId"} = ${db.param(auth.id)}
+    RETURNING atask.*, atodo.*
+    `.run(pool)
+    return updated.length ? updated[0] : null
   },
 })
