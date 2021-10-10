@@ -13,7 +13,6 @@ import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.CreateTaskMutation
 import com.example.endeavor.LocalGQLClient
 import com.example.endeavor.TasksQuery
-import com.example.endeavor.ui.theme.Theme
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 

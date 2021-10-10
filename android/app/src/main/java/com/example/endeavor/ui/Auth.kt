@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,78 +50,109 @@ fun AuthScreen() {
                 .padding(top = 64.dp)
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .alpha(if (error == null) 0f else 1f)
-                        .background(Theme.colors.onDanger)
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = error ?: "",
-                        color = Theme.colors.danger,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                TextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text("Username") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(onNext = {
-                        passwordFocusRequester.requestFocus()
-                    })
-                )
-                TextField(
-                    value = password,
-                    onValueChange = {
-                        password = it
-                    },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Go
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(passwordFocusRequester),
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(onGo = {
-                        scope.launch {
-                            error = auth.logIn(gql, username, password.text)
-                        }
-                    }),
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                error = auth.register(gql, username, password.text)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Sign Up")
+                AuthError(error)
+                Username(username, { username = it }, passwordFocusRequester)
+                Password(password, { password = it }, {
+                    scope.launch {
+                        error = auth.logIn(gql, username, password.text)
                     }
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                error = auth.logIn(gql, username, password.text)
-                            }
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Log In")
-                    }
-                }
+                }, passwordFocusRequester)
+                AuthButtons(username, password) { error = it }
             }
         }
 
     }
+}
+
+@Composable
+private fun AuthButtons(
+    username: String,
+    password: TextFieldValue,
+    onError: (String?) -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    val gql = LocalGQLClient.current
+    val auth = LocalAuth.current
+
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Button(
+            onClick = {
+                scope.launch {
+                    onError(auth.register(gql, username, password.text))
+                }
+            },
+            modifier = Modifier.weight(1f)
+        ) {
+            Text("Sign Up")
+        }
+        Button(
+            onClick = {
+                scope.launch {
+                    onError(auth.logIn(gql, username, password.text))
+                }
+            },
+            modifier = Modifier.weight(1f)
+        ) {
+            Text("Log In")
+        }
+    }
+}
+
+@Composable
+private fun AuthError(error: String?) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .alpha(if (error == null) 0f else 1f)
+            .background(Theme.colors.onDanger)
+            .padding(8.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = error ?: "",
+            color = Theme.colors.danger,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+private fun Username(username: String, onChange: (String) -> Unit, focusRequester: FocusRequester) {
+    TextField(
+        value = username,
+        onValueChange = onChange,
+        label = { Text("Username") },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        keyboardActions = KeyboardActions(onNext = {
+            focusRequester.requestFocus()
+        })
+    )
+}
+
+@Composable
+private fun Password(
+    password: TextFieldValue,
+    onChange: (TextFieldValue) -> Unit,
+    onGo: () -> Unit,
+    focusRequester: FocusRequester
+) {
+    TextField(
+        value = password,
+        onValueChange = onChange,
+        label = { Text("Password") },
+        visualTransformation = PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Go
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
+        singleLine = true,
+        keyboardActions = KeyboardActions(onGo = { onGo() }),
+    )
 }

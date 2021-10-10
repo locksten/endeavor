@@ -19,12 +19,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.endeavor.LocalAuth
 import com.example.endeavor.RNGQuery
 import com.example.endeavor.gqlWatchQuery
-import com.example.endeavor.ui.theme.Theme
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 sealed class MainScreenTab(val route: String, val label: String, val icon: ImageVector) {
     object Todos : MainScreenTab("todos", "Todos", Icons.Rounded.List)
-    object Character : MainScreenTab("character", "Character", Icons.Rounded.Person)
+    object Character : MainScreenTab("character", "CharacterScreen", Icons.Rounded.Person)
 }
 
 @ExperimentalPagerApi
@@ -56,7 +55,7 @@ fun MainScreen() {
                 startDestination = MainScreenTab.Character.route,
             ) {
                 composable(MainScreenTab.Todos.route) { TodosScreen() }
-                composable(MainScreenTab.Character.route) { Character() }
+                composable(MainScreenTab.Character.route) { CharacterScreen() }
             }
         }
     }
@@ -69,7 +68,7 @@ fun BottomNav(
     selected: String? = MainScreenTab.Character.route,
     onClick: (String) -> Unit
 ) {
-    val username = LocalAuth.current.loggedInUsernameState().value ?: "Character"
+    val username = LocalAuth.current.loggedInUsernameState().value ?: "CharacterScreen"
     BottomNavigation {
         mainTabs.forEach { tab ->
             BottomNavigationItem(

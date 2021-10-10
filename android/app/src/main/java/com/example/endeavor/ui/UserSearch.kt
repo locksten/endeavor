@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import com.example.endeavor.UserSearchQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.EndeavorTheme
-import com.example.endeavor.ui.theme.Theme
 
 @Preview(
     name = "Light Mode",
@@ -56,7 +55,6 @@ fun User(user: UserSearchQuery.UserSearch) {
         )
         Text(
             text = "id: ${user.id}",
-            color = Theme.colors.primary,
             fontWeight = FontWeight.Bold,
             fontSize = 25.sp
         )

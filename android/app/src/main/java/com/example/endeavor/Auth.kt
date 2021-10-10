@@ -1,7 +1,6 @@
 package com.example.endeavor
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -12,10 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import okhttp3.Interceptor
 import okhttp3.Response
-
-const val preference_file_key = "com.example.endeavor.PREFERENCE_FILE_KEY"
-const val preference_auth_token_key = "com.example.endeavor.AUTH_TOKEN"
-const val preference_username_key = "com.example.endeavor.USERNAME"
 
 class AuthorizationInterceptor(private val auth: Authentication) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -102,27 +97,26 @@ class Authentication(private val context: Context) {
     }
 
     fun logOut() {
-        setAuthToken(null)
-        setUsername(null)
+        removeAuthToken()
+        removeUsername()
     }
 
     private fun getPersistedUsername(): String? {
-        return context.getSharedPreferences(preference_file_key, Context.MODE_PRIVATE)
-            .getString(preference_username_key, null)
+        return getSharedPrefString(context, PrefKey.Username)
     }
 
     private fun setUsername(username: String?) {
-        val sharedPref = context.getSharedPreferences(preference_file_key, Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString(preference_username_key, username)
-            apply()
-        }
+        setSharedPrefString(context, PrefKey.Username, username)
         this.username.value = username
     }
 
+    private fun removeUsername() {
+        removeSharedPref(context, PrefKey.Username)
+        username.value = null
+    }
+
     private fun getPersistedAuthToken(): String? {
-        return context.getSharedPreferences(preference_file_key, Context.MODE_PRIVATE)
-            .getString(preference_auth_token_key, null)
+        return getSharedPrefString(context, PrefKey.AuthToken)
     }
 
     fun getAuthToken(): String? {
@@ -130,12 +124,13 @@ class Authentication(private val context: Context) {
     }
 
     private fun setAuthToken(token: String?) {
-        val sharedPref = context.getSharedPreferences(preference_file_key, Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString(preference_auth_token_key, token)
-            apply()
-        }
+        setSharedPrefString(context, PrefKey.AuthToken, token)
         authToken.value = token
+    }
+
+    private fun removeAuthToken() {
+        removeSharedPref(context, PrefKey.AuthToken)
+        authToken.value = null
     }
 
 }

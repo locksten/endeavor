@@ -1,17 +1,16 @@
 package com.example.endeavor.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import com.example.endeavor.DarkMode
 
 
 private val LocalMyRawColors = staticCompositionLocalOf { MyRawColors }
 private val LocalMyColors = staticCompositionLocalOf { MyColors(false) }
+val LocalMyDarkMode = staticCompositionLocalOf<DarkMode> {null!!}
 
 object Theme {
     val rawColors
@@ -54,13 +53,16 @@ val materialLightColors = lightColors(
 )
 
 @Composable
-fun EndeavorTheme(isDarkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun EndeavorTheme(content: @Composable () -> Unit) {
+    val darkMode = DarkMode(LocalContext.current)
+    val isDarkMode by darkMode.isDarkModeState()
     CompositionLocalProvider(
-        LocalMyColors provides MyColors(isDarkTheme)
+        LocalMyColors provides MyColors(isDarkMode),
+        LocalMyDarkMode provides darkMode
     ) {
         MaterialTheme(
             typography = Typography,
-            colors = if (isDarkTheme) {
+            colors = if (isDarkMode) {
                 materialDarkColors
             } else {
                 materialLightColors
