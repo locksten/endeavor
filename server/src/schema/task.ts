@@ -90,7 +90,8 @@ export const mutationCompleteTask = t.field("completeTask", {
     id: t.arg(t.NonNullInput(t.ID)),
   },
   resolve: async (_, { id }, { pool, auth }) => {
-    const updated = await db.sql<QTodo.SQL | QTask.SQL, [Todo & Task]>`
+    try {
+      const [task] = await db.sql<QTodo.SQL | QTask.SQL, [Todo & Task]>`
     UPDATE ${"Task"} AS atask
     SET ${"isCompleted"} = TRUE
     FROM ${"Todo"} AS atodo
@@ -99,6 +100,28 @@ export const mutationCompleteTask = t.field("completeTask", {
     AND atodo.${"userId"} = ${db.param(auth.id)}
     RETURNING atask.*, atodo.*
     `.run(pool)
-    return updated.length ? updated[0] : null
+
+      await db
+        .update(
+          "User",
+          {
+            energy: db.sql`LEAST(${"maxEnergy"}, ${db.self} + ${db.param(
+              task.difficulty,
+            )})`,
+            hitpoints: db.sql`LEAST(${"maxHitpoints"}, ${db.self} + ${db.param(
+              task.difficulty,
+            )})`,
+            experience: db.sql`LEAST(1000, ${db.self} + ${db.param(
+              task.difficulty,
+            )})`,
+          },
+          { id: auth.id },
+        )
+        .run(pool)
+
+      return task
+    } catch (e) {
+      return null
+    }
   },
 })

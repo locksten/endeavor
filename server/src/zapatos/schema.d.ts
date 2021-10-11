@@ -22,6 +22,299 @@ declare module 'zapatos/schema' {
   /* --- tables --- */
 
   /**
+   * **Character**
+   * - Table in database
+   */
+  export namespace Character {
+    export type Table = 'Character';
+    export interface Selectable {
+      /**
+      * **Character.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Character_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Character.username**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      username: string;
+      /**
+      * **Character.password**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      password: string;
+      /**
+      * **Character.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt: Date | null;
+      /**
+      * **Character.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints: number;
+      /**
+      * **Character.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints: number;
+      /**
+      * **Character.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy: number;
+      /**
+      * **Character.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy: number;
+      /**
+      * **Character.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience: number;
+    }
+    export interface JSONSelectable {
+      /**
+      * **Character.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Character_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Character.username**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      username: string;
+      /**
+      * **Character.password**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      password: string;
+      /**
+      * **Character.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt: db.TimestampTzString | null;
+      /**
+      * **Character.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints: number;
+      /**
+      * **Character.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints: number;
+      /**
+      * **Character.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy: number;
+      /**
+      * **Character.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy: number;
+      /**
+      * **Character.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience: number;
+    }
+    export interface Whereable {
+      /**
+      * **Character.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Character_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.username**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      username?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.password**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      password?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Character.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **Character.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Character_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **Character.username**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      username: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **Character.password**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      password: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **Character.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **Character.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Character.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Character.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Character.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Character.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience: number | db.Parameter<number> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **Character.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Character_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Character.username**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      username?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **Character.password**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      password?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **Character.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Character.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Character.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Character.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Character.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Character.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'Character_pkey' | 'Character_username_key';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **Task**
    * - Table in database
    */
@@ -308,6 +601,36 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `now()`
       */
       createdAt: Date | null;
+      /**
+      * **User.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints: number;
+      /**
+      * **User.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints: number;
+      /**
+      * **User.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy: number;
+      /**
+      * **User.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy: number;
+      /**
+      * **User.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience: number;
     }
     export interface JSONSelectable {
       /**
@@ -334,6 +657,36 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `now()`
       */
       createdAt: db.TimestampTzString | null;
+      /**
+      * **User.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints: number;
+      /**
+      * **User.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints: number;
+      /**
+      * **User.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy: number;
+      /**
+      * **User.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy: number;
+      /**
+      * **User.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience: number;
     }
     export interface Whereable {
       /**
@@ -360,6 +713,36 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `now()`
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -386,6 +769,36 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `now()`
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **User.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **User.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **User.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **User.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **User.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience: number | db.Parameter<number> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -412,6 +825,36 @@ declare module 'zapatos/schema' {
       * - Nullable, default: `now()`
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **User.hitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      hitpoints?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **User.maxHitpoints**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxHitpoints?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **User.energy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      energy?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **User.maxEnergy**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      maxEnergy?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **User.experience**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      experience?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
     }
     export type UniqueIndex = 'User_pkey' | 'User_username_key';
     export type Column = keyof Selectable;
@@ -422,64 +865,72 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = Task.Table | Todo.Table | User.Table;
-  export type Selectable = Task.Selectable | Todo.Selectable | User.Selectable;
-  export type JSONSelectable = Task.JSONSelectable | Todo.JSONSelectable | User.JSONSelectable;
-  export type Whereable = Task.Whereable | Todo.Whereable | User.Whereable;
-  export type Insertable = Task.Insertable | Todo.Insertable | User.Insertable;
-  export type Updatable = Task.Updatable | Todo.Updatable | User.Updatable;
-  export type UniqueIndex = Task.UniqueIndex | Todo.UniqueIndex | User.UniqueIndex;
-  export type Column = Task.Column | Todo.Column | User.Column;
-  export type AllBaseTables = [Task.Table, Todo.Table, User.Table];
+  export type Table = Character.Table | Task.Table | Todo.Table | User.Table;
+  export type Selectable = Character.Selectable | Task.Selectable | Todo.Selectable | User.Selectable;
+  export type JSONSelectable = Character.JSONSelectable | Task.JSONSelectable | Todo.JSONSelectable | User.JSONSelectable;
+  export type Whereable = Character.Whereable | Task.Whereable | Todo.Whereable | User.Whereable;
+  export type Insertable = Character.Insertable | Task.Insertable | Todo.Insertable | User.Insertable;
+  export type Updatable = Character.Updatable | Task.Updatable | Todo.Updatable | User.Updatable;
+  export type UniqueIndex = Character.UniqueIndex | Task.UniqueIndex | Todo.UniqueIndex | User.UniqueIndex;
+  export type Column = Character.Column | Task.Column | Todo.Column | User.Column;
+  export type AllBaseTables = [Character.Table, Task.Table, Todo.Table, User.Table];
   export type AllForeignTables = [];
   export type AllViews = [];
   export type AllMaterializedViews = [];
-  export type AllTablesAndViews = [Task.Table, Todo.Table, User.Table];
+  export type AllTablesAndViews = [Character.Table, Task.Table, Todo.Table, User.Table];
 
 
   export type SelectableForTable<T extends Table> = {
+    Character: Character.Selectable;
     Task: Task.Selectable;
     Todo: Todo.Selectable;
     User: User.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
+    Character: Character.JSONSelectable;
     Task: Task.JSONSelectable;
     Todo: Todo.JSONSelectable;
     User: User.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
+    Character: Character.Whereable;
     Task: Task.Whereable;
     Todo: Todo.Whereable;
     User: User.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
+    Character: Character.Insertable;
     Task: Task.Insertable;
     Todo: Todo.Insertable;
     User: User.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
+    Character: Character.Updatable;
     Task: Task.Updatable;
     Todo: Todo.Updatable;
     User: User.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
+    Character: Character.UniqueIndex;
     Task: Task.UniqueIndex;
     Todo: Todo.UniqueIndex;
     User: User.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
+    Character: Character.Column;
     Task: Task.Column;
     Todo: Todo.Column;
     User: User.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
+    Character: Character.SQL;
     Task: Task.SQL;
     Todo: Todo.SQL;
     User: User.SQL;

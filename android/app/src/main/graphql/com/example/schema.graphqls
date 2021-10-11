@@ -17,6 +17,11 @@ type User {
   _type: String!
   username: String!
   createdAt: Date!
+  hitpoints: Int!
+  maxHitpoints: Int!
+  energy: Int!
+  maxEnergy: Int!
+  experience: Int!
 }
 
 scalar Date

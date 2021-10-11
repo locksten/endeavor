@@ -65,7 +65,15 @@ export const mutationRegister = t.field("register", {
 
     try {
       const user = await db
-        .insert("User", { username, password: await hash(password, 10) })
+        .insert("User", {
+          username,
+          password: await hash(password, 10),
+          hitpoints: 10,
+          maxHitpoints: 10,
+          energy: 0,
+          maxEnergy: 10,
+          experience: 0,
+        })
         .run(pool)
       const res: SuccessfulLoginResult = {
         _type: "SuccessfulLoginResult",

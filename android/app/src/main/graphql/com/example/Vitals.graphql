@@ -1,0 +1,13 @@
+query Vitals {
+  me {
+    id
+    user {
+      id
+      hitpoints
+      maxEnergy
+      maxHitpoints
+      energy
+      experience
+    }
+  }
+}

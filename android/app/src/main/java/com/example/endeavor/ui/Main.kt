@@ -10,6 +10,7 @@ import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +29,7 @@ sealed class MainScreenTab(val route: String, val label: String, val icon: Image
     object Character : MainScreenTab("character", "CharacterScreen", Icons.Rounded.Person)
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
 @Composable
@@ -86,26 +88,5 @@ fun BottomNav(
             selected = selected == MainScreenTab.Character.route,
             onClick = { onClick(MainScreenTab.Character.route) },
             icon = { Icon(MainScreenTab.Character.icon, username) })
-    }
-}
-
-@Composable
-fun CRNG() {
-    val num = gqlWatchQuery(RNGQuery())?.rngNum
-
-    Log.i("endeavor", "rng " + num.toString())
-
-    Column {
-        if (num != null) {
-            Text(
-                text = num.toString(),
-                fontWeight = FontWeight.Bold,
-                fontSize = 25.sp
-            )
-        }
-        Button(onClick = {
-        }) {
-            Text("Do Something...")
-        }
     }
 }

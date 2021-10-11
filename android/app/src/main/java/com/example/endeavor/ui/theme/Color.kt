@@ -18,6 +18,22 @@ class MyColors(isDarkTheme: Boolean) {
 
     val danger = if (isDarkTheme) MyRawColors.red900 else MyRawColors.red900
     val onDanger = if (isDarkTheme) MyRawColors.red300 else MyRawColors.red300
+
+    val hitpoints = if (isDarkTheme) MyRawColors.red700 else MyRawColors.red400
+    val faintHitpoints =
+        if (isDarkTheme) MyRawColors.red500.copy(alpha = 0.1f) else MyRawColors.red500.copy(alpha = 0.1f)
+
+    val energy = if (isDarkTheme) MyRawColors.yellow700 else MyRawColors.yellow400
+    val faintEnergy =
+        if (isDarkTheme) MyRawColors.yellow500.copy(alpha = 0.1f) else MyRawColors.yellow500.copy(
+            alpha = 0.1f
+        )
+
+    val experience = if (isDarkTheme) MyRawColors.purple700 else MyRawColors.purple400
+    val faintExperience =
+        if (isDarkTheme) MyRawColors.purple500.copy(alpha = 0.1f) else MyRawColors.purple500.copy(
+            alpha = 0.1f
+        )
 }
 
 @Suppress("unused")
