@@ -24,6 +24,6 @@ private fun Character() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        Vitals()
+        CVitals()
     }
 }

@@ -113,16 +113,27 @@ export const mutationCompleteTask = t.field("completeTask", {
   },
 })
 
+export const updateTaskInput = t.inputObjectType({
+  name: "UpdateTaskInput",
+  fields: () => ({
+    id: { type: t.NonNullInput(t.ID) },
+    title: { type: t.String },
+    difficulty: { type: t.Int },
+  }),
+})
+
 export const mutationUpdateTask = t.field("updateTask", {
   type: TaskType,
   args: {
-    id: t.arg(t.NonNullInput(t.ID)),
-    title: t.arg(t.NonNullInput(t.String)),
+    updateTaskInput: t.arg(t.NonNullInput(updateTaskInput)),
   },
-  resolve: async (_, { id, title }, { pool, auth }) => {
+  resolve: async (_, { updateTaskInput: { id, ...patch } }, { pool, auth }) => {
     return (
       await db
-        .update("Task", { title }, { id: Number(id), userId: auth.id })
+        .update("Task", patch as Partial<Task>, {
+          id: Number(id),
+          userId: auth.id,
+        })
         .run(pool)
     )?.at(0)
   },

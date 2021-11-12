@@ -26,7 +26,7 @@ import com.example.endeavor.ui.theme.Theme
 import kotlinx.coroutines.launch
 
 @Composable
-fun AuthScreen() {
+fun CAuthScreen() {
     val scope = rememberCoroutineScope()
     val passwordFocusRequester = remember { FocusRequester() }
     val gql = LocalGQLClient.current

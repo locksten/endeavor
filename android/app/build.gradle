@@ -61,7 +61,6 @@ android {
 
 
 dependencies {
-
     implementation 'com.apollographql.apollo:apollo-runtime:2.5.9'
     implementation("com.apollographql.apollo:apollo-coroutines-support:2.5.9")
     implementation 'com.apollographql.apollo:apollo-normalized-cache:2.5.9'

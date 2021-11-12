@@ -34,6 +34,10 @@ class MyColors(isDarkTheme: Boolean) {
         if (isDarkTheme) MyRawColors.purple500.copy(alpha = 0.1f) else MyRawColors.purple500.copy(
             alpha = 0.1f
         )
+
+    val difficultyButton = if (isDarkTheme) MyRawColors.gray700 else MyRawColors.teal500
+    val difficultyButtonActive = if (isDarkTheme) MyRawColors.gray500 else MyRawColors.teal700
+    val onDifficultyButton = if (isDarkTheme) MyRawColors.gray50 else MyRawColors.gray50
 }
 
 @Suppress("unused")

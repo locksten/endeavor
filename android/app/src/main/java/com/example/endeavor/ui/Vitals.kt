@@ -21,7 +21,7 @@ import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.Theme
 
 @Composable
-fun Vitals() {
+fun CVitals() {
     val vitals = gqlWatchQuery(VitalsQuery())?.me?.user
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,

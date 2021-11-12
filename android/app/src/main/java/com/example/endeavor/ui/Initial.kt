@@ -17,6 +17,6 @@ fun InitialScreen() {
     when (isLoggedIn) {
         null -> Text("Loading...")
         true -> MainScreen()
-        else -> AuthScreen()
+        else -> CAuthScreen()
     }
 }

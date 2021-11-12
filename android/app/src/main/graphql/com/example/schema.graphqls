@@ -30,6 +30,7 @@ type Task {
   id: ID!
   _type: String!
   isCompleted: Boolean!
+  completionDate: Date
   title: String!
   difficulty: Int!
   createdAt: Date!
@@ -41,7 +42,7 @@ type Mutation {
   createTask(title: String!, difficulty: Int!): Task
   deleteTask(id: ID!): ID
   completeTask(id: ID!): Task
-  updateTask(id: ID!, title: String!): Task
+  updateTask(updateTaskInput: UpdateTaskInput!): Task
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult
@@ -67,6 +68,12 @@ union LoginResult = SuccessfulLoginResult | FailedLoginResult
 type FailedLoginResult {
   _type: String!
   reason: String!
+}
+
+input UpdateTaskInput {
+  id: ID!
+  title: String
+  difficulty: Int
 }
 
 schema {

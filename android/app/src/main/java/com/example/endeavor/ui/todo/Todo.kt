@@ -1,11 +1,5 @@
-package com.example.endeavor.ui
+package com.example.endeavor.ui.todo
 
-import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -13,10 +7,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import com.example.endeavor.ui.todo.task.CCreateTaskModal
+import com.example.endeavor.ui.todo.task.CTaskList
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 
 sealed class TodoTab(

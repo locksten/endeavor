@@ -1,6 +1,5 @@
 package com.example.endeavor.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,15 +12,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.endeavor.LocalAuth
-import com.example.endeavor.RNGQuery
-import com.example.endeavor.gqlWatchQuery
+import com.example.endeavor.ui.todo.TodosScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 sealed class MainScreenTab(val route: String, val label: String, val icon: ImageVector) {

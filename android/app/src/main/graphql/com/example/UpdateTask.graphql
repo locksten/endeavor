@@ -1,5 +1,5 @@
-mutation UpdateTaskMutation($updateTaskId: ID!, $title: String!) {
-  updateTask(id: $updateTaskId, title: $title) {
+mutation UpdateTask($updateTaskInput: UpdateTaskInput!) {
+  updateTask(updateTaskInput: $updateTaskInput) {
     id
     isCompleted
     title
