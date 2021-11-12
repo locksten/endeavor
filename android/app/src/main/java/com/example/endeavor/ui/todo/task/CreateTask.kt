@@ -68,7 +68,7 @@ suspend fun createTask(gql: ApolloClient, title: String, difficulty: Int) {
                 createTaskTitle = title,
                 createTaskDifficulty = difficulty
             )
-        ).await().data?.createTask
+        ).await()
         gql.query(TasksQuery()).await()
     } catch (e: ApolloNetworkException) {
     }

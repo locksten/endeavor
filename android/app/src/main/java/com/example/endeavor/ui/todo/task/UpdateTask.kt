@@ -60,6 +60,7 @@ fun CUpdateTaskModal(task: TasksQuery.Task, onDismissRequest: () -> Unit) {
                 ) {
                     Text("Save")
                 }
+                DeleteTaskButton(task, onDismissRequest)
             }
         }
     }
@@ -75,7 +76,7 @@ suspend fun updateTask(gql: ApolloClient, id: String, title: String?, difficulty
                     difficulty = Input.optional(difficulty)
                 )
             )
-        ).await().data?.updateTask
+        ).await()
         gql.query(TasksQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
