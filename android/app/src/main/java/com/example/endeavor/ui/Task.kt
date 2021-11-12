@@ -1,13 +1,18 @@
 package com.example.endeavor.ui
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.TextFieldDefaults.textFieldColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -15,7 +20,10 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,8 +36,10 @@ import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.*
 import com.example.endeavor.ui.theme.EndeavorTheme
 import com.example.endeavor.ui.theme.Theme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@ExperimentalComposeUiApi
 @Preview(
     name = "Light Mode",
     showBackground = true,
@@ -83,33 +93,23 @@ val testTasks = listOf(
     ),
 )
 
+@ExperimentalComposeUiApi
 @Composable
 fun Task(task: TasksQuery.Task) {
-    val scope = rememberCoroutineScope()
-    val gql = LocalGQLClient.current
+    var isEditDialogOpen by remember { mutableStateOf(false) }
     Row(
         Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(onLongPress = {
+                    isEditDialogOpen = true
+                })
+            },
         Arrangement.Start,
     ) {
-        Checkbox(
-            checked = task.isCompleted,
-            onCheckedChange = {
-                if (it) {
-                    scope.launch {
-                        completeTask(gql, task.id)
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxHeight(),
-            colors = CheckboxDefaults.colors(
-                uncheckedColor = Theme.colors.onBackground,
-                checkmarkColor = Theme.colors.onBackground,
-                checkedColor = Color.Transparent
-            )
-        )
+        TaskCheckbox(task)
         Spacer(Modifier.width(16.dp))
         Text(
             text = task.title,
@@ -123,23 +123,46 @@ fun Task(task: TasksQuery.Task) {
                 if (task.isCompleted) 0.5f else 1f,
             )
         )
+        if (isEditDialogOpen) CEditTaskModal(task) { isEditDialogOpen = false }
     }
 }
 
+@Composable
+private fun TaskCheckbox(task: TasksQuery.Task) {
+    val scope = rememberCoroutineScope()
+    val gql = LocalGQLClient.current
+    Checkbox(
+        checked = task.isCompleted,
+        onCheckedChange = {
+            if (it) {
+                scope.launch {
+                    completeTask(gql, task.id)
+                }
+            }
+        },
+        modifier = Modifier.fillMaxHeight(),
+        colors = CheckboxDefaults.colors(
+            uncheckedColor = Theme.colors.onBackground,
+            checkmarkColor = Theme.colors.onBackground,
+            checkedColor = Color.Transparent
+        )
+    )
+}
+
+@ExperimentalComposeUiApi
 @Composable
 fun TaskList(tasks: List<TasksQuery.Task>) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        itemsIndexed(tasks.sortedByDescending { it.id }) { index, task ->
-            if (index == 0) Spacer(Modifier.height(12.dp))
-            Task(task)
-            if (index == tasks.size - 1) Spacer(Modifier.height(12.dp))
-        }
+        item { Spacer(Modifier.height(0.dp)) }
+        items(tasks.sortedByDescending { it.id }) { Task(it) }
+        item { Spacer(Modifier.height(0.dp)) }
     }
 }
 
+@ExperimentalComposeUiApi
 @Composable
 fun CTaskList() {
     gqlWatchQuery(TasksQuery())?.me?.tasks?.let { TaskList(it) }
@@ -160,7 +183,7 @@ suspend fun completeTask(gql: ApolloClient, id: String) {
 fun CCreateTaskModal(onDismissRequest: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
-    var title by remember { mutableStateOf("") }
+    var title by remember { mutableStateOf(TextFieldValue("")) }
     val titleFocusRequester = remember { FocusRequester() }
     LaunchedEffect(true) {
         titleFocusRequester.requestFocus()
@@ -180,7 +203,7 @@ fun CCreateTaskModal(onDismissRequest: () -> Unit) {
                 Button(
                     onClick = {
                         scope.launch {
-                            createTask(gql, title, 3)
+                            createTask(gql, title.text, 3)
                             onDismissRequest()
                         }
                     },
@@ -188,7 +211,6 @@ fun CCreateTaskModal(onDismissRequest: () -> Unit) {
                 ) {
                     Text("Add")
                 }
-
             }
         }
     }
@@ -196,12 +218,12 @@ fun CCreateTaskModal(onDismissRequest: () -> Unit) {
 
 @Composable
 private fun TaskTitleTexField(
-    title: String,
+    value: TextFieldValue,
     focusRequester: FocusRequester,
-    onChange: (String) -> Unit
+    onChange: (TextFieldValue) -> Unit
 ) {
     TextField(
-        value = title,
+        value = value,
         onValueChange = onChange,
         label = { Text("Title") },
         modifier = Modifier
@@ -222,6 +244,64 @@ suspend fun createTask(gql: ApolloClient, title: String, difficulty: Int) {
                 createTaskDifficulty = difficulty
             )
         ).await().data?.createTask
+        gql.query(TasksQuery()).await()
+    } catch (e: ApolloNetworkException) {
+    }
+}
+
+@ExperimentalComposeUiApi
+@Composable
+fun CEditTaskModal(task: TasksQuery.Task, onDismissRequest: () -> Unit) {
+    val scope = rememberCoroutineScope()
+    val gql = LocalGQLClient.current
+    var title by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = task.title,
+                selection = TextRange(task.title.length, task.title.length)
+            )
+        )
+    }
+    val titleFocusRequester = remember { FocusRequester() }
+    LaunchedEffect(true) {
+        titleFocusRequester.requestFocus()
+    }
+
+    Dialog(onDismissRequest) {
+        Box(
+            modifier = Modifier
+                .background(Theme.colors.background)
+                .fillMaxWidth()
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(16.dp)
+            ) {
+                TaskTitleTexField(title, titleFocusRequester) { title = it }
+                Button(
+                    onClick = {
+                        scope.launch {
+                            updateTask(gql, task.id, title.text)
+                            onDismissRequest()
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Save")
+                }
+            }
+        }
+    }
+}
+
+suspend fun updateTask(gql: ApolloClient, id: String, title: String) {
+    try {
+        gql.mutate(
+            UpdateTaskMutation(
+                updateTaskId = id,
+                title = title,
+            )
+        ).await().data?.updateTask
         gql.query(TasksQuery()).await()
     } catch (e: ApolloNetworkException) {
     }

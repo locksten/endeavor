@@ -1,8 +1,3 @@
-import com.apollographql.apollo.gradle.internal.ApolloDownloadSchemaTask
-
-//buildscript {
-//}
-
 plugins {
     id("com.apollographql.apollo").version("2.5.9")
     id 'com.android.application'
@@ -14,19 +9,12 @@ apollo {
     generateKotlinModels.set(true)
     service("endeavor") {
         introspection {
-            // gradle downloadEndeavorApolloSchema
             packageName.set("com.example.endeavor")
             endpointUrl = "http://localhost:4000/graphql"
             schemaFile.set(file("src/main/graphql/com/example/schema.graphqls"))
         }
     }
 }
-
-tasks.register("downloadGraphQLSchema", ApolloDownloadSchemaTask) {
-    endpoint = "http://localhost:4000/graphql"
-    schemaRelativeToProject = "src/main/graphql/com/example/schema.json"
-}
-
 
 android {
     defaultConfig {

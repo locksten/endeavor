@@ -1,5 +1,11 @@
 package com.example.endeavor.ui
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -7,8 +13,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 
 sealed class TodoTab(
@@ -18,8 +26,10 @@ sealed class TodoTab(
 ) {
     @ExperimentalComposeUiApi
     object Habits : TodoTab("Habits", { CCreateTaskModal(it) }, { Text("Habits") })
+
     @ExperimentalComposeUiApi
     object Dailies : TodoTab("Dailies", { CCreateTaskModal(it) }, { Text("Dailies") })
+
     @ExperimentalComposeUiApi
     object Tasks : TodoTab("Tasks", { CCreateTaskModal(it) }, { CTaskList() })
 }
@@ -60,7 +70,7 @@ fun Tabs(pagerState: PagerState) {
 @ExperimentalMaterialApi
 @Composable
 fun TodosScreen() {
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState(2)
     Scaffold(floatingActionButton = { FloatingAddButton(pagerState.currentPage) }) {
         Column {
             Tabs(pagerState)

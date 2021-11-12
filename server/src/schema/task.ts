@@ -91,15 +91,20 @@ export const mutationCompleteTask = t.field("completeTask", {
   },
   resolve: async (_, { id }, { pool, auth }) => {
     try {
-      const [task] = await db.sql<QTodo.SQL | QTask.SQL, [Todo & Task]>`
-    UPDATE ${"Task"} AS atask
-    SET ${"isCompleted"} = TRUE
-    FROM ${"Todo"} AS atodo
-    WHERE atask.${"id"} = atodo.${"id"}
-    AND atodo.${"id"} = ${db.param(id)} 
-    AND atodo.${"userId"} = ${db.param(auth.id)}
-    RETURNING atask.*, atodo.*
+      const task = (
+        await db.sql<QTodo.SQL | QTask.SQL, (Todo & Task)[]>`
+        UPDATE ${"Task"} AS atask
+        SET ${"isCompleted"} = TRUE
+        FROM ${"Todo"} AS atodo
+        WHERE atask.${"id"} = atodo.${"id"}
+        AND atask.${"isCompleted"} = FALSE
+        AND atodo.${"id"} = ${db.param(id)} 
+        AND atodo.${"userId"} = ${db.param(auth.id)}
+        RETURNING atask.*, atodo.*
     `.run(pool)
+      )?.at(0)
+
+      if (task === undefined) return null
 
       await db
         .update(
@@ -123,5 +128,26 @@ export const mutationCompleteTask = t.field("completeTask", {
     } catch (e) {
       return null
     }
+  },
+})
+
+export const mutationUpdateTask = t.field("updateTask", {
+  type: TaskType,
+  args: {
+    id: t.arg(t.NonNullInput(t.ID)),
+    title: t.arg(t.NonNullInput(t.String)),
+  },
+  resolve: async (_, { id, title }, { pool, auth }) => {
+    return (
+      await db.sql<QTodo.SQL | QTask.SQL, (Todo & Task)[]>`
+        UPDATE ${"Todo"} AS atask
+        SET ${"title"} = ${db.param(title)}
+        FROM ${"Todo"} AS atodo
+        WHERE atask.${"id"} = atodo.${"id"}
+        AND atodo.${"id"} = ${db.param(id)} 
+        AND atodo.${"userId"} = ${db.param(auth.id)}
+        RETURNING atask.*, atodo.*
+    `.run(pool)
+    )?.at(0)
   },
 })

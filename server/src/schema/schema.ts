@@ -6,6 +6,7 @@ import {
   mutationCompleteTask,
   mutationCreateTask,
   mutationDeleteTask,
+  mutationUpdateTask,
 } from "schema/task"
 import { t } from "schema/typesFactory"
 import { queryUserById, queryUserByName, queryUserSearch } from "schema/user"
@@ -28,6 +29,7 @@ const mutation = t.mutationType({
     mutationCreateTask,
     mutationDeleteTask,
     mutationCompleteTask,
+    mutationUpdateTask,
   ],
 })
 

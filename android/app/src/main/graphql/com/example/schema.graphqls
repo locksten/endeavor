@@ -41,6 +41,7 @@ type Mutation {
   createTask(title: String!, difficulty: Int!): Task
   deleteTask(id: ID!): ID
   completeTask(id: ID!): Task
+  updateTask(id: ID!, title: String!): Task
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult
