@@ -1,7 +1,5 @@
 import { db } from "database"
-import { NoFragmentCyclesRule } from "graphql"
-import { QTask, Task, TaskType } from "schema/task"
-import { QTodo } from "schema/todo"
+import { TaskType } from "schema/task"
 import { idResolver, t } from "schema/typesFactory"
 import { UserType } from "schema/user"
 
@@ -20,12 +18,7 @@ export const MeType = t.objectType<Me>({
     t.field("tasks", {
       type: t.NonNull(t.List(t.NonNull(TaskType))),
       resolve: async (me, _args, { pool }) => {
-        return await db.sql<QTask.SQL | QTodo.SQL, Task[]>`
-        SELECT ${"Todo"}.*, ${"Task"}.*
-        FROM ${"Task"}
-        JOIN ${"Todo"} ON ${"Todo"}.${"id"} = ${"Task"}.${"id"}
-        WHERE ${{ userId: me.id }}
-        `.run(pool)
+        return await db.select("Task", { userId: me.id }).run(pool)
       },
     }),
   ],

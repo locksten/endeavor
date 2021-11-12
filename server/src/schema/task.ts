@@ -2,25 +2,32 @@ import { AppContext } from "context"
 import { db } from "database"
 import { ObjectType } from "gqtx/dist/types"
 import { DateType } from "schema/date"
-import { QTodo, Todo } from "schema/todo"
 import { idResolver, t, typeResolver } from "schema/typesFactory"
 import { Task as QTask } from "zapatos/schema"
 
 export { Task as QTask } from "zapatos/schema"
 export type Task = QTask.JSONSelectable & { _type?: "Task" }
 
-export const TaskType: ObjectType<AppContext, (Task & Todo) | null> =
-  t.objectType<Task & Todo>({
-    name: "Task",
-    fields: () => [
-      idResolver,
-      typeResolver("Task"),
-      t.defaultField("isCompleted", t.NonNull(t.Boolean)),
-      t.defaultField("title", t.NonNull(t.String)),
-      t.defaultField("difficulty", t.NonNull(t.Int)),
-      t.defaultField("createdAt", t.NonNull(DateType)),
-    ],
-  })
+export const TaskType: ObjectType<AppContext, Task> = t.objectType<Task>({
+  name: "Task",
+  fields: () => [
+    idResolver,
+    typeResolver("Task"),
+    t.field("isCompleted", {
+      type: t.NonNull(t.Boolean),
+      resolve: async ({ id }, _args, { pool }) => {
+        return (
+          (await db.selectExactlyOne("Task", { id }).run(pool))
+            ?.completionDate !== null
+        )
+      },
+    }),
+    t.defaultField("completionDate", DateType),
+    t.defaultField("title", t.NonNull(t.String)),
+    t.defaultField("difficulty", t.NonNull(t.Int)),
+    t.defaultField("createdAt", t.NonNull(DateType)),
+  ],
+})
 
 export const mutationCreateTask = t.field("createTask", {
   type: TaskType,
@@ -29,38 +36,16 @@ export const mutationCreateTask = t.field("createTask", {
     difficulty: t.arg(t.NonNullInput(t.Int)),
   },
   resolve: async (_, { title, difficulty }, { pool, auth }) => {
-    if (!auth.id) return null
+    if (!auth.id) return undefined
 
-    const todoArgs: Omit<Todo, "id" | "createdAt"> = {
+    const task: Omit<Task, "id" | "createdAt" | "completionDate"> = {
       userId: auth.id,
       title,
       difficulty,
     }
-    const taskArgs: Omit<Task, "id"> = { isCompleted: false }
 
     try {
-      const [{ id }] = await db.sql<QTask.SQL | QTodo.SQL, [{ id: number }]>`
-        WITH newTodo as (
-          INSERT INTO ${"Todo"} (${db.cols(todoArgs)})
-          VALUES (${db.vals(todoArgs)})
-          RETURNING *
-        )
-        INSERT INTO ${"Task"} (${"id"}, ${db.cols(taskArgs)})
-        VALUES (
-          (SELECT ${"id"} FROM newTodo),
-          ${db.vals(taskArgs)}
-        )
-        RETURNING ${"id"}
-        `.run(pool)
-
-      const [task] = await db.sql<QTask.SQL | QTodo.SQL, Task[]>`
-        SELECT ${"Todo"}.*, ${"Task"}.*
-        FROM ${"Todo"}
-        JOIN ${"Task"} ON ${"Todo"}.${"id"} = ${"Task"}.${"id"}
-        WHERE ${"Task"}.${"id"} = ${db.param(id)}
-        `.run(pool)
-
-      return task
+      return await db.insert("Task", task).run(pool)
     } catch (e) {
       console.log(e)
     }
@@ -75,12 +60,12 @@ export const mutationDeleteTask = t.field("deleteTask", {
   resolve: async (_, { id }, { pool, auth }) => {
     const deletedIds = await db
       .deletes(
-        "Todo",
+        "Task",
         { userId: auth.id, id: Number(id) },
         { returning: ["id"] },
       )
       .run(pool)
-    return deletedIds.length ? String(deletedIds[0].id) : null
+    return deletedIds.length ? String(deletedIds[0].id) : undefined
   },
 })
 
@@ -90,44 +75,41 @@ export const mutationCompleteTask = t.field("completeTask", {
     id: t.arg(t.NonNullInput(t.ID)),
   },
   resolve: async (_, { id }, { pool, auth }) => {
-    try {
-      const task = (
-        await db.sql<QTodo.SQL | QTask.SQL, (Todo & Task)[]>`
-        UPDATE ${"Task"} AS atask
-        SET ${"isCompleted"} = TRUE
-        FROM ${"Todo"} AS atodo
-        WHERE atask.${"id"} = atodo.${"id"}
-        AND atask.${"isCompleted"} = FALSE
-        AND atodo.${"id"} = ${db.param(id)} 
-        AND atodo.${"userId"} = ${db.param(auth.id)}
-        RETURNING atask.*, atodo.*
-    `.run(pool)
-      )?.at(0)
-
-      if (task === undefined) return null
-
+    const task = (
       await db
         .update(
-          "User",
+          "Task",
+          { completionDate: new Date() },
           {
-            energy: db.sql`LEAST(${"maxEnergy"}, ${db.self} + ${db.param(
-              task.difficulty,
-            )})`,
-            hitpoints: db.sql`LEAST(${"maxHitpoints"}, ${db.self} + ${db.param(
-              task.difficulty,
-            )})`,
-            experience: db.sql`LEAST(1000, ${db.self} + ${db.param(
-              task.difficulty,
-            )})`,
+            id: Number(id),
+            userId: auth.id,
+            completionDate: db.conditions.isNull,
           },
-          { id: auth.id },
         )
         .run(pool)
+    )?.at(0)
 
-      return task
-    } catch (e) {
-      return null
-    }
+    if (task === undefined) return undefined
+
+    await db
+      .update(
+        "User",
+        {
+          energy: db.sql`LEAST(${"maxEnergy"}, ${db.self} + ${db.param(
+            task.difficulty,
+          )})`,
+          hitpoints: db.sql`LEAST(${"maxHitpoints"}, ${db.self} + ${db.param(
+            task.difficulty,
+          )})`,
+          experience: db.sql`LEAST(1000, ${db.self} + ${db.param(
+            task.difficulty,
+          )})`,
+        },
+        { id: auth.id },
+      )
+      .run(pool)
+
+    return task
   },
 })
 
@@ -139,15 +121,9 @@ export const mutationUpdateTask = t.field("updateTask", {
   },
   resolve: async (_, { id, title }, { pool, auth }) => {
     return (
-      await db.sql<QTodo.SQL | QTask.SQL, (Todo & Task)[]>`
-        UPDATE ${"Todo"} AS atask
-        SET ${"title"} = ${db.param(title)}
-        FROM ${"Todo"} AS atodo
-        WHERE atask.${"id"} = atodo.${"id"}
-        AND atodo.${"id"} = ${db.param(id)} 
-        AND atodo.${"userId"} = ${db.param(auth.id)}
-        RETURNING atask.*, atodo.*
-    `.run(pool)
+      await db
+        .update("Task", { title }, { id: Number(id), userId: auth.id })
+        .run(pool)
     )?.at(0)
   },
 })
