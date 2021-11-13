@@ -1,5 +1,6 @@
-package com.example.endeavor.ui.todo.daily
+package com.example.endeavor.ui.todo.habit
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -14,10 +15,10 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.DailiesQuery
 import com.example.endeavor.LocalGQLClient
-import com.example.endeavor.UpdateDailyMutation
-import com.example.endeavor.type.UpdateDailyInput
+import com.example.endeavor.HabitsQuery
+import com.example.endeavor.UpdateHabitMutation
+import com.example.endeavor.type.UpdateHabitInput
 import com.example.endeavor.ui.theme.Theme
 import com.example.endeavor.ui.todo.TodoDifficultySelector
 import com.example.endeavor.ui.todo.TodoTitleTextField
@@ -25,10 +26,12 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun CUpdateDailyModal(daily: DailiesQuery.Daily, onDismissRequest: () -> Unit) {
+fun CUpdateHabitModal(habit: HabitsQuery.Habit, onDismissRequest: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
     var difficulty by remember { mutableStateOf<Int?>(null) }
+    var positiveCount by remember { mutableStateOf<Boolean?>(null) }
+    var negativeCount by remember { mutableStateOf<Boolean?>(null) }
     var title by remember { mutableStateOf<String?>(null) }
     val titleFocusRequester = remember { FocusRequester() }
     LaunchedEffect(true) {
@@ -45,15 +48,26 @@ fun CUpdateDailyModal(daily: DailiesQuery.Daily, onDismissRequest: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(16.dp)
             ) {
-                TodoTitleTextField(title ?: daily.title, titleFocusRequester) { title = it }
+                TodoTitleTextField(title ?: habit.title, titleFocusRequester) { title = it }
                 TodoDifficultySelector(
-                    value = difficulty ?: daily.difficulty,
+                    value = difficulty ?: habit.difficulty,
                     onChange = { difficulty = it })
-                DeleteDailyButton(daily, onDismissRequest)
+                HabitTypeSelector(
+                    positiveValue = positiveCount ?: (habit.positiveCount != null),
+                    negativeValue = negativeCount ?: (habit.negativeCount != null),
+                    onChangePositive = { positiveCount = it },
+                    onChangeNegative = { negativeCount = it })
                 Button(
                     onClick = {
                         scope.launch {
-                            updateDaily(gql, daily.id, title, difficulty)
+                            updateHabit(
+                                gql,
+                                habit.id,
+                                title,
+                                difficulty,
+                                positiveCount,
+                                negativeCount,
+                            )
                             onDismissRequest()
                         }
                     },
@@ -61,23 +75,33 @@ fun CUpdateDailyModal(daily: DailiesQuery.Daily, onDismissRequest: () -> Unit) {
                 ) {
                     Text("Save")
                 }
+                DeleteHabitButton(habit, onDismissRequest)
             }
         }
     }
 }
 
-suspend fun updateDaily(gql: ApolloClient, id: String, title: String?, difficulty: Int?) {
+suspend fun updateHabit(
+    gql: ApolloClient,
+    id: String,
+    title: String?,
+    difficulty: Int?,
+    positiveCount: Boolean?,
+    negativeCount: Boolean?
+) {
     try {
         gql.mutate(
-            UpdateDailyMutation(
-                UpdateDailyInput(
+            UpdateHabitMutation(
+                UpdateHabitInput(
                     id,
                     title = Input.optional(title),
-                    difficulty = Input.optional(difficulty)
+                    difficulty = Input.optional(difficulty),
+                    positiveCount = Input.optional(positiveCount),
+                    negativeCount = Input.optional(negativeCount),
                 )
             )
         ).await()
-        gql.query(DailiesQuery()).await()
+        gql.query(HabitsQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
 }

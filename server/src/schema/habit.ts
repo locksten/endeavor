@@ -42,7 +42,7 @@ export const mutationCreateHabit = t.field({
     { createHabitInput: { title, difficulty, positiveCount, negativeCount } },
     { pool, auth },
   ) => {
-    if (!auth.id) return undefined
+    if (!auth.id) return
 
     const habit: QHabit.Insertable = {
       title,
@@ -101,7 +101,7 @@ export const mutationDoNegativeHabit = t.field({
         .run(pool)
     ).at(0)
 
-    if (habit === undefined) return undefined
+    if (habit === undefined) return
 
     await givePenaltyForTodo(ctx, habit.difficulty)
 
@@ -132,7 +132,7 @@ export const mutationDoPositiveHabit = t.field({
         .run(pool)
     ).at(0)
 
-    if (habit === undefined) return undefined
+    if (habit === undefined) return
 
     await giveRewardForTodo(ctx, habit.difficulty)
 
@@ -177,6 +177,7 @@ export const mutationUpdateHabit = t.field({
         : { positiveCount: negativeCount ? 0 : null }),
     }
     if (isObjectEmpty(patch)) return
+
     return (
       await db
         .update("Habit", patch, {

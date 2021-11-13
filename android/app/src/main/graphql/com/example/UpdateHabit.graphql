@@ -1,0 +1,10 @@
+mutation UpdateHabit($updateHabitInput: UpdateHabitInput!) {
+    updateHabit(updateHabitInput: $updateHabitInput) {
+        id
+        difficulty
+        title
+        positiveCount
+        negativeCount
+        createdAt
+    }
+}

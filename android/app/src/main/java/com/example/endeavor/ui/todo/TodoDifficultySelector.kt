@@ -33,16 +33,13 @@ fun TodoDifficultySelector(
     @Composable
     fun RowScope.DifficultySelectorButton(
         buttonValue: Int,
-        Content: @Composable () -> Unit = { DifficultySelectorIcon() },
-        shape: Shape
+        text: String? = null
     ) {
         Button(
             onClick = { onChange(buttonValue) },
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 1.dp),
-            contentPadding = PaddingValues(horizontal = 1.dp),
-            shape = shape,
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(horizontal = 2.dp),
+            shape = RoundedCornerShape(0.dp),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = if (value == buttonValue) {
                     Theme.colors.difficultyButtonActive
@@ -52,21 +49,22 @@ fun TodoDifficultySelector(
                 contentColor = Theme.colors.onDifficultyButton
             )
         ) {
-            Content()
+            if (text == null) {
+                DifficultySelectorIcon()
+            } else {
+                Text(text, maxLines = 1)
+            }
         }
     }
 
-    val leftShape = RoundedCornerShape(4.dp, 0.dp, 0.dp, 4.dp)
-    val middleShape = RoundedCornerShape(0.dp)
-    val rightShape = RoundedCornerShape(0.dp, 4.dp, 4.dp, 0.dp)
-
     Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(1.dp),
+        modifier = Modifier.clip(RoundedCornerShape(4.dp))
     ) {
-        DifficultySelectorButton(buttonValue = 10, Content = { Text("Easy") }, shape = leftShape)
-        DifficultySelectorButton(buttonValue = 25, shape = middleShape)
-        DifficultySelectorButton(buttonValue = 50, shape = middleShape)
-        DifficultySelectorButton(buttonValue = 75, shape = middleShape)
-        DifficultySelectorButton(buttonValue = 90, Content = { Text("Hard") }, shape = rightShape)
+        DifficultySelectorButton(buttonValue = 10, text = "Easy")
+        DifficultySelectorButton(buttonValue = 25)
+        DifficultySelectorButton(buttonValue = 50)
+        DifficultySelectorButton(buttonValue = 75)
+        DifficultySelectorButton(buttonValue = 90, text = "Hard")
     }
 }

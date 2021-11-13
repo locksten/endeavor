@@ -45,6 +45,7 @@ fun CCreateTaskModal(onDismissRequest: () -> Unit) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 TodoTitleTextField(title, titleFocusRequester) { title = it }
+                TodoDifficultySelector(value = difficulty, onChange = { difficulty = it })
                 Button(
                     onClick = {
                         scope.launch {
@@ -56,7 +57,6 @@ fun CCreateTaskModal(onDismissRequest: () -> Unit) {
                 ) {
                     Text("Add")
                 }
-                TodoDifficultySelector(value = difficulty, onChange = { difficulty = it })
             }
         }
     }

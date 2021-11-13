@@ -48,7 +48,7 @@ export const mutationCreateTask = t.field({
     createTaskInput: t.arg(t.NonNullInput(createTaskInput)),
   },
   resolve: async (_, { createTaskInput: input }, { pool, auth }) => {
-    if (!auth.id) return undefined
+    if (!auth.id) return
 
     const task: Omit<Task, "id" | "createdAt" | "completionDate"> = {
       userId: auth.id,
@@ -104,7 +104,7 @@ export const mutationCompleteTask = t.field({
         .run(pool)
     ).at(0)
 
-    if (task === undefined) return undefined
+    if (task === undefined) return
 
     await giveRewardForTodo(ctx, task.difficulty)
 
@@ -138,9 +138,8 @@ export const mutationUpdateTask = t.field({
         ? undefined
         : { difficulty }),
     }
-
-    console.log(difficulty, patch)
     if (isObjectEmpty(patch)) return
+
     return (
       await db
         .update("Task", patch, {

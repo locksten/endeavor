@@ -1,0 +1,12 @@
+query Habits {
+    me {
+        habits {
+            id
+            title
+            difficulty
+            positiveCount
+            negativeCount
+            createdAt
+        }
+    }
+}

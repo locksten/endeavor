@@ -9,6 +9,7 @@ type Query {
 type Me {
   id: ID!
   user: User!
+  habits: [Habit!]!
   dailies: [Daily!]!
   tasks: [Task!]!
 }
@@ -26,6 +27,16 @@ type User {
 }
 
 scalar Date
+
+type Habit {
+  id: ID!
+  _type: String!
+  title: String!
+  difficulty: Int!
+  positiveCount: Int
+  negativeCount: Int
+  createdAt: Date!
+}
 
 type Daily {
   id: ID!
@@ -58,6 +69,11 @@ type Mutation {
   deleteDaily(id: ID!): ID
   completeDaily(id: ID!): Daily
   updateDaily(updateDailyInput: UpdateDailyInput!): Daily
+  createHabit(createHabitInput: CreateHabitInput!): Habit
+  deleteHabit(id: ID!): ID
+  updateHabit(updateHabitInput: UpdateHabitInput!): Habit
+  doPositiveHabit(id: ID!): Habit
+  doNegativeHabit(id: ID!): Habit
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult
@@ -105,6 +121,21 @@ input UpdateDailyInput {
   id: ID!
   title: String
   difficulty: Int
+}
+
+input CreateHabitInput {
+  title: String!
+  difficulty: Int!
+  positiveCount: Boolean!
+  negativeCount: Boolean!
+}
+
+input UpdateHabitInput {
+  id: ID!
+  title: String
+  difficulty: Int
+  positiveCount: Boolean
+  negativeCount: Boolean
 }
 
 schema {

@@ -36,7 +36,6 @@ fun Daily(daily: DailiesQuery.Daily) {
         Modifier
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
-            .padding(horizontal = 8.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(
                 Theme.colors.graySurface.copy(

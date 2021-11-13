@@ -10,6 +10,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import com.example.endeavor.ui.todo.daily.CCreateDailyModal
 import com.example.endeavor.ui.todo.daily.CDailyList
+import com.example.endeavor.ui.todo.habit.CCreateHabitModal
+import com.example.endeavor.ui.todo.habit.CHabitList
 import com.example.endeavor.ui.todo.task.CCreateTaskModal
 import com.example.endeavor.ui.todo.task.CTaskList
 import com.google.accompanist.pager.*
@@ -21,8 +23,9 @@ sealed class TodoTab(
     val creationModal: @Composable (onDismissRequest: () -> Unit) -> Unit,
     val composable: @Composable () -> Unit
 ) {
+    @ExperimentalFoundationApi
     @ExperimentalComposeUiApi
-    object Habits : TodoTab("Habits", { CCreateTaskModal(it) }, { Text("Habits") })
+    object Habits : TodoTab("Habits", { CCreateHabitModal(it) }, { CHabitList() })
 
     @ExperimentalFoundationApi
     @ExperimentalMaterialApi
@@ -74,7 +77,7 @@ fun Tabs(pagerState: PagerState) {
 @ExperimentalMaterialApi
 @Composable
 fun TodosScreen() {
-    val pagerState = rememberPagerState(2)
+    val pagerState = rememberPagerState(0)
     Scaffold(floatingActionButton = { FloatingAddButton(pagerState.currentPage) }) {
         Column {
             Tabs(pagerState)

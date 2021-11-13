@@ -7,12 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.coroutines.await
-import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.DeleteTaskMutation
-import com.example.endeavor.LocalGQLClient
-import com.example.endeavor.TasksQuery
 import com.example.endeavor.ui.theme.Theme
 import kotlinx.coroutines.launch
 
@@ -20,20 +14,20 @@ import kotlinx.coroutines.launch
 @Composable
 fun DeleteWithConfirmationButton(onDelete: () -> Unit) {
     val scope = rememberCoroutineScope()
-    var tapped by remember { mutableStateOf(false) }
+    var isTapped by remember { mutableStateOf(false) }
 
     Button(
         onClick = {
             scope.launch {
-                if (tapped) {
+                if (isTapped) {
                     onDelete()
                 } else {
-                    tapped = true
+                    isTapped = true
                 }
             }
         },
         modifier = Modifier.fillMaxWidth(),
-        colors = if (tapped) ButtonDefaults.buttonColors(
+        colors = if (isTapped) ButtonDefaults.buttonColors(
             backgroundColor = Theme.colors.danger,
             contentColor = Theme.colors.onDanger
         ) else {
@@ -41,7 +35,7 @@ fun DeleteWithConfirmationButton(onDelete: () -> Unit) {
         }
     ) {
         Text(
-            if (tapped) {
+            if (isTapped) {
                 "Really Delete"
             } else {
                 "Delete"

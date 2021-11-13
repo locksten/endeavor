@@ -34,8 +34,8 @@ fun Task(task: TasksQuery.Task) {
     Row(
         Modifier
             .fillMaxWidth()
+
             .height(IntrinsicSize.Min)
-            .padding(horizontal = 8.dp)
             .clip(RoundedCornerShape(8.dp))
             .combinedClickable(
                 onClick = {},

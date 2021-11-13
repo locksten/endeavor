@@ -51,7 +51,7 @@ export const mutationCreateDaily = t.field({
     createDailyInput: t.arg(t.NonNullInput(createDailyInput)),
   },
   resolve: async (_, { createDailyInput: input }, { pool, auth }) => {
-    if (!auth.id) return undefined
+    if (!auth.id) return
 
     const daily: Omit<Daily, "id" | "createdAt" | "lastCompletionDate"> = {
       userId: auth.id,
@@ -108,7 +108,7 @@ export const mutationCompleteDaily = t.field({
         .run(pool)
     ).at(0)
 
-    if (daily === undefined) return undefined
+    if (daily === undefined) return
 
     await giveRewardForTodo(ctx, daily.difficulty)
 
@@ -143,6 +143,7 @@ export const mutationUpdateDaily = t.field({
         : { difficulty }),
     }
     if (isObjectEmpty(patch)) return
+
     return (
       await db
         .update("Daily", patch, {

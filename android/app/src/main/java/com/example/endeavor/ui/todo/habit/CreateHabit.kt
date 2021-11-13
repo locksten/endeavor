@@ -1,4 +1,4 @@
-package com.example.endeavor.ui.todo.daily
+package com.example.endeavor.ui.todo.habit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,9 +13,10 @@ import androidx.compose.ui.window.Dialog
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.*
-import com.example.endeavor.type.CreateDailyInput
-import com.example.endeavor.type.CreateTaskInput
+import com.example.endeavor.CreateHabitMutation
+import com.example.endeavor.LocalGQLClient
+import com.example.endeavor.HabitsQuery
+import com.example.endeavor.type.CreateHabitInput
 import com.example.endeavor.ui.theme.Theme
 import com.example.endeavor.ui.todo.TodoDifficultySelector
 import com.example.endeavor.ui.todo.TodoTitleTextField
@@ -23,11 +24,13 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun CCreateDailyModal(onDismissRequest: () -> Unit) {
+fun CCreateHabitModal(onDismissRequest: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
     var title by remember { mutableStateOf("") }
     var difficulty by remember { mutableStateOf(50) }
+    var positiveCount by remember { mutableStateOf(true) }
+    var negativeCount by remember { mutableStateOf(true) }
     val titleFocusRequester = remember { FocusRequester() }
     LaunchedEffect(true) {
         titleFocusRequester.requestFocus()
@@ -45,10 +48,15 @@ fun CCreateDailyModal(onDismissRequest: () -> Unit) {
             ) {
                 TodoTitleTextField(title, titleFocusRequester) { title = it }
                 TodoDifficultySelector(value = difficulty, onChange = { difficulty = it })
+                HabitTypeSelector(
+                    negativeValue = negativeCount,
+                    positiveValue = positiveCount,
+                    onChangePositive = { positiveCount = it },
+                    onChangeNegative = { negativeCount = it })
                 Button(
                     onClick = {
                         scope.launch {
-                            createDaily(gql, title, difficulty)
+                            createHabit(gql, title, difficulty, positiveCount, negativeCount)
                             onDismissRequest()
                         }
                     },
@@ -61,12 +69,18 @@ fun CCreateDailyModal(onDismissRequest: () -> Unit) {
     }
 }
 
-suspend fun createDaily(gql: ApolloClient, title: String, difficulty: Int) {
+suspend fun createHabit(
+    gql: ApolloClient,
+    title: String,
+    difficulty: Int,
+    positiveCount: Boolean,
+    negativeCount: Boolean
+) {
     try {
         gql.mutate(
-            CreateDailyMutation(CreateDailyInput(title, difficulty))
+            CreateHabitMutation(CreateHabitInput(title, difficulty, positiveCount, negativeCount))
         ).await()
-        gql.query(DailiesQuery()).await()
+        gql.query(HabitsQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
 }
