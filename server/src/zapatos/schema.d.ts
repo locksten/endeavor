@@ -258,15 +258,15 @@ declare module 'zapatos/schema' {
       /**
       * **Habit.positiveCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      positiveCount: number;
+      positiveCount: number | null;
       /**
       * **Habit.negativeCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      negativeCount: number;
+      negativeCount: number | null;
       /**
       * **Habit.createdAt**
       * - `timestamptz` in database
@@ -302,15 +302,15 @@ declare module 'zapatos/schema' {
       /**
       * **Habit.positiveCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      positiveCount: number;
+      positiveCount: number | null;
       /**
       * **Habit.negativeCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      negativeCount: number;
+      negativeCount: number | null;
       /**
       * **Habit.createdAt**
       * - `timestamptz` in database
@@ -346,13 +346,13 @@ declare module 'zapatos/schema' {
       /**
       * **Habit.positiveCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
       positiveCount?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **Habit.negativeCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
       negativeCount?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -390,15 +390,15 @@ declare module 'zapatos/schema' {
       /**
       * **Habit.positiveCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      positiveCount?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      positiveCount?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **Habit.negativeCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      negativeCount?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      negativeCount?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **Habit.createdAt**
       * - `timestamptz` in database
@@ -434,15 +434,15 @@ declare module 'zapatos/schema' {
       /**
       * **Habit.positiveCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      positiveCount?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      positiveCount?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **Habit.negativeCount**
       * - `int4` in database
-      * - `NOT NULL`, default: `0`
+      * - Nullable, no default
       */
-      negativeCount?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      negativeCount?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **Habit.createdAt**
       * - `timestamptz` in database

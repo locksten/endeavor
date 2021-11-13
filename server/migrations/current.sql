@@ -17,8 +17,8 @@ create table "Habit" (
     "userId" integer not null references "User" (id) on delete cascade,
     "title" text not null,
     "difficulty" integer not null,
-    "positiveCount" integer not null default 0,
-    "negativeCount" integer not null default 0,
+    "positiveCount" integer,
+    "negativeCount" integer,
     "createdAt" timestamp with time zone not null default now()
 );
 

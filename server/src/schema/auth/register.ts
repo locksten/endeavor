@@ -1,15 +1,13 @@
 import { hash } from "bcrypt"
+import { AppContext } from "context"
 import { db } from "database"
+import { ObjectType } from "gqtx"
 import { makeAuthTokens } from "schema/auth/authToken"
 import {
   SuccessfulLoginResult,
   SuccessfulLoginResultType,
 } from "schema/auth/login"
-import {
-  defaultStringLiteralFieldResolver,
-  t,
-  typeResolver,
-} from "schema/typesFactory"
+import { t, typeResolver } from "schema/typesFactory"
 
 type FailedRegistrationResult = {
   _type: "FailedRegistrationResult"
@@ -19,14 +17,19 @@ type FailedRegistrationResult = {
     | "Password must be at least twelve characters long"
 }
 
-export const FailedRegistrationResultType =
-  t.objectType<FailedRegistrationResult>({
-    name: "FailedRegistrationResult",
-    fields: () => [
-      typeResolver("FailedRegistrationResult"),
-      defaultStringLiteralFieldResolver("reason"),
-    ],
-  })
+export const FailedRegistrationResultType: ObjectType<
+  AppContext,
+  FailedRegistrationResult
+> = t.objectType<FailedRegistrationResult>({
+  name: "FailedRegistrationResult",
+  fields: () => [
+    typeResolver("FailedRegistrationResult"),
+    t.field({
+      name: "reason",
+      type: t.NonNull(t.String),
+    }),
+  ],
+})
 
 export const RegistrationResultType = t.unionType<
   SuccessfulLoginResult | FailedRegistrationResult
@@ -40,7 +43,8 @@ export const RegistrationResultType = t.unionType<
   },
 })
 
-export const mutationRegister = t.field("register", {
+export const mutationRegister = t.field({
+  name: "register",
   type: t.NonNull(RegistrationResultType),
   args: {
     username: t.arg(t.NonNullInput(t.String)),

@@ -2225,10 +2225,10 @@ globby@^11.0.3:
     merge2 "^1.3.0"
     slash "^3.0.0"
 
-gqtx@^0.8.0-beta.0:
-  version "0.8.0-beta.0"
-  resolved "https://registry.yarnpkg.com/gqtx/-/gqtx-0.8.0-beta.0.tgz#5912f762e060863acf4c146cbfd30d54610df511"
-  integrity sha512-F1fH9QRE0wiagGGR/h9+bV3CHMWo8zyX32yzrk6IKBhLoAEuWm+3gWPdyJKD6eTbaFNS1aAHsQg6Sk4zq0adZQ==
+gqtx@0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/gqtx/-/gqtx-0.8.1.tgz#ef1f7b21a687a4005768a1af8c326652302b4be8"
+  integrity sha512-TUoOVSm5Gah1UY75i+degpvO8DOy//28t6d+a51Nh3dCiG080pfjDZQ/ALmAbbLWIP+W0pDCQ5YrZTZ/x7vXDw==
 
 graceful-fs@^4.2.4:
   version "4.2.8"

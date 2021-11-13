@@ -1,6 +1,6 @@
 import { AppContext } from "context"
 import { db, dc } from "database"
-import { ObjectType } from "gqtx/dist/types"
+import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
 import { idResolver, t, typeResolver } from "schema/typesFactory"
 import { User as QUser } from "zapatos/schema"
@@ -14,18 +14,19 @@ export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
     fields: () => [
       idResolver,
       typeResolver("User"),
-      t.defaultField("username", t.NonNull(t.String)),
-      t.defaultField("createdAt", t.NonNull(DateType)),
-      t.defaultField("hitpoints", t.NonNull(t.Int)),
-      t.defaultField("maxHitpoints", t.NonNull(t.Int)),
-      t.defaultField("energy", t.NonNull(t.Int)),
-      t.defaultField("maxEnergy", t.NonNull(t.Int)),
-      t.defaultField("experience", t.NonNull(t.Int)),
+      t.field({ name: "username", type: t.NonNull(t.String) }),
+      t.field({ name: "createdAt", type: t.NonNull(DateType) }),
+      t.field({ name: "hitpoints", type: t.NonNull(t.Int) }),
+      t.field({ name: "maxHitpoints", type: t.NonNull(t.Int) }),
+      t.field({ name: "energy", type: t.NonNull(t.Int) }),
+      t.field({ name: "maxEnergy", type: t.NonNull(t.Int) }),
+      t.field({ name: "experience", type: t.NonNull(t.Int) }),
     ],
   },
 )
 
-export const queryUserById = t.field("userById", {
+export const queryUserById = t.field({
+  name: "userById",
   type: UserType,
   args: {
     id: t.arg(t.NonNullInput(t.ID)),
@@ -35,7 +36,8 @@ export const queryUserById = t.field("userById", {
   },
 })
 
-export const queryUserByName = t.field("userByName", {
+export const queryUserByName = t.field({
+  name: "userByName",
   type: UserType,
   args: {
     username: t.arg(t.NonNullInput(t.String)),
@@ -45,7 +47,8 @@ export const queryUserByName = t.field("userByName", {
   },
 })
 
-export const queryUserSearch = t.field("userSearch", {
+export const queryUserSearch = t.field({
+  name: "userSearch",
   type: t.NonNull(t.List(t.NonNull(UserType))),
   args: {
     searchTerm: t.arg(t.NonNullInput(t.String)),

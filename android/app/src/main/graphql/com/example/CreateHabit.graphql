@@ -1,0 +1,10 @@
+mutation CreateHabit($createHabitInput: CreateHabitInput!) {
+  createHabit(createHabitInput: $createHabitInput) {
+    id
+    title
+    difficulty
+    positiveCount
+    negativeCount
+    createdAt
+  }
+}

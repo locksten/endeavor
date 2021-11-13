@@ -1,0 +1,10 @@
+mutation DoNegativeHabit($doNegativeHabitId: ID!) {
+    doNegativeHabit(id: $doNegativeHabitId) {
+        id
+        title
+        difficulty
+        positiveCount
+        negativeCount
+        createdAt
+    }
+}

@@ -7,6 +7,13 @@ import {
   mutationCompleteDaily,
   mutationUpdateDaily,
 } from "schema/daily"
+import {
+  mutationCreateHabit,
+  mutationDeleteHabit,
+  mutationDoNegativeHabit,
+  mutationDoPositiveHabit,
+  mutationUpdateHabit,
+} from "schema/habit"
 import { queryMe } from "schema/me"
 import {
   mutationCompleteTask,
@@ -17,7 +24,8 @@ import {
 import { t } from "schema/typesFactory"
 import { queryUserById, queryUserByName, queryUserSearch } from "schema/user"
 
-const queryRNG = t.field("RNG", {
+const queryRNG = t.field({
+  name: "RNG",
   type: t.NonNull(t.Int),
   resolve: async () => {
     return Math.floor(Math.random() * 100)
@@ -25,7 +33,13 @@ const queryRNG = t.field("RNG", {
 })
 
 const query = t.queryType({
-  fields: [queryRNG, queryMe, queryUserById, queryUserByName, queryUserSearch],
+  fields: () => [
+    queryRNG,
+    queryMe,
+    queryUserById,
+    queryUserByName,
+    queryUserSearch,
+  ],
 })
 
 const mutation = t.mutationType({
@@ -40,6 +54,11 @@ const mutation = t.mutationType({
     mutationDeleteDaily,
     mutationCompleteDaily,
     mutationUpdateDaily,
+    mutationCreateHabit,
+    mutationDeleteHabit,
+    mutationUpdateHabit,
+    mutationDoPositiveHabit,
+    mutationDoNegativeHabit,
   ],
 })
 
