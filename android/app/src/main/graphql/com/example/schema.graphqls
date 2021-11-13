@@ -9,6 +9,7 @@ type Query {
 type Me {
   id: ID!
   user: User!
+  dailies: [Daily!]!
   tasks: [Task!]!
 }
 
@@ -26,6 +27,16 @@ type User {
 
 scalar Date
 
+type Daily {
+  id: ID!
+  _type: String!
+  isCompleted: Boolean!
+  lastCompletionDate: Date
+  title: String!
+  difficulty: Int!
+  createdAt: Date!
+}
+
 type Task {
   id: ID!
   _type: String!
@@ -39,10 +50,14 @@ type Task {
 type Mutation {
   register(username: String!, password: String!): RegistrationResult!
   login(username: String!, password: String!): LoginResult!
-  createTask(title: String!, difficulty: Int!): Task
+  createTask(createTaskInput: CreateTaskInput!): Task
   deleteTask(id: ID!): ID
   completeTask(id: ID!): Task
   updateTask(updateTaskInput: UpdateTaskInput!): Task
+  createDaily(createDailyInput: CreateDailyInput!): Daily
+  deleteDaily(id: ID!): ID
+  completeDaily(id: ID!): Daily
+  updateDaily(updateDailyInput: UpdateDailyInput!): Daily
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult
@@ -70,7 +85,23 @@ type FailedLoginResult {
   reason: String!
 }
 
+input CreateTaskInput {
+  title: String!
+  difficulty: Int!
+}
+
 input UpdateTaskInput {
+  id: ID!
+  title: String
+  difficulty: Int
+}
+
+input CreateDailyInput {
+  title: String!
+  difficulty: Int!
+}
+
+input UpdateDailyInput {
   id: ID!
   title: String
   difficulty: Int

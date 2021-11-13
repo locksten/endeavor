@@ -27,8 +27,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CUpdateTaskModal(task: TasksQuery.Task, onDismissRequest: () -> Unit) {
     val scope = rememberCoroutineScope()
-    var difficulty by remember { mutableStateOf<Int?>(null) }
     val gql = LocalGQLClient.current
+    var difficulty by remember { mutableStateOf<Int?>(null) }
     var title by remember { mutableStateOf<String?>(null) }
     val titleFocusRequester = remember { FocusRequester() }
     LaunchedEffect(true) {

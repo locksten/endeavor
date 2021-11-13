@@ -1,7 +1,8 @@
-mutation CreateTask($createTaskTitle: String!, $createTaskDifficulty: Int!) {
-  createTask(title: $createTaskTitle, difficulty: $createTaskDifficulty) {
+mutation CreateTask($createTaskInput: CreateTaskInput!) {
+  createTask(createTaskInput: $createTaskInput) {
     id
     isCompleted
+    completionDate
     title
     difficulty
     createdAt

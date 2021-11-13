@@ -1,0 +1,10 @@
+mutation CompleteDaily($completeDailyId: ID!) {
+  completeDaily(id: $completeDailyId) {
+    id
+    isCompleted
+    lastCompletionDate
+    title
+    createdAt
+    difficulty
+  }
+}

@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 fun DeleteWithConfirmationButton(onDelete: () -> Unit) {
     val scope = rememberCoroutineScope()
     var tapped by remember { mutableStateOf(false) }
-    val gql = LocalGQLClient.current
 
     Button(
         onClick = {
@@ -43,7 +42,7 @@ fun DeleteWithConfirmationButton(onDelete: () -> Unit) {
     ) {
         Text(
             if (tapped) {
-                "Really Delete!"
+                "Really Delete"
             } else {
                 "Delete"
             }

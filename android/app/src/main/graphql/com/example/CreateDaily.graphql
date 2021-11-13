@@ -1,0 +1,10 @@
+mutation CreateDaily($createDailyInput: CreateDailyInput!) {
+  createDaily(createDailyInput: $createDailyInput) {
+    id
+    isCompleted
+    lastCompletionDate
+    title
+    difficulty
+    createdAt
+  }
+}

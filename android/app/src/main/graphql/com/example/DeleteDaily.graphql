@@ -1,0 +1,3 @@
+mutation DeleteDaily($deleteDailyId: ID!) {
+  deleteDaily(id: $deleteDailyId)
+}

@@ -4,63 +4,67 @@ import { ObjectType } from "gqtx/dist/types"
 import { DateType } from "schema/date"
 import { giveRewardForTodo } from "schema/reward"
 import { idResolver, t, typeResolver } from "schema/typesFactory"
-import { Task as QTask } from "zapatos/schema"
+import { getLastMidnight } from "utils"
+import { Daily as QDaily } from "zapatos/schema"
 
-export { Task as QTask } from "zapatos/schema"
-export type Task = QTask.JSONSelectable & { _type?: "Task" }
+export { Daily as QDaily } from "zapatos/schema"
+export type Daily = QDaily.JSONSelectable & { _type?: "Daily" }
 
-export const TaskType: ObjectType<AppContext, Task> = t.objectType<Task>({
-  name: "Task",
+export const DailyType: ObjectType<AppContext, Daily> = t.objectType<Daily>({
+  name: "Daily",
   fields: () => [
     idResolver,
-    typeResolver("Task"),
+    typeResolver("Daily"),
     t.field("isCompleted", {
       type: t.NonNull(t.Boolean),
       resolve: async ({ id }, _args, { pool }) => {
         return (
           (await db
-            .selectOne("Task", { id, completionDate: dc.isNotNull })
+            .selectOne("Daily", {
+              id,
+              lastCompletionDate: dc.gte(getLastMidnight()),
+            })
             .run(pool)) !== undefined
         )
       },
     }),
-    t.defaultField("completionDate", DateType),
+    t.defaultField("lastCompletionDate", DateType),
     t.defaultField("title", t.NonNull(t.String)),
     t.defaultField("difficulty", t.NonNull(t.Int)),
     t.defaultField("createdAt", t.NonNull(DateType)),
   ],
 })
 
-export const createTaskInput = t.inputObjectType({
-  name: "CreateTaskInput",
+export const createDailyInput = t.inputObjectType({
+  name: "CreateDailyInput",
   fields: () => ({
     title: { type: t.NonNullInput(t.String) },
     difficulty: { type: t.NonNullInput(t.Int) },
   }),
 })
 
-export const mutationCreateTask = t.field("createTask", {
-  type: TaskType,
+export const mutationCreateDaily = t.field("createDaily", {
+  type: DailyType,
   args: {
-    createTaskInput: t.arg(t.NonNullInput(createTaskInput)),
+    createDailyInput: t.arg(t.NonNullInput(createDailyInput)),
   },
-  resolve: async (_, { createTaskInput: input }, { pool, auth }) => {
+  resolve: async (_, { createDailyInput: input }, { pool, auth }) => {
     if (!auth.id) return undefined
 
-    const task: Omit<Task, "id" | "createdAt" | "completionDate"> = {
+    const daily: Omit<Daily, "id" | "createdAt" | "lastCompletionDate"> = {
       userId: auth.id,
       ...input,
     }
 
     try {
-      return await db.insert("Task", task).run(pool)
+      return await db.insert("Daily", daily).run(pool)
     } catch (e) {
       console.log(e)
     }
   },
 })
 
-export const mutationDeleteTask = t.field("deleteTask", {
+export const mutationDeleteDaily = t.field("deleteDaily", {
   type: t.ID,
   args: {
     id: t.arg(t.NonNullInput(t.ID)),
@@ -68,7 +72,7 @@ export const mutationDeleteTask = t.field("deleteTask", {
   resolve: async (_, { id }, { pool, auth }) => {
     const deletedIds = await db
       .deletes(
-        "Task",
+        "Daily",
         { userId: auth.id, id: Number(id) },
         { returning: ["id"] },
       )
@@ -77,38 +81,38 @@ export const mutationDeleteTask = t.field("deleteTask", {
   },
 })
 
-export const mutationCompleteTask = t.field("completeTask", {
-  type: TaskType,
+export const mutationCompleteDaily = t.field("completeDaily", {
+  type: DailyType,
   args: {
     id: t.arg(t.NonNullInput(t.ID)),
   },
   resolve: async (_, { id }, ctx) => {
     const { pool, auth } = ctx
 
-    const task = (
+    const daily = (
       await db
         .update(
-          "Task",
-          { completionDate: new Date() },
+          "Daily",
+          { lastCompletionDate: new Date() },
           {
             id: Number(id),
             userId: auth.id,
-            completionDate: dc.isNull,
+            lastCompletionDate: dc.or(dc.isNull, dc.lt(getLastMidnight())),
           },
         )
         .run(pool)
     )?.at(0)
 
-    if (task === undefined) return undefined
+    if (daily === undefined) return undefined
 
-    await giveRewardForTodo(ctx, task.difficulty)
+    await giveRewardForTodo(ctx, daily.difficulty)
 
-    return task
+    return daily
   },
 })
 
-export const updateTaskInput = t.inputObjectType({
-  name: "UpdateTaskInput",
+export const updateDailyInput = t.inputObjectType({
+  name: "UpdateDailyInput",
   fields: () => ({
     id: { type: t.NonNullInput(t.ID) },
     title: { type: t.String },
@@ -116,15 +120,19 @@ export const updateTaskInput = t.inputObjectType({
   }),
 })
 
-export const mutationUpdateTask = t.field("updateTask", {
-  type: TaskType,
+export const mutationUpdateDaily = t.field("updateDaily", {
+  type: DailyType,
   args: {
-    updateTaskInput: t.arg(t.NonNullInput(updateTaskInput)),
+    updateDailyInput: t.arg(t.NonNullInput(updateDailyInput)),
   },
-  resolve: async (_, { updateTaskInput: { id, ...input } }, { pool, auth }) => {
+  resolve: async (
+    _,
+    { updateDailyInput: { id, ...patch } },
+    { pool, auth },
+  ) => {
     return (
       await db
-        .update("Task", input as Partial<Task>, {
+        .update("Daily", patch as Partial<Daily>, {
           id: Number(id),
           userId: auth.id,
         })

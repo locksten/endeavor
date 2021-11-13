@@ -1,0 +1,10 @@
+mutation UpdateDaily($updateDailyInput: UpdateDailyInput!) {
+  updateDaily(updateDailyInput: $updateDailyInput) {
+    id
+    isCompleted
+    lastCompletionDate
+    title
+    difficulty
+    createdAt
+  }
+}

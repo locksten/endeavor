@@ -1,4 +1,4 @@
-package com.example.endeavor.ui.todo.task
+package com.example.endeavor.ui.todo.daily
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,9 +13,8 @@ import androidx.compose.ui.window.Dialog
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.CreateTaskMutation
-import com.example.endeavor.LocalGQLClient
-import com.example.endeavor.TasksQuery
+import com.example.endeavor.*
+import com.example.endeavor.type.CreateDailyInput
 import com.example.endeavor.type.CreateTaskInput
 import com.example.endeavor.ui.theme.Theme
 import com.example.endeavor.ui.todo.TodoDifficultySelector
@@ -24,7 +23,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun CCreateTaskModal(onDismissRequest: () -> Unit) {
+fun CCreateDailyModal(onDismissRequest: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
     var title by remember { mutableStateOf("") }
@@ -48,7 +47,7 @@ fun CCreateTaskModal(onDismissRequest: () -> Unit) {
                 Button(
                     onClick = {
                         scope.launch {
-                            createTask(gql, title, difficulty)
+                            createDaily(gql, title, difficulty)
                             onDismissRequest()
                         }
                     },
@@ -62,12 +61,12 @@ fun CCreateTaskModal(onDismissRequest: () -> Unit) {
     }
 }
 
-suspend fun createTask(gql: ApolloClient, title: String, difficulty: Int) {
+suspend fun createDaily(gql: ApolloClient, title: String, difficulty: Int) {
     try {
         gql.mutate(
-            CreateTaskMutation(CreateTaskInput(title, difficulty))
+            CreateDailyMutation(CreateDailyInput(title, difficulty))
         ).await()
-        gql.query(TasksQuery()).await()
+        gql.query(DailiesQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
 }

@@ -1,5 +1,6 @@
 package com.example.endeavor.ui.todo
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -7,6 +8,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import com.example.endeavor.ui.todo.daily.CCreateDailyModal
+import com.example.endeavor.ui.todo.daily.CDailyList
 import com.example.endeavor.ui.todo.task.CCreateTaskModal
 import com.example.endeavor.ui.todo.task.CTaskList
 import com.google.accompanist.pager.*
@@ -21,16 +24,22 @@ sealed class TodoTab(
     @ExperimentalComposeUiApi
     object Habits : TodoTab("Habits", { CCreateTaskModal(it) }, { Text("Habits") })
 
+    @ExperimentalFoundationApi
+    @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
-    object Dailies : TodoTab("Dailies", { CCreateTaskModal(it) }, { Text("Dailies") })
+    object Dailies : TodoTab("Dailies", { CCreateDailyModal(it) }, { CDailyList() })
 
+    @ExperimentalFoundationApi
     @ExperimentalComposeUiApi
     object Tasks : TodoTab("Tasks", { CCreateTaskModal(it) }, { CTaskList() })
 }
 
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 val todoTabs = listOf(TodoTab.Habits, TodoTab.Dailies, TodoTab.Tasks)
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -59,6 +68,7 @@ fun Tabs(pagerState: PagerState) {
     }
 }
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -79,6 +89,8 @@ fun TodosScreen() {
     }
 }
 
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
 fun FloatingAddButton(tab: Int) {

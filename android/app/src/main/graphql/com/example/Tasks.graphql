@@ -3,6 +3,7 @@ query Tasks {
         tasks {
             id
             isCompleted
+            completionDate
             title
             difficulty
             createdAt

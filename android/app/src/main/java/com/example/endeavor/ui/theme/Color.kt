@@ -16,8 +16,8 @@ class MyColors(isDarkTheme: Boolean) {
     val surface = if (isDarkTheme) MyRawColors.gray800 else MyRawColors.teal400
     val onSurface = if (isDarkTheme) MyRawColors.gray200 else MyRawColors.gray900
 
-    val danger = if (isDarkTheme) MyRawColors.red900 else MyRawColors.red900
-    val onDanger = if (isDarkTheme) MyRawColors.red300 else MyRawColors.red300
+    val danger = if (isDarkTheme) MyRawColors.red800 else MyRawColors.red600
+    val onDanger = if (isDarkTheme) MyRawColors.red100 else MyRawColors.red100
 
     val hitpoints = if (isDarkTheme) MyRawColors.red700 else MyRawColors.red400
     val faintHitpoints =
@@ -38,6 +38,9 @@ class MyColors(isDarkTheme: Boolean) {
     val difficultyButton = if (isDarkTheme) MyRawColors.gray700 else MyRawColors.teal500
     val difficultyButtonActive = if (isDarkTheme) MyRawColors.gray500 else MyRawColors.teal700
     val onDifficultyButton = if (isDarkTheme) MyRawColors.gray50 else MyRawColors.gray50
+
+    val graySurface = if (isDarkTheme) MyRawColors.gray800 else MyRawColors.gray200
+    val onGraySurface = if (isDarkTheme) MyRawColors.gray50 else MyRawColors.gray900
 }
 
 @Suppress("unused")

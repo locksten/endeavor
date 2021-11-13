@@ -1,0 +1,12 @@
+query Dailies {
+  me {
+    dailies {
+      id
+      isCompleted
+      lastCompletionDate
+      title
+      difficulty
+      createdAt
+    }
+  }
+}
