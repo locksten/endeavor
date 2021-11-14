@@ -12,34 +12,11 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun DeleteWithConfirmationButton(onDelete: () -> Unit) {
-    val scope = rememberCoroutineScope()
-    var isTapped by remember { mutableStateOf(false) }
-
-    Button(
-        onClick = {
-            scope.launch {
-                if (isTapped) {
-                    onDelete()
-                } else {
-                    isTapped = true
-                }
-            }
-        },
-        modifier = Modifier.fillMaxWidth(),
-        colors = if (isTapped) ButtonDefaults.buttonColors(
-            backgroundColor = Theme.colors.danger,
-            contentColor = Theme.colors.onDanger
-        ) else {
-            ButtonDefaults.buttonColors()
-        }
-    ) {
-        Text(
-            if (isTapped) {
-                "Really Delete"
-            } else {
-                "Delete"
-            }
-        )
-    }
+fun ButtonWithConfirmationDelete(onDelete: () -> Unit) {
+    ButtonWithConfirmation(
+        text = "Delete",
+        confirmation = "Really Delete",
+        onClick = onDelete,
+        modifier = Modifier.fillMaxWidth()
+    )
 }

@@ -3,9 +3,10 @@ import { db, dc } from "database"
 import { ObjectType } from "gqtx"
 import { DailyType } from "schema/daily"
 import { HabitType } from "schema/habit"
+import { QInvite } from "schema/invite"
 import { TaskType } from "schema/task"
 import { idResolver, t } from "schema/typesFactory"
-import { User, UserType } from "schema/user"
+import { QUser, User, UserType } from "schema/user"
 import { getLastMidnight } from "utils"
 
 export type Me = { id: number }
@@ -45,6 +46,59 @@ export const MeType: ObjectType<AppContext, User> = t.objectType<Me>({
             completionDate: dc.or(dc.isNull, dc.gt(getLastMidnight())),
           })
           .run(pool)
+      },
+    }),
+    t.field({
+      name: "partyLeader",
+      type: UserType,
+      resolve: async (me, _args, { pool }) => {
+        return (
+          await db.sql<QUser.SQL, User[]>`
+            SELECT ${"User"}.*
+            FROM ${"User"}
+            WHERE ${"id"} =
+            (SELECT ${"partyLeaderId"}
+             FROM ${"User"}
+             WHERE ${"User"}.${"id"} = ${db.param(me.id)})
+            `.run(pool)
+        ).at(0)
+      },
+    }),
+    t.field({
+      name: "partyMembers",
+      type: t.NonNull(t.List(t.NonNull(UserType))),
+      resolve: async (me, _args, { pool }) => {
+        return await db.sql<QUser.SQL, User[]>`
+            SELECT ${"User"}.*
+            FROM ${"User"}
+            WHERE ${"partyLeaderId"} IS NOT NULL
+            AND ${"partyLeaderId"} =
+            (SELECT ${"partyLeaderId"}
+             FROM ${"User"}
+             WHERE ${"User"}.${"id"} = ${db.param(me.id)})
+            `.run(pool)
+      },
+    }),
+    t.field({
+      name: "inviters",
+      type: t.NonNull(t.List(t.NonNull(UserType))),
+      resolve: async (me, _args, { pool }) => {
+        return await db.sql<QInvite.SQL | QUser.SQL, User[]>`
+            SELECT ${"User"}.*
+            FROM ${"Invite"}
+            JOIN ${"User"} ON ${"Invite"}.${"inviterId"} = ${"User"}.${"id"}
+            WHERE ${"inviteeId"} = ${db.param(me.id)}`.run(pool)
+      },
+    }),
+    t.field({
+      name: "invitees",
+      type: t.NonNull(t.List(t.NonNull(UserType))),
+      resolve: async (me, _args, { pool }) => {
+        return await db.sql<QInvite.SQL | QUser.SQL, User[]>`
+            SELECT ${"User"}.*
+            FROM ${"Invite"}
+            JOIN ${"User"} ON ${"Invite"}.${"inviteeId"} = ${"User"}.${"id"}
+            WHERE ${"inviterId"} = ${db.param(me.id)}`.run(pool)
       },
     }),
   ],

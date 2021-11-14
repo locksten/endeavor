@@ -35,7 +35,7 @@ fun Habit(habit: HabitsQuery.Habit) {
     Row(
         Modifier
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 48.dp)
+            .defaultMinSize(minHeight = 52.dp)
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
             .background(Theme.colors.graySurface)

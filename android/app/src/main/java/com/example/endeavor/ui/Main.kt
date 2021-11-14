@@ -1,10 +1,13 @@
 package com.example.endeavor.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
+import androidx.compose.material.icons.rounded.Face
 import androidx.compose.material.icons.rounded.List
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.Composable
@@ -17,14 +20,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.endeavor.LocalAuth
+import com.example.endeavor.ui.party.PartyScreen
 import com.example.endeavor.ui.todo.TodosScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 sealed class MainScreenTab(val route: String, val label: String, val icon: ImageVector) {
     object Todos : MainScreenTab("todos", "Todos", Icons.Rounded.List)
-    object Character : MainScreenTab("character", "CharacterScreen", Icons.Rounded.Person)
+    object Party : MainScreenTab("party", "Party", Icons.Rounded.AccountCircle)
+    object Character : MainScreenTab("character", "CharacterScreen", Icons.Rounded.Face)
 }
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi
@@ -57,13 +63,14 @@ fun MainScreen() {
                 startDestination = MainScreenTab.Character.route,
             ) {
                 composable(MainScreenTab.Todos.route) { TodosScreen() }
+                composable(MainScreenTab.Party.route) { PartyScreen() }
                 composable(MainScreenTab.Character.route) { CharacterScreen() }
             }
         }
     }
 }
 
-val mainTabs = listOf(MainScreenTab.Todos)
+val mainTabs = listOf(MainScreenTab.Todos, MainScreenTab.Party)
 
 @Composable
 fun BottomNav(

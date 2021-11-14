@@ -12,6 +12,10 @@ type Me {
   habits: [Habit!]!
   dailies: [Daily!]!
   tasks: [Task!]!
+  partyLeader: User
+  partyMembers: [User!]!
+  inviters: [User!]!
+  invitees: [User!]!
 }
 
 type User {
@@ -19,6 +23,7 @@ type User {
   _type: String!
   username: String!
   createdAt: Date!
+  isPartyLeader: Boolean!
   hitpoints: Int!
   maxHitpoints: Int!
   energy: Int!
@@ -74,6 +79,12 @@ type Mutation {
   updateHabit(updateHabitInput: UpdateHabitInput!): Habit
   doPositiveHabit(id: ID!): Habit
   doNegativeHabit(id: ID!): Habit
+  inviteToParty(username: String!): ID
+  acceptInviteToParty(id: ID!): ID
+  leaveParty: ID
+  removeFromParty(id: ID!): ID
+  declineInviteToParty(id: ID!): ID
+  cancelInviteToParty(id: ID!): ID
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult

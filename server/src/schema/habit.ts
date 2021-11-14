@@ -174,7 +174,7 @@ export const mutationUpdateHabit = t.field({
         : { positiveCount: positiveCount ? 0 : null }),
       ...(negativeCount === undefined
         ? undefined
-        : { positiveCount: negativeCount ? 0 : null }),
+        : { negativeCount: negativeCount ? 0 : null }),
     }
     if (isObjectEmpty(patch)) return
 

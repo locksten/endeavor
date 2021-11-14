@@ -60,7 +60,6 @@ fun CAuthScreen() {
                 AuthButtons(username, password) { error = it }
             }
         }
-
     }
 }
 

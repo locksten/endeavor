@@ -458,6 +458,149 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **Invite**
+   * - Table in database
+   */
+  export namespace Invite {
+    export type Table = 'Invite';
+    export interface Selectable {
+      /**
+      * **Invite.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Invite_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Invite.inviterId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviterId: number;
+      /**
+      * **Invite.inviteeId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviteeId: number;
+      /**
+      * **Invite.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **Invite.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Invite_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Invite.inviterId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviterId: number;
+      /**
+      * **Invite.inviteeId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviteeId: number;
+      /**
+      * **Invite.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: db.TimestampTzString;
+    }
+    export interface Whereable {
+      /**
+      * **Invite.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Invite_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Invite.inviterId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviterId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Invite.inviteeId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviteeId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Invite.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **Invite.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Invite_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **Invite.inviterId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviterId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Invite.inviteeId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviteeId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Invite.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **Invite.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Invite_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Invite.inviterId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviterId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Invite.inviteeId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      inviteeId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Invite.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'Invite_inviterId_inviteeId_key' | 'Invite_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **Task**
    * - Table in database
    */
@@ -692,6 +835,12 @@ declare module 'zapatos/schema' {
       */
       createdAt: Date;
       /**
+      * **User.partyLeaderId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      partyLeaderId: number | null;
+      /**
       * **User.hitpoints**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -747,6 +896,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `now()`
       */
       createdAt: db.TimestampTzString;
+      /**
+      * **User.partyLeaderId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      partyLeaderId: number | null;
       /**
       * **User.hitpoints**
       * - `int4` in database
@@ -804,6 +959,12 @@ declare module 'zapatos/schema' {
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **User.partyLeaderId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      partyLeaderId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **User.hitpoints**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -859,6 +1020,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `now()`
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **User.partyLeaderId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      partyLeaderId?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **User.hitpoints**
       * - `int4` in database
@@ -916,6 +1083,12 @@ declare module 'zapatos/schema' {
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
       /**
+      * **User.partyLeaderId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      partyLeaderId?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
       * **User.hitpoints**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -955,24 +1128,25 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = Daily.Table | Habit.Table | Task.Table | User.Table;
-  export type Selectable = Daily.Selectable | Habit.Selectable | Task.Selectable | User.Selectable;
-  export type JSONSelectable = Daily.JSONSelectable | Habit.JSONSelectable | Task.JSONSelectable | User.JSONSelectable;
-  export type Whereable = Daily.Whereable | Habit.Whereable | Task.Whereable | User.Whereable;
-  export type Insertable = Daily.Insertable | Habit.Insertable | Task.Insertable | User.Insertable;
-  export type Updatable = Daily.Updatable | Habit.Updatable | Task.Updatable | User.Updatable;
-  export type UniqueIndex = Daily.UniqueIndex | Habit.UniqueIndex | Task.UniqueIndex | User.UniqueIndex;
-  export type Column = Daily.Column | Habit.Column | Task.Column | User.Column;
-  export type AllBaseTables = [Daily.Table, Habit.Table, Task.Table, User.Table];
+  export type Table = Daily.Table | Habit.Table | Invite.Table | Task.Table | User.Table;
+  export type Selectable = Daily.Selectable | Habit.Selectable | Invite.Selectable | Task.Selectable | User.Selectable;
+  export type JSONSelectable = Daily.JSONSelectable | Habit.JSONSelectable | Invite.JSONSelectable | Task.JSONSelectable | User.JSONSelectable;
+  export type Whereable = Daily.Whereable | Habit.Whereable | Invite.Whereable | Task.Whereable | User.Whereable;
+  export type Insertable = Daily.Insertable | Habit.Insertable | Invite.Insertable | Task.Insertable | User.Insertable;
+  export type Updatable = Daily.Updatable | Habit.Updatable | Invite.Updatable | Task.Updatable | User.Updatable;
+  export type UniqueIndex = Daily.UniqueIndex | Habit.UniqueIndex | Invite.UniqueIndex | Task.UniqueIndex | User.UniqueIndex;
+  export type Column = Daily.Column | Habit.Column | Invite.Column | Task.Column | User.Column;
+  export type AllBaseTables = [Daily.Table, Habit.Table, Invite.Table, Task.Table, User.Table];
   export type AllForeignTables = [];
   export type AllViews = [];
   export type AllMaterializedViews = [];
-  export type AllTablesAndViews = [Daily.Table, Habit.Table, Task.Table, User.Table];
+  export type AllTablesAndViews = [Daily.Table, Habit.Table, Invite.Table, Task.Table, User.Table];
 
 
   export type SelectableForTable<T extends Table> = {
     Daily: Daily.Selectable;
     Habit: Habit.Selectable;
+    Invite: Invite.Selectable;
     Task: Task.Selectable;
     User: User.Selectable;
   }[T];
@@ -980,6 +1154,7 @@ declare module 'zapatos/schema' {
   export type JSONSelectableForTable<T extends Table> = {
     Daily: Daily.JSONSelectable;
     Habit: Habit.JSONSelectable;
+    Invite: Invite.JSONSelectable;
     Task: Task.JSONSelectable;
     User: User.JSONSelectable;
   }[T];
@@ -987,6 +1162,7 @@ declare module 'zapatos/schema' {
   export type WhereableForTable<T extends Table> = {
     Daily: Daily.Whereable;
     Habit: Habit.Whereable;
+    Invite: Invite.Whereable;
     Task: Task.Whereable;
     User: User.Whereable;
   }[T];
@@ -994,6 +1170,7 @@ declare module 'zapatos/schema' {
   export type InsertableForTable<T extends Table> = {
     Daily: Daily.Insertable;
     Habit: Habit.Insertable;
+    Invite: Invite.Insertable;
     Task: Task.Insertable;
     User: User.Insertable;
   }[T];
@@ -1001,6 +1178,7 @@ declare module 'zapatos/schema' {
   export type UpdatableForTable<T extends Table> = {
     Daily: Daily.Updatable;
     Habit: Habit.Updatable;
+    Invite: Invite.Updatable;
     Task: Task.Updatable;
     User: User.Updatable;
   }[T];
@@ -1008,6 +1186,7 @@ declare module 'zapatos/schema' {
   export type UniqueIndexForTable<T extends Table> = {
     Daily: Daily.UniqueIndex;
     Habit: Habit.UniqueIndex;
+    Invite: Invite.UniqueIndex;
     Task: Task.UniqueIndex;
     User: User.UniqueIndex;
   }[T];
@@ -1015,6 +1194,7 @@ declare module 'zapatos/schema' {
   export type ColumnForTable<T extends Table> = {
     Daily: Daily.Column;
     Habit: Habit.Column;
+    Invite: Invite.Column;
     Task: Task.Column;
     User: User.Column;
   }[T];
@@ -1022,6 +1202,7 @@ declare module 'zapatos/schema' {
   export type SQLForTable<T extends Table> = {
     Daily: Daily.SQL;
     Habit: Habit.SQL;
+    Invite: Invite.SQL;
     Task: Task.SQL;
     User: User.SQL;
   }[T];

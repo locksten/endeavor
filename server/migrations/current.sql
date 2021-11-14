@@ -4,11 +4,22 @@ create table "User" (
     "username" text not null unique,
     "password" text not null,
     "createdAt" timestamp with time zone not null default now(),
+    "partyLeaderId" integer references "User" (id) on delete cascade,
     "hitpoints" integer not null,
     "maxHitpoints" integer not null,
     "energy" integer not null,
     "maxEnergy" integer not null,
     "experience" integer not null
+);
+
+drop table if exists "Invite" cascade;
+create table "Invite" (
+    "id" serial primary key,
+    "inviterId" integer not null references "User" (id) on delete cascade,
+    "inviteeId" integer not null references "User" (id) on delete cascade,
+    "createdAt" timestamp with time zone not null default now(),
+    unique ("inviterId", "inviteeId"),
+    CHECK ("inviterId" <> "inviteeId")
 );
 
 drop table if exists "Habit" cascade;

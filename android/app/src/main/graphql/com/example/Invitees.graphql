@@ -1,0 +1,8 @@
+query Invitees {
+  me {
+    invitees {
+      id
+      username
+    }
+  }
+}

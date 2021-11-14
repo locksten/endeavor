@@ -14,6 +14,14 @@ import {
   mutationDoPositiveHabit,
   mutationUpdateHabit,
 } from "schema/habit"
+import {
+  mutationAcceptInviteToParty,
+  mutationCancelInviteToParty,
+  mutationDeclineInviteToParty,
+  mutationInviteToParty,
+  mutationLeaveParty,
+  mutationRemoveFromParty,
+} from "schema/invite"
 import { queryMe } from "schema/me"
 import {
   mutationCompleteTask,
@@ -59,6 +67,12 @@ const mutation = t.mutationType({
     mutationUpdateHabit,
     mutationDoPositiveHabit,
     mutationDoNegativeHabit,
+    mutationInviteToParty,
+    mutationAcceptInviteToParty,
+    mutationLeaveParty,
+    mutationRemoveFromParty,
+    mutationDeclineInviteToParty,
+    mutationCancelInviteToParty,
   ],
 })
 

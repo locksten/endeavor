@@ -1,0 +1,3 @@
+mutation RemovePartyMember($removeFromPartyId: ID!) {
+  removeFromParty(id: $removeFromPartyId)
+}

@@ -16,6 +16,17 @@ export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
       typeResolver("User"),
       t.field({ name: "username", type: t.NonNull(t.String) }),
       t.field({ name: "createdAt", type: t.NonNull(DateType) }),
+      t.field({
+        name: "isPartyLeader",
+        type: t.NonNull(t.Boolean),
+        resolve: async ({ id, partyLeaderId }, _args, { auth, pool }) => {
+          const authUser = await db
+            .selectOne("User", { id: Number(auth.id) })
+            .run(pool)
+          if (authUser?.partyLeaderId !== partyLeaderId) return false
+          return id === partyLeaderId
+        },
+      }),
       t.field({ name: "hitpoints", type: t.NonNull(t.Int) }),
       t.field({ name: "maxHitpoints", type: t.NonNull(t.Int) }),
       t.field({ name: "energy", type: t.NonNull(t.Int) }),

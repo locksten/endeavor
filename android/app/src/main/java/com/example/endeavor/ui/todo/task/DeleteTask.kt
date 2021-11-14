@@ -9,7 +9,7 @@ import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.DeleteTaskMutation
 import com.example.endeavor.LocalGQLClient
 import com.example.endeavor.TasksQuery
-import com.example.endeavor.ui.DeleteWithConfirmationButton
+import com.example.endeavor.ui.ButtonWithConfirmationDelete
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 fun DeleteTaskButton(task: TasksQuery.Task, onDelete: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
-    DeleteWithConfirmationButton {
+    ButtonWithConfirmationDelete {
         scope.launch {
             deleteTask(gql, task.id)
             onDelete()

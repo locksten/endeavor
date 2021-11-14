@@ -9,7 +9,7 @@ import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.DailiesQuery
 import com.example.endeavor.DeleteDailyMutation
 import com.example.endeavor.LocalGQLClient
-import com.example.endeavor.ui.DeleteWithConfirmationButton
+import com.example.endeavor.ui.ButtonWithConfirmationDelete
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 fun DeleteDailyButton(task: DailiesQuery.Daily, onDelete: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
-    DeleteWithConfirmationButton {
+    ButtonWithConfirmationDelete {
         scope.launch {
             deleteDaily(gql, task.id)
             onDelete()

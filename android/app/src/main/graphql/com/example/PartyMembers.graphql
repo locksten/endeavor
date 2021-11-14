@@ -1,0 +1,13 @@
+query PartyMembers {
+  me {
+    user {
+      id
+      isPartyLeader
+    }
+    partyMembers {
+      id
+      username
+      isPartyLeader
+    }
+  }
+}

@@ -1,34 +1,34 @@
-package com.example.endeavor.ui.todo.daily
+package com.example.endeavor.ui.party
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.*
-import com.example.endeavor.type.CreateDailyInput
-import com.example.endeavor.type.CreateTaskInput
 import com.example.endeavor.ui.theme.Theme
-import com.example.endeavor.ui.todo.TodoDifficultySelector
-import com.example.endeavor.ui.todo.TodoTitleTextField
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun CCreateDailyModal(onDismissRequest: () -> Unit) {
-    var title by remember { mutableStateOf("") }
-    var difficulty by remember { mutableStateOf(50) }
-    val titleFocusRequester = remember { FocusRequester() }
+fun CInviteModal(onDismissRequest: () -> Unit) {
+    var username by remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
     LaunchedEffect(true) {
-        titleFocusRequester.requestFocus()
+        focusRequester.requestFocus()
     }
 
     MutationComposable { gql, scope ->
@@ -42,18 +42,27 @@ fun CCreateDailyModal(onDismissRequest: () -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    TodoTitleTextField(title, titleFocusRequester) { title = it }
-                    TodoDifficultySelector(value = difficulty, onChange = { difficulty = it })
+                    TextField(
+                        value = username,
+                        onValueChange = { username = it },
+                        label = { Text("Username") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        colors = TextFieldDefaults.textFieldColors(textColor = Theme.colors.onBackground)
+                    )
                     Button(
                         onClick = {
                             scope.launch {
-                                createDaily(gql, title, difficulty)
+                                invite(gql, username)
                                 onDismissRequest()
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Add")
+                        Text("Invite")
                     }
                 }
             }
@@ -61,12 +70,12 @@ fun CCreateDailyModal(onDismissRequest: () -> Unit) {
     }
 }
 
-suspend fun createDaily(gql: ApolloClient, title: String, difficulty: Int) {
+suspend fun invite(gql: ApolloClient, username: String) {
     try {
         gql.mutate(
-            CreateDailyMutation(CreateDailyInput(title, difficulty))
+            InviteMutation(username)
         ).await()
-        gql.query(DailiesQuery()).await()
+        gql.query(InviteesQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
 }
