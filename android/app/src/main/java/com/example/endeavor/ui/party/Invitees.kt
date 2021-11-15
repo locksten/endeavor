@@ -14,7 +14,10 @@ import androidx.compose.ui.unit.dp
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.*
+import com.example.endeavor.CancelInviteMutation
+import com.example.endeavor.InviteesQuery
+import com.example.endeavor.MutationComposable
+import com.example.endeavor.gqlWatchQuery
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -41,7 +44,7 @@ fun CInviteeList() {
 @Composable
 fun InviteeList(users: List<User>) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(2.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
@@ -51,7 +54,7 @@ fun InviteeList(users: List<User>) {
             users.sortedWith(compareBy { it.username })
         )
         { UserListItem(it) { CCancelInvitationButton(it) } }
-        item { Spacer(Modifier.height(14.dp)) }
+        item { Spacer(Modifier.height(80.dp)) }
     }
 }
 

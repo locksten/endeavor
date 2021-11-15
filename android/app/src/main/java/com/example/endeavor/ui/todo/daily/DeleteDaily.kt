@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun DeleteDailyButton(task: DailiesQuery.Daily, onDelete: () -> Unit) {
+fun CDeleteDailyButton(task: DailiesQuery.Daily, onDelete: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
     ButtonWithConfirmationDelete {

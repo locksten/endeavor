@@ -44,7 +44,7 @@ fun EndeavorGQL(content: @Composable () -> Unit) {
 @Composable
 fun <D : Operation.Data, T, V : Operation.Variables> gqlWatchQuery(query: Query<D, T, V>): T? {
     val gql = LocalGQLClient.current
-    return remember {gql.query(query).watcher().toFlow().catch {}}
+    return remember { gql.query(query).watcher().toFlow().catch {} }
         .collectAsState(initial = null).value?.data
 }
 

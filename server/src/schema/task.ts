@@ -50,7 +50,7 @@ export const mutationCreateTask = t.field({
   resolve: async (_, { createTaskInput: input }, { pool, auth }) => {
     if (!auth.id) return
 
-    const task: Omit<Task, "id" | "createdAt" | "completionDate"> = {
+    const task: QTask.Insertable = {
       userId: auth.id,
       ...input,
     }

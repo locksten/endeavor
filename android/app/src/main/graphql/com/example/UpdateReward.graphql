@@ -1,0 +1,7 @@
+mutation UpdateReward($updateRewardInput: UpdateRewardInput!) {
+    updateReward(updateRewardInput: $updateRewardInput) {
+        id
+        title
+        price
+    }
+}

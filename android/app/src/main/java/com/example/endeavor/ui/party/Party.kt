@@ -27,7 +27,7 @@ sealed class PartyTab(
     @ExperimentalMaterialApi
     @ExperimentalFoundationApi
     @ExperimentalComposeUiApi
-    object Inviters : PartyTab("Inviters", { CInviterList()})
+    object Inviters : PartyTab("Inviters", { CInviterList() })
 }
 
 @ExperimentalFoundationApi

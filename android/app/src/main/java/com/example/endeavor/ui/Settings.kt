@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.endeavor.LocalAuth
+import com.example.endeavor.LocalGQLClient
 import com.example.endeavor.ui.theme.LocalMyDarkMode
 
 @Composable
@@ -18,8 +19,8 @@ fun Settings() {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(8.dp)
     ) {
-        LogOutButton()
         ThemeButton()
+        LogOutButton()
     }
 }
 
@@ -45,10 +46,11 @@ private fun ThemeButton() {
 
 @Composable
 private fun LogOutButton() {
+    val gql = LocalGQLClient.current
     val auth = LocalAuth.current
     Button(
         onClick = {
-            auth.logOut()
+            auth.logOut(gql)
         },
         modifier = Modifier.fillMaxWidth()
     ) {

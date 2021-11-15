@@ -23,13 +23,17 @@ import com.example.endeavor.ui.theme.Theme
 @Composable
 fun CVitals() {
     val vitals = gqlWatchQuery(VitalsQuery())?.me?.user
-    Row(
-        horizontalArrangement = Arrangement.SpaceEvenly,
+    Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        HitpointRing(value = vitals?.hitpoints, maxValue = vitals?.maxHitpoints)
-        EnergyRing(value = vitals?.energy, maxValue = vitals?.maxEnergy)
-        ExperienceRing(value = vitals?.experience, maxValue = 1000)
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            HitpointRing(value = vitals?.hitpoints, maxValue = vitals?.maxHitpoints)
+            EnergyRing(value = vitals?.energy, maxValue = vitals?.maxEnergy)
+            ExperienceRing(value = vitals?.experience, maxValue = 1000)
+        }
     }
 }
 

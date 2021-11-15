@@ -1,0 +1,13 @@
+query Rewards {
+    me {
+        rewards {
+            id
+            title
+            createdAt
+            price
+        }
+        user {
+            gold
+        }
+    }
+}

@@ -2,6 +2,7 @@ package com.example.endeavor.ui.todo.task
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -18,9 +19,9 @@ import com.example.endeavor.LocalGQLClient
 import com.example.endeavor.TasksQuery
 import com.example.endeavor.UpdateTaskMutation
 import com.example.endeavor.type.UpdateTaskInput
+import com.example.endeavor.ui.MyTextField
 import com.example.endeavor.ui.theme.Theme
 import com.example.endeavor.ui.todo.TodoDifficultySelector
-import com.example.endeavor.ui.todo.TodoTitleTextField
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
@@ -45,10 +46,19 @@ fun CUpdateTaskModal(task: TasksQuery.Task, onDismissRequest: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(16.dp)
             ) {
-                TodoTitleTextField(title ?: task.title, titleFocusRequester) { title = it }
+                MyTextField(
+                    title ?: task.title, titleFocusRequester, label = "Title",
+                    keyboardActions = KeyboardActions(onDone = {
+                        scope.launch {
+                            updateTask(gql, task.id, title, difficulty)
+                            onDismissRequest()
+                        }
+                    }),
+                ) { title = it }
                 TodoDifficultySelector(
                     value = difficulty ?: task.difficulty,
                     onChange = { difficulty = it })
+                CDeleteTaskButton(task, onDismissRequest)
                 Button(
                     onClick = {
                         scope.launch {
@@ -60,7 +70,6 @@ fun CUpdateTaskModal(task: TasksQuery.Task, onDismissRequest: () -> Unit) {
                 ) {
                     Text("Save")
                 }
-                DeleteTaskButton(task, onDismissRequest)
             }
         }
     }

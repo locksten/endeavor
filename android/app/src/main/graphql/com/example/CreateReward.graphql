@@ -1,0 +1,8 @@
+mutation CreateReward($createRewardInput: CreateRewardInput!) {
+  createReward(createRewardInput: $createRewardInput) {
+    id
+    title
+    createdAt
+    price
+  }
+}

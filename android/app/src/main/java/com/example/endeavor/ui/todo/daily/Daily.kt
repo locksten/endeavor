@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,6 +36,7 @@ fun Daily(daily: DailiesQuery.Daily) {
     Row(
         Modifier
             .fillMaxWidth()
+            .defaultMinSize(minHeight = 52.dp)
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
             .background(
@@ -58,6 +60,7 @@ fun Daily(daily: DailiesQuery.Daily) {
             )
             .padding(horizontal = 16.dp, vertical = 8.dp),
         Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = daily.title,
@@ -74,7 +77,6 @@ fun Daily(daily: DailiesQuery.Daily) {
         )
         if (isUpdateDialogOpen) CUpdateDailyModal(daily) { isUpdateDialogOpen = false }
     }
-
 }
 
 suspend fun completeDaily(gql: ApolloClient, id: String) {
@@ -86,64 +88,3 @@ suspend fun completeDaily(gql: ApolloClient, id: String) {
     } catch (e: ApolloNetworkException) {
     }
 }
-
-/*
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@ExperimentalComposeUiApi
-@Composable
-fun Daily(daily: DailiesQuery.Daily) {
-    val scope = rememberCoroutineScope()
-    val gql = LocalGQLClient.current
-    var isUpdateDialogOpen by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                Theme.colors.graySurface.copy(
-                    alpha = if (daily.isCompleted) {
-                        0f
-                    } else {
-                        1f
-                    }
-                )
-            )
-            .combinedClickable(
-                onClick = {
-                    scope.launch {
-                        completeDaily(gql, daily.id)
-                    }
-                },
-                onLongClick = {
-                    isUpdateDialogOpen = true
-                }
-            )
-            .padding(horizontal = 16.dp, vertical= 8.dp)
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
-            Arrangement.Start,
-        ) {
-            Text(
-                text = daily.title,
-                color = Theme.colors.onGraySurface,
-                textDecoration = if (daily.isCompleted) {
-                    TextDecoration.LineThrough
-                } else {
-                    null
-                },
-                fontSize = 20.sp,
-                modifier = Modifier.alpha(
-                    if (daily.isCompleted) 0.5f else 1f,
-                )
-            )
-            if (isUpdateDialogOpen) CUpdateDailyModal(daily) { isUpdateDialogOpen = false }
-        }
-    }
-}
-
- */

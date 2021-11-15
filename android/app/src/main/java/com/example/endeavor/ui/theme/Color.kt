@@ -19,11 +19,17 @@ class MyColors(isDarkTheme: Boolean) {
     val danger = if (isDarkTheme) MyRawColors.red800 else MyRawColors.red600
     val onDanger = if (isDarkTheme) MyRawColors.red100 else MyRawColors.red100
 
-    val positiveHabitButton = if (isDarkTheme) MyRawColors.green900 else MyRawColors.green300
-    val onPositiveHabitButton = if (isDarkTheme) MyRawColors.green200 else MyRawColors.green600
+    val positiveHabitButton =
+        if (isDarkTheme) MyRawColors.green900.copy(alpha = 0.07f) else MyRawColors.green900.copy(
+            alpha = 0.1f
+        )
+    val onPositiveHabitButton = if (isDarkTheme) MyRawColors.green100 else MyRawColors.green900
 
-    val negativeHabitButton= if (isDarkTheme) MyRawColors.red900 else MyRawColors.red300
-    val onNegativeHabitButton= if (isDarkTheme) MyRawColors.red200 else MyRawColors.red600
+    val negativeHabitButton =
+        if (isDarkTheme) MyRawColors.red900.copy(alpha = 0.07f) else MyRawColors.red900.copy(
+            alpha = 0.1f
+        )
+    val onNegativeHabitButton = if (isDarkTheme) MyRawColors.red100 else MyRawColors.red900
 
     val hitpoints = if (isDarkTheme) MyRawColors.red700 else MyRawColors.red400
     val faintHitpoints =

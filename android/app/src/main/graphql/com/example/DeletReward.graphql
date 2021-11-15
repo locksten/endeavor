@@ -1,0 +1,3 @@
+mutation DeleteReward($deleteRewardId: ID!) {
+    deleteReward(id: $deleteRewardId)
+}

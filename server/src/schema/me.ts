@@ -4,6 +4,7 @@ import { ObjectType } from "gqtx"
 import { DailyType } from "schema/daily"
 import { HabitType } from "schema/habit"
 import { QInvite } from "schema/invite"
+import { RewardType } from "schema/reward"
 import { TaskType } from "schema/task"
 import { idResolver, t } from "schema/typesFactory"
 import { QUser, User, UserType } from "schema/user"
@@ -99,6 +100,13 @@ export const MeType: ObjectType<AppContext, User> = t.objectType<Me>({
             FROM ${"Invite"}
             JOIN ${"User"} ON ${"Invite"}.${"inviteeId"} = ${"User"}.${"id"}
             WHERE ${"inviterId"} = ${db.param(me.id)}`.run(pool)
+      },
+    }),
+    t.field({
+      name: "rewards",
+      type: t.NonNull(t.List(t.NonNull(RewardType))),
+      resolve: async (me, _args, { pool }) => {
+        return await db.select("Reward", { userId: me.id }).run(pool)
       },
     }),
   ],

@@ -24,6 +24,12 @@ import {
 } from "schema/invite"
 import { queryMe } from "schema/me"
 import {
+  mutationBuyReward,
+  mutationCreateReward,
+  mutationDeleteReward,
+  mutationUpdateReward,
+} from "schema/reward"
+import {
   mutationCompleteTask,
   mutationCreateTask,
   mutationDeleteTask,
@@ -73,6 +79,10 @@ const mutation = t.mutationType({
     mutationRemoveFromParty,
     mutationDeclineInviteToParty,
     mutationCancelInviteToParty,
+    mutationCreateReward,
+    mutationDeleteReward,
+    mutationUpdateReward,
+    mutationBuyReward,
   ],
 })
 

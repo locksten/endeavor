@@ -27,17 +27,19 @@ fun CDailyList() {
 @Composable
 fun DailyList(dailies: List<DailiesQuery.Daily>) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-        modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp)
     ) {
         item { Spacer(Modifier.height(14.dp)) }
         items(
             dailies.sortedWith(
-             compareBy<DailiesQuery.Daily> { it.isCompleted }
-                .thenByDescending { (it.lastCompletionDate ?: it.createdAt) as String? }
+                compareBy<DailiesQuery.Daily> { it.isCompleted }
+                    .thenByDescending { (it.lastCompletionDate ?: it.createdAt) as String? }
             )
         )
         { Daily(it) }
-        item { Spacer(Modifier.height(14.dp)) }
+        item { Spacer(Modifier.height(80.dp)) }
     }
 }

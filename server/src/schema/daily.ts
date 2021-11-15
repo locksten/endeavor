@@ -53,7 +53,7 @@ export const mutationCreateDaily = t.field({
   resolve: async (_, { createDailyInput: input }, { pool, auth }) => {
     if (!auth.id) return
 
-    const daily: Omit<Daily, "id" | "createdAt" | "lastCompletionDate"> = {
+    const daily: QDaily.Insertable = {
       userId: auth.id,
       ...input,
     }
