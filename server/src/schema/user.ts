@@ -32,6 +32,7 @@ export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
       t.field({ name: "energy", type: t.NonNull(t.Int) }),
       t.field({ name: "maxEnergy", type: t.NonNull(t.Int) }),
       t.field({ name: "experience", type: t.NonNull(t.Int) }),
+      t.field({ name: "gold", type: t.NonNull(t.Int) }),
     ],
   },
 )

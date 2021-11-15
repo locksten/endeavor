@@ -77,6 +77,7 @@ export const mutationRegister = t.field({
           energy: 0,
           maxEnergy: 10,
           experience: 0,
+          gold: 0,
         })
         .run(pool)
       const res: SuccessfulLoginResult = {

@@ -1,7 +1,6 @@
 package com.example.endeavor.ui.todo.task
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -9,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.endeavor.DailiesQuery
 import com.example.endeavor.TasksQuery
 import com.example.endeavor.gqlWatchQuery
 
@@ -26,7 +24,9 @@ fun CTaskList() {
 fun TaskList(tasks: List<TasksQuery.Task>) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(2.dp),
-        modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp)
     ) {
         item { Spacer(Modifier.height(14.dp)) }
         items(
@@ -35,6 +35,6 @@ fun TaskList(tasks: List<TasksQuery.Task>) {
                     .thenByDescending { (it.completionDate ?: it.createdAt) as String? }
             )
         ) { Task(it) }
-        item { Spacer(Modifier.height(14.dp)) }
+        item { Spacer(Modifier.height(80.dp)) }
     }
 }

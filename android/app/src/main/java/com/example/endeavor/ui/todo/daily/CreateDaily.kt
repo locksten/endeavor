@@ -2,23 +2,27 @@ package com.example.endeavor.ui.todo.daily
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.*
+import com.example.endeavor.CreateDailyMutation
+import com.example.endeavor.DailiesQuery
+import com.example.endeavor.MutationComposable
 import com.example.endeavor.type.CreateDailyInput
-import com.example.endeavor.type.CreateTaskInput
+import com.example.endeavor.ui.MyTextField
 import com.example.endeavor.ui.theme.Theme
 import com.example.endeavor.ui.todo.TodoDifficultySelector
-import com.example.endeavor.ui.todo.TodoTitleTextField
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
@@ -42,7 +46,16 @@ fun CCreateDailyModal(onDismissRequest: () -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    TodoTitleTextField(title, titleFocusRequester) { title = it }
+                    MyTextField(
+                        title, titleFocusRequester, label = "Title",
+                        keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
+                        keyboardActions = KeyboardActions(onDone = {
+                            scope.launch {
+                                createDaily(gql, title, difficulty)
+                                onDismissRequest()
+                            }
+                        }),
+                    ) { title = it }
                     TodoDifficultySelector(value = difficulty, onChange = { difficulty = it })
                     Button(
                         onClick = {

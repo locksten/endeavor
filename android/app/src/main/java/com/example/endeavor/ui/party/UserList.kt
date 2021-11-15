@@ -16,12 +16,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun UserList(users: List<User>) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-        modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp)
     ) {
         item { Spacer(Modifier.height(14.dp)) }
         items(
-            users.sortedWith(compareBy { it.username }))
+            users.sortedWith(compareBy { it.username })
+        )
         { UserListItem(it) }
         item { Spacer(Modifier.height(14.dp)) }
     }

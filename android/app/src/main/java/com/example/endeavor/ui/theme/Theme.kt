@@ -10,7 +10,7 @@ import com.example.endeavor.DarkMode
 
 private val LocalMyRawColors = staticCompositionLocalOf { MyRawColors }
 private val LocalMyColors = staticCompositionLocalOf { MyColors(false) }
-val LocalMyDarkMode = staticCompositionLocalOf<DarkMode> {null!!}
+val LocalMyDarkMode = staticCompositionLocalOf<DarkMode> { null!! }
 
 object Theme {
     val rawColors

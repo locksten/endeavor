@@ -96,9 +96,11 @@ class Authentication(private val context: Context) {
         }
     }
 
-    fun logOut() {
+    fun logOut(client: ApolloClient) {
         removeAuthToken()
         removeUsername()
+        client.apolloStore.clearAll()
+        client.apolloStore.normalizedCache().clearAll()
     }
 
     private fun getPersistedUsername(): String? {

@@ -5,6 +5,7 @@ create table "User" (
     "password" text not null,
     "createdAt" timestamp with time zone not null default now(),
     "partyLeaderId" integer references "User" (id) on delete cascade,
+    "gold" integer not null,
     "hitpoints" integer not null,
     "maxHitpoints" integer not null,
     "energy" integer not null,
@@ -50,5 +51,14 @@ create table "Task" (
     "title" text not null,
     "completionDate" timestamp with time zone,
     "difficulty" integer not null,
+    "createdAt" timestamp with time zone not null default now()
+);
+
+drop table if exists "Reward" cascade;
+create table "Reward" (
+    "id" serial primary key,
+    "userId" integer not null references "User" (id) on delete cascade,
+    "title" text not null,
+    "price" integer not null,
     "createdAt" timestamp with time zone not null default now()
 );

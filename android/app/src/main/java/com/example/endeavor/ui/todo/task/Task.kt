@@ -8,6 +8,7 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -34,7 +35,7 @@ fun Task(task: TasksQuery.Task) {
     Row(
         Modifier
             .fillMaxWidth()
-
+            .defaultMinSize(minHeight = 40.dp)
             .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(8.dp))
             .combinedClickable(
@@ -45,6 +46,7 @@ fun Task(task: TasksQuery.Task) {
             )
             .padding(8.dp),
         Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         CTaskCheckbox(task)
         Spacer(Modifier.width(16.dp))

@@ -16,6 +16,7 @@ type Me {
   partyMembers: [User!]!
   inviters: [User!]!
   invitees: [User!]!
+  rewards: [Reward!]!
 }
 
 type User {
@@ -29,6 +30,7 @@ type User {
   energy: Int!
   maxEnergy: Int!
   experience: Int!
+  gold: Int!
 }
 
 scalar Date
@@ -63,6 +65,14 @@ type Task {
   createdAt: Date!
 }
 
+type Reward {
+  id: ID!
+  _type: String!
+  title: String!
+  createdAt: Date!
+  price: Int!
+}
+
 type Mutation {
   register(username: String!, password: String!): RegistrationResult!
   login(username: String!, password: String!): LoginResult!
@@ -85,6 +95,10 @@ type Mutation {
   removeFromParty(id: ID!): ID
   declineInviteToParty(id: ID!): ID
   cancelInviteToParty(id: ID!): ID
+  createReward(createRewardInput: CreateRewardInput!): Reward
+  deleteReward(id: ID!): ID
+  updateReward(updateRewardInput: UpdateRewardInput!): Reward
+  buyReward(id: ID!): ID
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult
@@ -147,6 +161,17 @@ input UpdateHabitInput {
   difficulty: Int
   positiveCount: Boolean
   negativeCount: Boolean
+}
+
+input CreateRewardInput {
+  title: String!
+  price: Int!
+}
+
+input UpdateRewardInput {
+  id: ID!
+  title: String
+  price: Int
 }
 
 schema {

@@ -1,38 +1,30 @@
-package com.example.endeavor.ui.party
+package com.example.endeavor.ui.reward
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.InviteMutation
-import com.example.endeavor.InviteesQuery
+import com.example.endeavor.BuyRewardMutation
 import com.example.endeavor.MutationComposable
+import com.example.endeavor.RewardsQuery
 import com.example.endeavor.ui.theme.Theme
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun CInviteModal(onDismissRequest: () -> Unit) {
-    var username by remember { mutableStateOf("") }
-    val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(true) {
-        focusRequester.requestFocus()
-    }
-
+fun CBuyRewardModal(reward: Reward, gold: Int, onDismissRequest: () -> Unit) {
     MutationComposable { gql, scope ->
         Dialog(onDismissRequest) {
             Box(
@@ -44,27 +36,37 @@ fun CInviteModal(onDismissRequest: () -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    TextField(
-                        value = username,
-                        onValueChange = { username = it },
-                        label = { Text("Username") },
+                    Text(
+                        text = reward.title,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .focusRequester(focusRequester),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                        colors = TextFieldDefaults.textFieldColors(textColor = Theme.colors.onBackground)
+                            .padding(horizontal = 8.dp, vertical = 32.dp)
                     )
                     Button(
                         onClick = {
                             scope.launch {
-                                invite(gql, username)
+                                buyReward(gql, reward.id)
                                 onDismissRequest()
                             }
                         },
+                        enabled = reward.price <= gold,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Invite")
+                        Row {
+                            Text(
+                                text = "Buy for",
+                                fontSize = 20.sp
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "💰${reward.price}",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                     }
                 }
             }
@@ -72,12 +74,10 @@ fun CInviteModal(onDismissRequest: () -> Unit) {
     }
 }
 
-suspend fun invite(gql: ApolloClient, username: String) {
+suspend fun buyReward(gql: ApolloClient, id: String) {
     try {
-        gql.mutate(
-            InviteMutation(username)
-        ).await()
-        gql.query(InviteesQuery()).await()
+        gql.mutate(BuyRewardMutation(id)).await()
+        gql.query(RewardsQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
 }

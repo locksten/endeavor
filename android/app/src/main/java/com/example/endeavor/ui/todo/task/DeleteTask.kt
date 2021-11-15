@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun DeleteTaskButton(task: TasksQuery.Task, onDelete: () -> Unit) {
+fun CDeleteTaskButton(task: TasksQuery.Task, onDelete: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
     ButtonWithConfirmationDelete {

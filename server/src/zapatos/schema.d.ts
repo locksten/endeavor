@@ -601,6 +601,179 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **Reward**
+   * - Table in database
+   */
+  export namespace Reward {
+    export type Table = 'Reward';
+    export interface Selectable {
+      /**
+      * **Reward.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Reward_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Reward.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **Reward.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **Reward.price**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      price: number;
+      /**
+      * **Reward.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **Reward.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Reward_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Reward.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **Reward.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **Reward.price**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      price: number;
+      /**
+      * **Reward.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: db.TimestampTzString;
+    }
+    export interface Whereable {
+      /**
+      * **Reward.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Reward_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Reward.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Reward.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Reward.price**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      price?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Reward.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **Reward.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Reward_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **Reward.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Reward.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **Reward.price**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      price: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Reward.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **Reward.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Reward_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Reward.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Reward.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **Reward.price**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      price?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Reward.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'Reward_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **Task**
    * - Table in database
    */
@@ -841,6 +1014,12 @@ declare module 'zapatos/schema' {
       */
       partyLeaderId: number | null;
       /**
+      * **User.gold**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      gold: number;
+      /**
       * **User.hitpoints**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -902,6 +1081,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       partyLeaderId: number | null;
+      /**
+      * **User.gold**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      gold: number;
       /**
       * **User.hitpoints**
       * - `int4` in database
@@ -965,6 +1150,12 @@ declare module 'zapatos/schema' {
       */
       partyLeaderId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **User.gold**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      gold?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **User.hitpoints**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -1026,6 +1217,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       partyLeaderId?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **User.gold**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      gold: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **User.hitpoints**
       * - `int4` in database
@@ -1089,6 +1286,12 @@ declare module 'zapatos/schema' {
       */
       partyLeaderId?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
+      * **User.gold**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      gold?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
       * **User.hitpoints**
       * - `int4` in database
       * - `NOT NULL`, no default
@@ -1128,25 +1331,26 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = Daily.Table | Habit.Table | Invite.Table | Task.Table | User.Table;
-  export type Selectable = Daily.Selectable | Habit.Selectable | Invite.Selectable | Task.Selectable | User.Selectable;
-  export type JSONSelectable = Daily.JSONSelectable | Habit.JSONSelectable | Invite.JSONSelectable | Task.JSONSelectable | User.JSONSelectable;
-  export type Whereable = Daily.Whereable | Habit.Whereable | Invite.Whereable | Task.Whereable | User.Whereable;
-  export type Insertable = Daily.Insertable | Habit.Insertable | Invite.Insertable | Task.Insertable | User.Insertable;
-  export type Updatable = Daily.Updatable | Habit.Updatable | Invite.Updatable | Task.Updatable | User.Updatable;
-  export type UniqueIndex = Daily.UniqueIndex | Habit.UniqueIndex | Invite.UniqueIndex | Task.UniqueIndex | User.UniqueIndex;
-  export type Column = Daily.Column | Habit.Column | Invite.Column | Task.Column | User.Column;
-  export type AllBaseTables = [Daily.Table, Habit.Table, Invite.Table, Task.Table, User.Table];
+  export type Table = Daily.Table | Habit.Table | Invite.Table | Reward.Table | Task.Table | User.Table;
+  export type Selectable = Daily.Selectable | Habit.Selectable | Invite.Selectable | Reward.Selectable | Task.Selectable | User.Selectable;
+  export type JSONSelectable = Daily.JSONSelectable | Habit.JSONSelectable | Invite.JSONSelectable | Reward.JSONSelectable | Task.JSONSelectable | User.JSONSelectable;
+  export type Whereable = Daily.Whereable | Habit.Whereable | Invite.Whereable | Reward.Whereable | Task.Whereable | User.Whereable;
+  export type Insertable = Daily.Insertable | Habit.Insertable | Invite.Insertable | Reward.Insertable | Task.Insertable | User.Insertable;
+  export type Updatable = Daily.Updatable | Habit.Updatable | Invite.Updatable | Reward.Updatable | Task.Updatable | User.Updatable;
+  export type UniqueIndex = Daily.UniqueIndex | Habit.UniqueIndex | Invite.UniqueIndex | Reward.UniqueIndex | Task.UniqueIndex | User.UniqueIndex;
+  export type Column = Daily.Column | Habit.Column | Invite.Column | Reward.Column | Task.Column | User.Column;
+  export type AllBaseTables = [Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, User.Table];
   export type AllForeignTables = [];
   export type AllViews = [];
   export type AllMaterializedViews = [];
-  export type AllTablesAndViews = [Daily.Table, Habit.Table, Invite.Table, Task.Table, User.Table];
+  export type AllTablesAndViews = [Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, User.Table];
 
 
   export type SelectableForTable<T extends Table> = {
     Daily: Daily.Selectable;
     Habit: Habit.Selectable;
     Invite: Invite.Selectable;
+    Reward: Reward.Selectable;
     Task: Task.Selectable;
     User: User.Selectable;
   }[T];
@@ -1155,6 +1359,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.JSONSelectable;
     Habit: Habit.JSONSelectable;
     Invite: Invite.JSONSelectable;
+    Reward: Reward.JSONSelectable;
     Task: Task.JSONSelectable;
     User: User.JSONSelectable;
   }[T];
@@ -1163,6 +1368,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Whereable;
     Habit: Habit.Whereable;
     Invite: Invite.Whereable;
+    Reward: Reward.Whereable;
     Task: Task.Whereable;
     User: User.Whereable;
   }[T];
@@ -1171,6 +1377,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Insertable;
     Habit: Habit.Insertable;
     Invite: Invite.Insertable;
+    Reward: Reward.Insertable;
     Task: Task.Insertable;
     User: User.Insertable;
   }[T];
@@ -1179,6 +1386,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Updatable;
     Habit: Habit.Updatable;
     Invite: Invite.Updatable;
+    Reward: Reward.Updatable;
     Task: Task.Updatable;
     User: User.Updatable;
   }[T];
@@ -1187,6 +1395,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.UniqueIndex;
     Habit: Habit.UniqueIndex;
     Invite: Invite.UniqueIndex;
+    Reward: Reward.UniqueIndex;
     Task: Task.UniqueIndex;
     User: User.UniqueIndex;
   }[T];
@@ -1195,6 +1404,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Column;
     Habit: Habit.Column;
     Invite: Invite.Column;
+    Reward: Reward.Column;
     Task: Task.Column;
     User: User.Column;
   }[T];
@@ -1203,6 +1413,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.SQL;
     Habit: Habit.SQL;
     Invite: Invite.SQL;
+    Reward: Reward.SQL;
     Task: Task.SQL;
     User: User.SQL;
   }[T];

@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +42,7 @@ fun CInviterList() {
 @Composable
 fun InviterList(users: List<User>) {
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(2.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 8.dp)
@@ -49,7 +51,7 @@ fun InviterList(users: List<User>) {
         items(
             users.sortedWith(compareBy { it.username })
         )
-        { UserListItem(it) { CAcceptInvitationButton(it) } }
+        { UserListItem(it) { CAcceptDeclineInvitationButtons(it) } }
         item { Spacer(Modifier.height(14.dp)) }
     }
 }
@@ -57,7 +59,7 @@ fun InviterList(users: List<User>) {
 
 @ExperimentalComposeUiApi
 @Composable
-fun CAcceptInvitationButton(user: User) {
+fun CAcceptDeclineInvitationButtons(user: User) {
     MutationComposable { gql, scope ->
         Row(
             horizontalArrangement = Arrangement.spacedBy(1.dp),

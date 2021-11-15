@@ -1,4 +1,4 @@
-package com.example.endeavor.ui.todo.habit
+package com.example.endeavor.ui.reward
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -17,25 +18,23 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.HabitsQuery
 import com.example.endeavor.LocalGQLClient
-import com.example.endeavor.UpdateHabitMutation
-import com.example.endeavor.type.UpdateHabitInput
+import com.example.endeavor.RewardsQuery
+import com.example.endeavor.UpdateRewardMutation
+import com.example.endeavor.type.UpdateRewardInput
 import com.example.endeavor.ui.MyTextField
 import com.example.endeavor.ui.theme.Theme
-import com.example.endeavor.ui.todo.TodoDifficultySelector
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
-fun CUpdateHabitModal(habit: HabitsQuery.Habit, onDismissRequest: () -> Unit) {
+fun CUpdateRewardModal(reward: Reward, onDismissRequest: () -> Unit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
-    var difficulty by remember { mutableStateOf<Int?>(null) }
-    var positiveCount by remember { mutableStateOf<Boolean?>(null) }
-    var negativeCount by remember { mutableStateOf<Boolean?>(null) }
     var title by remember { mutableStateOf<String?>(null) }
+    var price by remember { mutableStateOf<Int?>(null) }
     val titleFocusRequester = remember { FocusRequester() }
+    val priceFocusRequester = remember { FocusRequester() }
     LaunchedEffect(true) {
         titleFocusRequester.requestFocus()
     }
@@ -51,41 +50,36 @@ fun CUpdateHabitModal(habit: HabitsQuery.Habit, onDismissRequest: () -> Unit) {
                 modifier = Modifier.padding(16.dp)
             ) {
                 MyTextField(
-                    title ?: habit.title, titleFocusRequester, label = "Title",
-                    keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
-                    keyboardActions = KeyboardActions(onDone = {
+                    label = "Title",
+                    value = title ?: reward.title,
+                    onChange = { title = it },
+                    focusRequester = titleFocusRequester,
+                    keyboardActions = KeyboardActions(onNext = { priceFocusRequester.requestFocus() }),
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Next,
+                        capitalization = KeyboardCapitalization.Words
+                    ),
+                )
+                PriceTextField(
+                    value = price ?: reward.price,
+                    onValueChange = { price = it },
+                    focusRequester = priceFocusRequester,
+                    onDone = {
                         scope.launch {
-                            updateHabit(
-                                gql,
-                                habit.id,
-                                title,
-                                difficulty,
-                                positiveCount,
-                                negativeCount,
-                            )
+                            updateReward(gql, reward.id, title, price)
                             onDismissRequest()
                         }
-                    }),
-                ) { title = it }
-                TodoDifficultySelector(
-                    value = difficulty ?: habit.difficulty,
-                    onChange = { difficulty = it })
-                HabitTypeSelector(
-                    positiveValue = positiveCount ?: (habit.positiveCount != null),
-                    negativeValue = negativeCount ?: (habit.negativeCount != null),
-                    onChangePositive = { positiveCount = it },
-                    onChangeNegative = { negativeCount = it })
-                CDeleteHabitButton(habit, onDismissRequest)
+                    }
+                )
+                CDeleteRewardButton(reward, onDismissRequest)
                 Button(
                     onClick = {
                         scope.launch {
-                            updateHabit(
+                            updateReward(
                                 gql,
-                                habit.id,
+                                reward.id,
                                 title,
-                                difficulty,
-                                positiveCount,
-                                negativeCount,
+                                price,
                             )
                             onDismissRequest()
                         }
@@ -99,27 +93,23 @@ fun CUpdateHabitModal(habit: HabitsQuery.Habit, onDismissRequest: () -> Unit) {
     }
 }
 
-suspend fun updateHabit(
+suspend fun updateReward(
     gql: ApolloClient,
     id: String,
     title: String?,
-    difficulty: Int?,
-    positiveCount: Boolean?,
-    negativeCount: Boolean?
+    price: Int?,
 ) {
     try {
         gql.mutate(
-            UpdateHabitMutation(
-                UpdateHabitInput(
+            UpdateRewardMutation(
+                UpdateRewardInput(
                     id,
                     title = Input.optional(title),
-                    difficulty = Input.optional(difficulty),
-                    positiveCount = Input.optional(positiveCount),
-                    negativeCount = Input.optional(negativeCount),
+                    price = Input.optional(price),
                 )
             )
         ).await()
-        gql.query(HabitsQuery()).await()
+        gql.query(RewardsQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
 }

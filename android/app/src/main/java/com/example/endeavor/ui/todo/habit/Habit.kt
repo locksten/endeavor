@@ -2,17 +2,18 @@ package com.example.endeavor.ui.todo.habit
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apollographql.apollo.ApolloClient
@@ -31,7 +32,6 @@ import kotlin.math.abs
 @Composable
 fun Habit(habit: HabitsQuery.Habit) {
     var isUpdateDialogOpen by remember { mutableStateOf(false) }
-
     Row(
         Modifier
             .fillMaxWidth()
@@ -45,28 +45,29 @@ fun Habit(habit: HabitsQuery.Habit) {
                     isUpdateDialogOpen = true
                 }
             ),
-        Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        HabitButton(isPositive = false, habit = habit)
-        Spacer(Modifier.width(16.dp))
-        Column(
-            verticalArrangement = Arrangement.Center,
+        CHabitButton(isPositive = false, habit = habit)
+        Text(
+            text = habit.title,
+            fontSize = 20.sp,
             modifier = Modifier
+                .fillMaxWidth()
                 .weight(1f)
-                .fillMaxHeight()
-        ) {
-            Text(
-                text = habit.title,
-                fontSize = 20.sp,
-            )
-        }
-        HabitButton(isPositive = true, habit = habit)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            textAlign = when {
+                isHabitPos(habit) -> TextAlign.End
+                isHabitNeg(habit) -> TextAlign.Start
+                else -> TextAlign.Center
+            }
+        )
+        CHabitButton(isPositive = true, habit = habit)
         if (isUpdateDialogOpen) CUpdateHabitModal(habit) { isUpdateDialogOpen = false }
     }
 }
 
 @Composable
-fun HabitButton(isPositive: Boolean, habit: HabitsQuery.Habit) {
+fun CHabitButton(isPositive: Boolean, habit: HabitsQuery.Habit) {
     val scope = rememberCoroutineScope()
     val gql = LocalGQLClient.current
 
@@ -82,40 +83,45 @@ fun HabitButton(isPositive: Boolean, habit: HabitsQuery.Habit) {
         "-"
     }
 
-    Box(
-        Modifier
-            .width(64.dp)
-            .fillMaxHeight()) {
-        if (count != null) {
-            Button(
-                onClick = {
-                    scope.launch {
-                        if (isPositive) {
-                            doPositiveHabit(gql, habit.id)
-                        } else {
-                            doNegativeHabit(gql, habit.id)
+    if (count != null) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .width(56.dp)
+                .fillMaxHeight()
+                .clickable(
+                    onClick = {
+                        scope.launch {
+                            if (isPositive) {
+                                doPositiveHabit(gql, habit.id)
+                            } else {
+                                doNegativeHabit(gql, habit.id)
+                            }
                         }
-                    }
-                },
-                modifier = Modifier.fillMaxHeight(),
-                shape = RoundedCornerShape(0),
-                colors = if (isPositive) ButtonDefaults.buttonColors(
-                    backgroundColor = Theme.colors.positiveHabitButton,
-                    contentColor = Theme.colors.onPositiveHabitButton
-                ) else {
-                    ButtonDefaults.buttonColors(
-                        backgroundColor = Theme.colors.negativeHabitButton,
-                        contentColor = Theme.colors.onNegativeHabitButton
-                    )
-                }
-            ) {
-                Text(
-                    "${sign}${count}",
-                    fontWeight = FontWeight.Bold
+                    },
                 )
-            }
+                .background(
+                    if (isPositive) {
+                        Theme.colors.positiveHabitButton
+                    } else {
+                        Theme.colors.negativeHabitButton
+                    }
+                )
+        )
+        {
+            Text(
+                text = "${sign}${count}",
+                fontWeight = FontWeight.Bold,
+                color = if (isPositive) {
+                    Theme.colors.onPositiveHabitButton
+                } else {
+                    Theme.colors.onNegativeHabitButton
+                }
+            )
         }
     }
+
 }
 
 suspend fun doPositiveHabit(gql: ApolloClient, id: String) {
@@ -136,4 +142,16 @@ suspend fun doNegativeHabit(gql: ApolloClient, id: String) {
         gql.query(HabitsQuery()).await()
     } catch (e: ApolloNetworkException) {
     }
+}
+
+fun isHabitPosNeg(a: HabitsQuery.Habit): Boolean {
+    return a.negativeCount != null && a.positiveCount != null
+}
+
+fun isHabitPos(a: HabitsQuery.Habit): Boolean {
+    return a.negativeCount == null && a.positiveCount != null
+}
+
+fun isHabitNeg(a: HabitsQuery.Habit): Boolean {
+    return a.negativeCount != null && a.positiveCount == null
 }
