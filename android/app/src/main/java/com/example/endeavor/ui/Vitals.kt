@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.endeavor.VitalsQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.Theme
+import kotlin.math.sin
 
 @Composable
 fun CVitals() {
@@ -118,23 +119,52 @@ private fun AnimatedRing(color: Color, backgroundColor: Color, targetValue: Floa
     LaunchedEffect(animateFloat, targetValue) {
         lastFinish = animateFloat.animateTo(
             targetValue = targetValue ?: lastFinish,
-            animationSpec = tween(durationMillis = 500, easing = LinearEasing)
+            animationSpec = tween(durationMillis = 2000, easing = LinearEasing)
         ).endState.value
     }
-    RingWithBackground(color = color, backgroundColor = backgroundColor, value = animateFloat.value)
+    RingWithBackground(
+        color = color,
+        backgroundColor = backgroundColor,
+        value = animateFloat.value,
+        targetValue = targetValue ?: animateFloat.value,
+        isIncreasing = (targetValue ?: 0f) - lastFinish >= 0f
+    )
 }
 
 @Composable
-private fun RingWithBackground(color: Color, backgroundColor: Color, value: Float) {
+private fun RingWithBackground(
+    color: Color,
+    backgroundColor: Color,
+    value: Float,
+    targetValue: Float,
+    isIncreasing: Boolean
+) {
     Box {
-        Ring(color = backgroundColor, value = 1f)
-        Ring(color = color, value = value)
+        Ring(
+            color = backgroundColor,
+            value = 1f,
+            targetValue = targetValue,
+            isIncreasing = isIncreasing
+        )
+        Ring(color = color, value = value, targetValue = targetValue, isIncreasing = isIncreasing)
     }
 }
 
 @Composable
-private fun Ring(color: Color, value: Float) {
-    val thickness = 40f
+private fun Ring(color: Color, value: Float, targetValue: Float, isIncreasing: Boolean) {
+    val thicknessAmplitude = if (isIncreasing) {
+        20f
+    } else {
+        -10f
+    }
+    val thicknessProgress = value / targetValue
+    val thickness = 20f +
+            thicknessAmplitude *
+            if (targetValue == 0f) {
+                1f
+            } else {
+                sin(Math.toRadians((thicknessProgress * 360f * 3f).toDouble())).toFloat()
+            }
     Canvas(
         modifier = Modifier.fillMaxSize()
     ) {
