@@ -2,6 +2,7 @@ mutation UpdateTask($updateTaskInput: UpdateTaskInput!) {
   updateTask(updateTaskInput: $updateTaskInput) {
     id
     isCompleted
+    completionDate
     title
     difficulty
   }

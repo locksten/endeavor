@@ -2,18 +2,18 @@ import { AppContext } from "context"
 import { db, dc } from "database"
 import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
-import { idResolver, t, typeResolver } from "schema/typesFactory"
+import { idResolver, t, _typeResolver } from "schema/typesFactory"
 import { User as QUser } from "zapatos/schema"
 
 export { User as QUser } from "zapatos/schema"
-export type User = QUser.JSONSelectable & { _type?: "User" }
+export type User = QUser.JSONSelectable
 
 export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
   {
     name: "User",
     fields: () => [
       idResolver,
-      typeResolver("User"),
+      _typeResolver("User"),
       t.field({ name: "username", type: t.NonNull(t.String) }),
       t.field({ name: "createdAt", type: t.NonNull(DateType) }),
       t.field({

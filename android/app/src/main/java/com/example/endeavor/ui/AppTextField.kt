@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import com.example.endeavor.ui.theme.Theme
 
 @Composable
-fun MyTextField(
+fun AppTextField(
     value: String,
     focusRequester: FocusRequester,
     isError: Boolean? = false,

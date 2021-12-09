@@ -18,6 +18,10 @@ declare module 'zapatos/schema' {
 
   /* --- enums --- */
 
+  export type TodoType = 'Daily' | 'Habit' | 'Task';
+  export namespace every {
+    export type TodoType = ['Daily', 'Habit', 'Task'];
+  }
 
   /* --- tables --- */
 
@@ -31,193 +35,73 @@ declare module 'zapatos/schema' {
       /**
       * **Daily.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Daily_id_seq"'::regclass)`
+      * - `NOT NULL`, no default
       */
       id: number;
-      /**
-      * **Daily.userId**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      userId: number;
-      /**
-      * **Daily.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string;
-      /**
-      * **Daily.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty: number;
       /**
       * **Daily.lastCompletionDate**
       * - `timestamptz` in database
       * - Nullable, no default
       */
       lastCompletionDate: Date | null;
-      /**
-      * **Daily.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt: Date;
     }
     export interface JSONSelectable {
       /**
       * **Daily.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Daily_id_seq"'::regclass)`
+      * - `NOT NULL`, no default
       */
       id: number;
-      /**
-      * **Daily.userId**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      userId: number;
-      /**
-      * **Daily.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string;
-      /**
-      * **Daily.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty: number;
       /**
       * **Daily.lastCompletionDate**
       * - `timestamptz` in database
       * - Nullable, no default
       */
       lastCompletionDate: db.TimestampTzString | null;
-      /**
-      * **Daily.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt: db.TimestampTzString;
     }
     export interface Whereable {
       /**
       * **Daily.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Daily_id_seq"'::regclass)`
+      * - `NOT NULL`, no default
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Daily.userId**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Daily.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Daily.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **Daily.lastCompletionDate**
       * - `timestamptz` in database
       * - Nullable, no default
       */
       lastCompletionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Daily.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
       * **Daily.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Daily_id_seq"'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **Daily.userId**
-      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      userId: number | db.Parameter<number> | db.SQLFragment;
-      /**
-      * **Daily.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **Daily.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty: number | db.Parameter<number> | db.SQLFragment;
+      id: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **Daily.lastCompletionDate**
       * - `timestamptz` in database
       * - Nullable, no default
       */
       lastCompletionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **Daily.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
       * **Daily.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Daily_id_seq"'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **Daily.userId**
-      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      userId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
-      * **Daily.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **Daily.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
       * **Daily.lastCompletionDate**
       * - `timestamptz` in database
       * - Nullable, no default
       */
       lastCompletionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **Daily.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'Daily_pkey';
+    export type UniqueIndex = never;
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -234,27 +118,9 @@ declare module 'zapatos/schema' {
       /**
       * **Habit.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Habit_id_seq"'::regclass)`
+      * - `NOT NULL`, no default
       */
       id: number;
-      /**
-      * **Habit.userId**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      userId: number;
-      /**
-      * **Habit.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string;
-      /**
-      * **Habit.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty: number;
       /**
       * **Habit.positiveCount**
       * - `int4` in database
@@ -267,38 +133,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       negativeCount: number | null;
-      /**
-      * **Habit.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt: Date;
     }
     export interface JSONSelectable {
       /**
       * **Habit.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Habit_id_seq"'::regclass)`
+      * - `NOT NULL`, no default
       */
       id: number;
-      /**
-      * **Habit.userId**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      userId: number;
-      /**
-      * **Habit.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string;
-      /**
-      * **Habit.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty: number;
       /**
       * **Habit.positiveCount**
       * - `int4` in database
@@ -311,38 +153,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       negativeCount: number | null;
-      /**
-      * **Habit.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt: db.TimestampTzString;
     }
     export interface Whereable {
       /**
       * **Habit.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Habit_id_seq"'::regclass)`
+      * - `NOT NULL`, no default
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Habit.userId**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Habit.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Habit.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
       * **Habit.positiveCount**
       * - `int4` in database
@@ -355,38 +173,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       negativeCount?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Habit.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
       * **Habit.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Habit_id_seq"'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **Habit.userId**
-      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      userId: number | db.Parameter<number> | db.SQLFragment;
-      /**
-      * **Habit.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **Habit.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty: number | db.Parameter<number> | db.SQLFragment;
+      id: number | db.Parameter<number> | db.SQLFragment;
       /**
       * **Habit.positiveCount**
       * - `int4` in database
@@ -399,38 +193,14 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       negativeCount?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **Habit.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
       * **Habit.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Habit_id_seq"'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **Habit.userId**
-      * - `int4` in database
       * - `NOT NULL`, no default
       */
-      userId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
-      /**
-      * **Habit.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **Habit.difficulty**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
       * **Habit.positiveCount**
       * - `int4` in database
@@ -443,14 +213,8 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       negativeCount?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **Habit.createdAt**
-      * - `timestamptz` in database
-      * - `NOT NULL`, default: `now()`
-      */
-      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'Habit_pkey';
+    export type UniqueIndex = never;
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -783,35 +547,118 @@ declare module 'zapatos/schema' {
       /**
       * **Task.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Task_id_seq"'::regclass)`
+      * - `NOT NULL`, no default
       */
       id: number;
-      /**
-      * **Task.userId**
-      * - `int4` in database
-      * - `NOT NULL`, no default
-      */
-      userId: number;
-      /**
-      * **Task.title**
-      * - `text` in database
-      * - `NOT NULL`, no default
-      */
-      title: string;
       /**
       * **Task.completionDate**
       * - `timestamptz` in database
       * - Nullable, no default
       */
       completionDate: Date | null;
+    }
+    export interface JSONSelectable {
       /**
-      * **Task.difficulty**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id: number;
+      /**
+      * **Task.completionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      completionDate: db.TimestampTzString | null;
+    }
+    export interface Whereable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Task.completionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **Task.completionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **Task.id**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **Task.completionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = never;
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **Todo**
+   * - Table in database
+   */
+  export namespace Todo {
+    export type Table = 'Todo';
+    export interface Selectable {
+      /**
+      * **Todo.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Todo.type**
+      * - `TodoType` in database
+      * - `NOT NULL`, no default
+      */
+      type: TodoType;
+      /**
+      * **Todo.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **Todo.title**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      title: string;
+      /**
+      * **Todo.difficulty**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       difficulty: number;
       /**
-      * **Task.createdAt**
+      * **Todo.createdAt**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
@@ -819,37 +666,37 @@ declare module 'zapatos/schema' {
     }
     export interface JSONSelectable {
       /**
-      * **Task.id**
+      * **Todo.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Task_id_seq"'::regclass)`
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
       */
       id: number;
       /**
-      * **Task.userId**
+      * **Todo.type**
+      * - `TodoType` in database
+      * - `NOT NULL`, no default
+      */
+      type: TodoType;
+      /**
+      * **Todo.userId**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       userId: number;
       /**
-      * **Task.title**
+      * **Todo.title**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       title: string;
       /**
-      * **Task.completionDate**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      completionDate: db.TimestampTzString | null;
-      /**
-      * **Task.difficulty**
+      * **Todo.difficulty**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       difficulty: number;
       /**
-      * **Task.createdAt**
+      * **Todo.createdAt**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
@@ -857,37 +704,37 @@ declare module 'zapatos/schema' {
     }
     export interface Whereable {
       /**
-      * **Task.id**
+      * **Todo.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Task_id_seq"'::regclass)`
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
       */
       id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **Task.userId**
+      * **Todo.type**
+      * - `TodoType` in database
+      * - `NOT NULL`, no default
+      */
+      type?: TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Todo.userId**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **Task.title**
+      * **Todo.title**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **Task.completionDate**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **Task.difficulty**
+      * **Todo.difficulty**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       difficulty?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **Task.createdAt**
+      * **Todo.createdAt**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
@@ -895,37 +742,37 @@ declare module 'zapatos/schema' {
     }
     export interface Insertable {
       /**
-      * **Task.id**
+      * **Todo.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Task_id_seq"'::regclass)`
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-      * **Task.userId**
+      * **Todo.type**
+      * - `TodoType` in database
+      * - `NOT NULL`, no default
+      */
+      type: TodoType | db.Parameter<TodoType> | db.SQLFragment;
+      /**
+      * **Todo.userId**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       userId: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **Task.title**
+      * **Todo.title**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       title: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **Task.completionDate**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **Task.difficulty**
+      * **Todo.difficulty**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       difficulty: number | db.Parameter<number> | db.SQLFragment;
       /**
-      * **Task.createdAt**
+      * **Todo.createdAt**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
@@ -933,43 +780,514 @@ declare module 'zapatos/schema' {
     }
     export interface Updatable {
       /**
-      * **Task.id**
+      * **Todo.id**
       * - `int4` in database
-      * - `NOT NULL`, default: `nextval('"Task_id_seq"'::regclass)`
+      * - `NOT NULL`, default: `nextval('"Todo_id_seq"'::regclass)`
       */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-      * **Task.userId**
+      * **Todo.type**
+      * - `TodoType` in database
+      * - `NOT NULL`, no default
+      */
+      type?: TodoType | db.Parameter<TodoType> | db.SQLFragment | db.SQLFragment<any, TodoType | db.Parameter<TodoType> | db.SQLFragment>;
+      /**
+      * **Todo.userId**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       userId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-      * **Task.title**
+      * **Todo.title**
       * - `text` in database
       * - `NOT NULL`, no default
       */
       title?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **Task.completionDate**
-      * - `timestamptz` in database
-      * - Nullable, no default
-      */
-      completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **Task.difficulty**
+      * **Todo.difficulty**
       * - `int4` in database
       * - `NOT NULL`, no default
       */
       difficulty?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-      * **Task.createdAt**
+      * **Todo.createdAt**
       * - `timestamptz` in database
       * - `NOT NULL`, default: `now()`
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = 'Task_pkey';
+    export type UniqueIndex = 'Todo_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **TodoDaily**
+   * - View in database
+   */
+  export namespace TodoDaily {
+    export type Table = 'TodoDaily';
+    export interface Selectable {
+      /**
+      * **TodoDaily.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id: number | null;
+      /**
+      * **TodoDaily.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type: TodoType | null;
+      /**
+      * **TodoDaily.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId: number | null;
+      /**
+      * **TodoDaily.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **TodoDaily.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty: number | null;
+      /**
+      * **TodoDaily.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt: Date | null;
+      /**
+      * **TodoDaily.lastCompletionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      lastCompletionDate: Date | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **TodoDaily.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id: number | null;
+      /**
+      * **TodoDaily.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type: TodoType | null;
+      /**
+      * **TodoDaily.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId: number | null;
+      /**
+      * **TodoDaily.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **TodoDaily.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty: number | null;
+      /**
+      * **TodoDaily.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt: db.TimestampTzString | null;
+      /**
+      * **TodoDaily.lastCompletionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      lastCompletionDate: db.TimestampTzString | null;
+    }
+    export interface Whereable {
+      /**
+      * **TodoDaily.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoDaily.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type?: TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoDaily.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoDaily.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoDaily.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoDaily.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoDaily.lastCompletionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      lastCompletionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      [key: string]: never;
+    }
+    export interface Updatable {
+      [key: string]: never;
+    }
+    export type UniqueIndex = never;
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **TodoHabit**
+   * - View in database
+   */
+  export namespace TodoHabit {
+    export type Table = 'TodoHabit';
+    export interface Selectable {
+      /**
+      * **TodoHabit.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id: number | null;
+      /**
+      * **TodoHabit.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type: TodoType | null;
+      /**
+      * **TodoHabit.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId: number | null;
+      /**
+      * **TodoHabit.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **TodoHabit.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty: number | null;
+      /**
+      * **TodoHabit.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt: Date | null;
+      /**
+      * **TodoHabit.positiveCount**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      positiveCount: number | null;
+      /**
+      * **TodoHabit.negativeCount**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      negativeCount: number | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **TodoHabit.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id: number | null;
+      /**
+      * **TodoHabit.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type: TodoType | null;
+      /**
+      * **TodoHabit.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId: number | null;
+      /**
+      * **TodoHabit.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **TodoHabit.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty: number | null;
+      /**
+      * **TodoHabit.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt: db.TimestampTzString | null;
+      /**
+      * **TodoHabit.positiveCount**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      positiveCount: number | null;
+      /**
+      * **TodoHabit.negativeCount**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      negativeCount: number | null;
+    }
+    export interface Whereable {
+      /**
+      * **TodoHabit.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoHabit.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type?: TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoHabit.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoHabit.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoHabit.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoHabit.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoHabit.positiveCount**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      positiveCount?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoHabit.negativeCount**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      negativeCount?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      [key: string]: never;
+    }
+    export interface Updatable {
+      [key: string]: never;
+    }
+    export type UniqueIndex = never;
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **TodoTask**
+   * - View in database
+   */
+  export namespace TodoTask {
+    export type Table = 'TodoTask';
+    export interface Selectable {
+      /**
+      * **TodoTask.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id: number | null;
+      /**
+      * **TodoTask.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type: TodoType | null;
+      /**
+      * **TodoTask.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId: number | null;
+      /**
+      * **TodoTask.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **TodoTask.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty: number | null;
+      /**
+      * **TodoTask.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt: Date | null;
+      /**
+      * **TodoTask.completionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      completionDate: Date | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **TodoTask.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id: number | null;
+      /**
+      * **TodoTask.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type: TodoType | null;
+      /**
+      * **TodoTask.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId: number | null;
+      /**
+      * **TodoTask.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title: string | null;
+      /**
+      * **TodoTask.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty: number | null;
+      /**
+      * **TodoTask.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt: db.TimestampTzString | null;
+      /**
+      * **TodoTask.completionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      completionDate: db.TimestampTzString | null;
+    }
+    export interface Whereable {
+      /**
+      * **TodoTask.id**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoTask.type**
+      * - `TodoType` in database
+      * - Nullable, no default
+      */
+      type?: TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, TodoType | db.Parameter<TodoType> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoTask.userId**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoTask.title**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      title?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoTask.difficulty**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      difficulty?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoTask.createdAt**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoTask.completionDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      [key: string]: never;
+    }
+    export interface Updatable {
+      [key: string]: never;
+    }
+    export type UniqueIndex = never;
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -1331,19 +1649,19 @@ declare module 'zapatos/schema' {
 
   /* === cross-table types === */
 
-  export type Table = Daily.Table | Habit.Table | Invite.Table | Reward.Table | Task.Table | User.Table;
-  export type Selectable = Daily.Selectable | Habit.Selectable | Invite.Selectable | Reward.Selectable | Task.Selectable | User.Selectable;
-  export type JSONSelectable = Daily.JSONSelectable | Habit.JSONSelectable | Invite.JSONSelectable | Reward.JSONSelectable | Task.JSONSelectable | User.JSONSelectable;
-  export type Whereable = Daily.Whereable | Habit.Whereable | Invite.Whereable | Reward.Whereable | Task.Whereable | User.Whereable;
-  export type Insertable = Daily.Insertable | Habit.Insertable | Invite.Insertable | Reward.Insertable | Task.Insertable | User.Insertable;
-  export type Updatable = Daily.Updatable | Habit.Updatable | Invite.Updatable | Reward.Updatable | Task.Updatable | User.Updatable;
-  export type UniqueIndex = Daily.UniqueIndex | Habit.UniqueIndex | Invite.UniqueIndex | Reward.UniqueIndex | Task.UniqueIndex | User.UniqueIndex;
-  export type Column = Daily.Column | Habit.Column | Invite.Column | Reward.Column | Task.Column | User.Column;
-  export type AllBaseTables = [Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, User.Table];
+  export type Table = Daily.Table | Habit.Table | Invite.Table | Reward.Table | Task.Table | Todo.Table | TodoDaily.Table | TodoHabit.Table | TodoTask.Table | User.Table;
+  export type Selectable = Daily.Selectable | Habit.Selectable | Invite.Selectable | Reward.Selectable | Task.Selectable | Todo.Selectable | TodoDaily.Selectable | TodoHabit.Selectable | TodoTask.Selectable | User.Selectable;
+  export type JSONSelectable = Daily.JSONSelectable | Habit.JSONSelectable | Invite.JSONSelectable | Reward.JSONSelectable | Task.JSONSelectable | Todo.JSONSelectable | TodoDaily.JSONSelectable | TodoHabit.JSONSelectable | TodoTask.JSONSelectable | User.JSONSelectable;
+  export type Whereable = Daily.Whereable | Habit.Whereable | Invite.Whereable | Reward.Whereable | Task.Whereable | Todo.Whereable | TodoDaily.Whereable | TodoHabit.Whereable | TodoTask.Whereable | User.Whereable;
+  export type Insertable = Daily.Insertable | Habit.Insertable | Invite.Insertable | Reward.Insertable | Task.Insertable | Todo.Insertable | TodoDaily.Insertable | TodoHabit.Insertable | TodoTask.Insertable | User.Insertable;
+  export type Updatable = Daily.Updatable | Habit.Updatable | Invite.Updatable | Reward.Updatable | Task.Updatable | Todo.Updatable | TodoDaily.Updatable | TodoHabit.Updatable | TodoTask.Updatable | User.Updatable;
+  export type UniqueIndex = Daily.UniqueIndex | Habit.UniqueIndex | Invite.UniqueIndex | Reward.UniqueIndex | Task.UniqueIndex | Todo.UniqueIndex | TodoDaily.UniqueIndex | TodoHabit.UniqueIndex | TodoTask.UniqueIndex | User.UniqueIndex;
+  export type Column = Daily.Column | Habit.Column | Invite.Column | Reward.Column | Task.Column | Todo.Column | TodoDaily.Column | TodoHabit.Column | TodoTask.Column | User.Column;
+  export type AllBaseTables = [Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, Todo.Table, User.Table];
   export type AllForeignTables = [];
-  export type AllViews = [];
+  export type AllViews = [TodoDaily.Table, TodoHabit.Table, TodoTask.Table];
   export type AllMaterializedViews = [];
-  export type AllTablesAndViews = [Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, User.Table];
+  export type AllTablesAndViews = [Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, Todo.Table, TodoDaily.Table, TodoHabit.Table, TodoTask.Table, User.Table];
 
 
   export type SelectableForTable<T extends Table> = {
@@ -1352,6 +1670,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.Selectable;
     Reward: Reward.Selectable;
     Task: Task.Selectable;
+    Todo: Todo.Selectable;
+    TodoDaily: TodoDaily.Selectable;
+    TodoHabit: TodoHabit.Selectable;
+    TodoTask: TodoTask.Selectable;
     User: User.Selectable;
   }[T];
 
@@ -1361,6 +1683,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.JSONSelectable;
     Reward: Reward.JSONSelectable;
     Task: Task.JSONSelectable;
+    Todo: Todo.JSONSelectable;
+    TodoDaily: TodoDaily.JSONSelectable;
+    TodoHabit: TodoHabit.JSONSelectable;
+    TodoTask: TodoTask.JSONSelectable;
     User: User.JSONSelectable;
   }[T];
 
@@ -1370,6 +1696,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.Whereable;
     Reward: Reward.Whereable;
     Task: Task.Whereable;
+    Todo: Todo.Whereable;
+    TodoDaily: TodoDaily.Whereable;
+    TodoHabit: TodoHabit.Whereable;
+    TodoTask: TodoTask.Whereable;
     User: User.Whereable;
   }[T];
 
@@ -1379,6 +1709,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.Insertable;
     Reward: Reward.Insertable;
     Task: Task.Insertable;
+    Todo: Todo.Insertable;
+    TodoDaily: TodoDaily.Insertable;
+    TodoHabit: TodoHabit.Insertable;
+    TodoTask: TodoTask.Insertable;
     User: User.Insertable;
   }[T];
 
@@ -1388,6 +1722,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.Updatable;
     Reward: Reward.Updatable;
     Task: Task.Updatable;
+    Todo: Todo.Updatable;
+    TodoDaily: TodoDaily.Updatable;
+    TodoHabit: TodoHabit.Updatable;
+    TodoTask: TodoTask.Updatable;
     User: User.Updatable;
   }[T];
 
@@ -1397,6 +1735,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.UniqueIndex;
     Reward: Reward.UniqueIndex;
     Task: Task.UniqueIndex;
+    Todo: Todo.UniqueIndex;
+    TodoDaily: TodoDaily.UniqueIndex;
+    TodoHabit: TodoHabit.UniqueIndex;
+    TodoTask: TodoTask.UniqueIndex;
     User: User.UniqueIndex;
   }[T];
 
@@ -1406,6 +1748,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.Column;
     Reward: Reward.Column;
     Task: Task.Column;
+    Todo: Todo.Column;
+    TodoDaily: TodoDaily.Column;
+    TodoHabit: TodoHabit.Column;
+    TodoTask: TodoTask.Column;
     User: User.Column;
   }[T];
 
@@ -1415,6 +1761,10 @@ declare module 'zapatos/schema' {
     Invite: Invite.SQL;
     Reward: Reward.SQL;
     Task: Task.SQL;
+    Todo: Todo.SQL;
+    TodoDaily: TodoDaily.SQL;
+    TodoHabit: TodoHabit.SQL;
+    TodoTask: TodoTask.SQL;
     User: User.SQL;
   }[T];
 

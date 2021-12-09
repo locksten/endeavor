@@ -3,13 +3,11 @@ import { mutationLogin } from "schema/auth/login"
 import { mutationRegister } from "schema/auth/register"
 import {
   mutationCreateDaily,
-  mutationDeleteDaily,
   mutationCompleteDaily,
   mutationUpdateDaily,
 } from "schema/daily"
 import {
   mutationCreateHabit,
-  mutationDeleteHabit,
   mutationDoNegativeHabit,
   mutationDoPositiveHabit,
   mutationUpdateHabit,
@@ -32,9 +30,9 @@ import {
 import {
   mutationCompleteTask,
   mutationCreateTask,
-  mutationDeleteTask,
   mutationUpdateTask,
 } from "schema/task"
+import { mutationDeleteTodo } from "schema/todo"
 import { t } from "schema/typesFactory"
 import { queryUserById, queryUserByName, queryUserSearch } from "schema/user"
 
@@ -61,15 +59,13 @@ const mutation = t.mutationType({
     mutationRegister,
     mutationLogin,
     mutationCreateTask,
-    mutationDeleteTask,
+    mutationDeleteTodo,
     mutationCompleteTask,
     mutationUpdateTask,
     mutationCreateDaily,
-    mutationDeleteDaily,
     mutationCompleteDaily,
     mutationUpdateDaily,
     mutationCreateHabit,
-    mutationDeleteHabit,
     mutationUpdateHabit,
     mutationDoPositiveHabit,
     mutationDoNegativeHabit,
@@ -89,4 +85,5 @@ const mutation = t.mutationType({
 export const schema = buildGraphQLSchema({
   query,
   mutation,
+  types: [],
 })

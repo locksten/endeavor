@@ -1,8 +1,7 @@
 package com.example.endeavor.ui.party
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,7 +9,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
@@ -18,6 +16,7 @@ import com.example.endeavor.CancelInviteMutation
 import com.example.endeavor.InviteesQuery
 import com.example.endeavor.MutationComposable
 import com.example.endeavor.gqlWatchQuery
+import com.example.endeavor.ui.AppLazyColumn
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -43,18 +42,9 @@ fun CInviteeList() {
 @ExperimentalComposeUiApi
 @Composable
 fun InviteeList(users: List<User>) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp)
-    ) {
-        item { Spacer(Modifier.height(14.dp)) }
-        items(
-            users.sortedWith(compareBy { it.username })
-        )
+    AppLazyColumn(fabPadding = true) {
+        items(users.sortedWith(compareBy { it.username }))
         { UserListItem(it) { CCancelInvitationButton(it) } }
-        item { Spacer(Modifier.height(80.dp)) }
     }
 }
 

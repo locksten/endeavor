@@ -27,14 +27,14 @@ export const MeType: ObjectType<AppContext, User> = t.objectType<Me>({
       name: "habits",
       type: t.NonNull(t.List(t.NonNull(HabitType))),
       resolve: async (me, _args, { pool }) => {
-        return await db.select("Habit", { userId: me.id }).run(pool)
+        return await db.select("TodoHabit", { userId: me.id }).run(pool)
       },
     }),
     t.field({
       name: "dailies",
       type: t.NonNull(t.List(t.NonNull(DailyType))),
       resolve: async (me, _args, { pool }) => {
-        return await db.select("Daily", { userId: me.id }).run(pool)
+        return await db.select("TodoDaily", { userId: me.id }).run(pool)
       },
     }),
     t.field({
@@ -42,7 +42,7 @@ export const MeType: ObjectType<AppContext, User> = t.objectType<Me>({
       type: t.NonNull(t.List(t.NonNull(TaskType))),
       resolve: async (me, _args, { pool }) => {
         return await db
-          .select("Task", {
+          .select("TodoTask", {
             userId: me.id,
             completionDate: dc.or(dc.isNull, dc.gt(getLastMidnight())),
           })

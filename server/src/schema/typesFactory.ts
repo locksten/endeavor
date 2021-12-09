@@ -11,5 +11,8 @@ export const idResolver = t.field<"id", { id: number }, any, any>({
   },
 })
 
-export const typeResolver = (type: string) =>
+export const _typeResolver = (type: string) =>
   t.field({ name: "_type", type: t.NonNull(t.String), resolve: () => type })
+
+export const typeResolver = (type: string) =>
+  t.field({ name: "type", type: t.NonNull(t.String), resolve: () => type })

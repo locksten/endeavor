@@ -3,41 +3,55 @@ import { db, dc } from "database"
 import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
 import { giveRewardForTodo } from "schema/reward"
+import {
+  createTodo,
+  CreateTodoInput,
+  dcTodoIdBelongsToUser,
+  QTodo,
+  Todo,
+  TodoInterface,
+  updateTodo,
+  UpdateTodoInput,
+} from "schema/todo"
 import { idResolver, t, typeResolver } from "schema/typesFactory"
-import { isObjectEmpty } from "utils"
+
 import { Task as QTask } from "zapatos/schema"
-
 export { Task as QTask } from "zapatos/schema"
-export type Task = QTask.JSONSelectable & { _type?: "Task" }
+export type Task = QTask.JSONSelectable
 
-export const TaskType: ObjectType<AppContext, Task> = t.objectType<Task>({
-  name: "Task",
-  fields: () => [
-    idResolver,
-    typeResolver("Task"),
-    t.field({
-      name: "isCompleted",
-      type: t.NonNull(t.Boolean),
-      resolve: async ({ id }, _args, { pool }) => {
-        return (
-          (await db
-            .selectOne("Task", { id, completionDate: dc.isNotNull })
-            .run(pool)) !== undefined
-        )
-      },
-    }),
-    t.field({ name: "completionDate", type: DateType }),
-    t.field({ name: "title", type: t.NonNull(t.String) }),
-    t.field({ name: "difficulty", type: t.NonNull(t.Int) }),
-    t.field({ name: "createdAt", type: t.NonNull(DateType) }),
-  ],
-})
+export { TodoTask as QTodoTask } from "zapatos/schema"
+export type TodoTask = Todo & { type: "Task" } & Task
+
+export const TaskType: ObjectType<AppContext, TodoTask> =
+  t.objectType<TodoTask>({
+    name: "Task",
+    interfaces: [TodoInterface],
+    isTypeOf: (thing: Todo) => thing.type === "Task",
+    fields: () => [
+      typeResolver("Task"),
+      idResolver,
+      t.field({
+        name: "isCompleted",
+        type: t.NonNull(t.Boolean),
+        resolve: async ({ id }, _args, { pool }) => {
+          return (
+            (await db
+              .selectOne("TodoTask", { id, completionDate: dc.isNotNull })
+              .run(pool)) !== undefined
+          )
+        },
+      }),
+      t.field({ name: "title", type: t.NonNull(t.String) }),
+      t.field({ name: "difficulty", type: t.NonNull(t.Int) }),
+      t.field({ name: "completionDate", type: DateType }),
+      t.field({ name: "createdAt", type: t.NonNull(DateType) }),
+    ],
+  })
 
 export const createTaskInput = t.inputObjectType({
   name: "CreateTaskInput",
   fields: () => ({
-    title: t.arg(t.NonNullInput(t.String)),
-    difficulty: t.arg(t.NonNullInput(t.Int)),
+    createTodoInput: t.arg(t.NonNullInput(CreateTodoInput)),
   }),
 })
 
@@ -47,37 +61,39 @@ export const mutationCreateTask = t.field({
   args: {
     createTaskInput: t.arg(t.NonNullInput(createTaskInput)),
   },
-  resolve: async (_, { createTaskInput: input }, { pool, auth }) => {
+  resolve: async (_, { createTaskInput: { createTodoInput } }, ctx) => {
+    const { pool, auth } = ctx
     if (!auth.id) return
 
-    const task: QTask.Insertable = {
-      userId: auth.id,
-      ...input,
-    }
+    const id = await createTodo(ctx, "Task", {}, createTodoInput)
+    if (id === undefined) return
 
-    try {
-      return await db.insert("Task", task).run(pool)
-    } catch (e) {
-      console.log(e)
-    }
+    return await db.selectOne("TodoTask", { id }).run(pool)
   },
 })
 
-export const mutationDeleteTask = t.field({
-  name: "deleteTask",
-  type: t.ID,
-  args: {
+export const updateTaskInput = t.inputObjectType({
+  name: "UpdateTaskInput",
+  fields: () => ({
     id: t.arg(t.NonNullInput(t.ID)),
+    updateTodoInput: t.arg(t.NonNullInput(UpdateTodoInput)),
+  }),
+})
+
+export const mutationUpdateTask = t.field({
+  name: "updateTask",
+  type: TaskType,
+  args: {
+    updateTaskInput: t.arg(t.NonNullInput(updateTaskInput)),
   },
-  resolve: async (_, { id }, { pool, auth }) => {
-    const deletedIds = await db
-      .deletes(
-        "Task",
-        { userId: auth.id, id: Number(id) },
-        { returning: ["id"] },
-      )
-      .run(pool)
-    return deletedIds.at(0) !== undefined ? String(deletedIds[0].id) : undefined
+  resolve: async (_, { updateTaskInput: { id, updateTodoInput } }, ctx) => {
+    const { auth, pool } = ctx
+    if (!auth.id) return
+
+    const todo = await updateTodo(ctx, Number(id), updateTodoInput)
+    if (todo?.at(0) === undefined) return
+
+    return await db.selectOne("TodoTask", { id: Number(id) }).run(pool)
   },
 })
 
@@ -89,6 +105,7 @@ export const mutationCompleteTask = t.field({
   },
   resolve: async (_, { id }, ctx) => {
     const { pool, auth } = ctx
+    if (!auth.id) return
 
     const task = (
       await db
@@ -96,57 +113,20 @@ export const mutationCompleteTask = t.field({
           "Task",
           { completionDate: new Date() },
           {
-            id: Number(id),
-            userId: auth.id,
+            id: dcTodoIdBelongsToUser(Number(id), auth.id),
             completionDate: dc.isNull,
           },
         )
         .run(pool)
     ).at(0)
-
     if (task === undefined) return
 
-    await giveRewardForTodo(ctx, task.difficulty)
+    const todoTask = (await db
+      .selectOne("TodoTask", { id: Number(id) })
+      .run(pool)) as TodoTask | undefined
+    if (todoTask === undefined) return
 
-    return task
-  },
-})
-
-export const updateTaskInput = t.inputObjectType({
-  name: "UpdateTaskInput",
-  fields: () => ({
-    id: t.arg(t.NonNullInput(t.ID)),
-    title: t.arg(t.String),
-    difficulty: t.arg(t.Int),
-  }),
-})
-
-export const mutationUpdateTask = t.field({
-  name: "updateTask",
-  type: TaskType,
-  args: {
-    updateTaskInput: t.arg(t.NonNullInput(updateTaskInput)),
-  },
-  resolve: async (
-    _,
-    { updateTaskInput: { id, difficulty, title } },
-    { pool, auth },
-  ) => {
-    const patch: QTask.Updatable = {
-      ...(title === null || title === undefined ? undefined : { title }),
-      ...(difficulty === null || difficulty === undefined
-        ? undefined
-        : { difficulty }),
-    }
-    if (isObjectEmpty(patch)) return
-
-    return (
-      await db
-        .update("Task", patch, {
-          id: Number(id),
-          userId: auth.id,
-        })
-        .run(pool)
-    ).at(0)
+    await giveRewardForTodo(ctx, todoTask.difficulty)
+    return todoTask
   },
 })

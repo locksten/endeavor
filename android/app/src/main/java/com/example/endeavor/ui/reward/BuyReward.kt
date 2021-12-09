@@ -1,75 +1,62 @@
 package com.example.endeavor.ui.reward
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.BuyRewardMutation
 import com.example.endeavor.MutationComposable
 import com.example.endeavor.RewardsQuery
-import com.example.endeavor.ui.theme.Theme
+import com.example.endeavor.ui.ColumnDialog
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
 fun CBuyRewardModal(reward: Reward, gold: Int, onDismissRequest: () -> Unit) {
     MutationComposable { gql, scope ->
-        Dialog(onDismissRequest) {
-            Box(
+        ColumnDialog(onDismissRequest) {
+            Text(
+                text = reward.title,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
                 modifier = Modifier
-                    .background(Theme.colors.background)
                     .fillMaxWidth()
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(
-                        text = reward.title,
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 32.dp)
-                    )
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                buyReward(gql, reward.id)
-                                onDismissRequest()
-                            }
-                        },
-                        enabled = reward.price <= gold,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row {
-                            Text(
-                                text = "Buy for",
-                                fontSize = 20.sp
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text(
-                                text = "💰${reward.price}",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
+                    .padding(horizontal = 8.dp, vertical = 32.dp)
+            )
+            Button(
+                onClick = {
+                    scope.launch {
+                        buyReward(gql, reward.id)
+                        onDismissRequest()
                     }
+                },
+                enabled = reward.price <= gold,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Row {
+                    Text(
+                        text = "Buy for",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = "💰${reward.price}",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
+
         }
     }
 }

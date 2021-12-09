@@ -1,5 +1,6 @@
 package com.example.endeavor.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.endeavor.LocalAuth
 import com.google.accompanist.pager.ExperimentalPagerApi
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @ExperimentalPagerApi
 @ExperimentalMaterialApi

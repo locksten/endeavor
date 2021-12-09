@@ -7,7 +7,7 @@ import {
   SuccessfulLoginResult,
   SuccessfulLoginResultType,
 } from "schema/auth/login"
-import { t, typeResolver } from "schema/typesFactory"
+import { t, _typeResolver } from "schema/typesFactory"
 
 type FailedRegistrationResult = {
   _type: "FailedRegistrationResult"
@@ -23,7 +23,7 @@ export const FailedRegistrationResultType: ObjectType<
 > = t.objectType<FailedRegistrationResult>({
   name: "FailedRegistrationResult",
   fields: () => [
-    typeResolver("FailedRegistrationResult"),
+    _typeResolver("FailedRegistrationResult"),
     t.field({
       name: "reason",
       type: t.NonNull(t.String),

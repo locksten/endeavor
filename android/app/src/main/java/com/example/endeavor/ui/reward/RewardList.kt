@@ -1,8 +1,9 @@
 package com.example.endeavor.ui.reward
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.endeavor.RewardsQuery
 import com.example.endeavor.gqlWatchQuery
+import com.example.endeavor.ui.AppLazyColumn
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -54,20 +56,12 @@ fun CRewardList() {
 @ExperimentalComposeUiApi
 @Composable
 fun RewardList(rewards: List<Reward>, gold: Int) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp)
-    ) {
+    AppLazyColumn(fabPadding = true) {
         items(
             rewards.sortedWith(
                 compareByDescending<Reward> { it.price }.thenBy { it.createdAt }
             )
-        )
-
-        { RewardListItem(it, gold) }
-        item { Spacer(Modifier.height(80.dp)) }
+        ) { RewardListItem(it, gold) }
     }
 }
 

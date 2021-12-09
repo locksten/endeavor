@@ -2,6 +2,7 @@ mutation CompleteTask($completeTaskId: ID!) {
   completeTask(id: $completeTaskId) {
     id
     isCompleted
+    completionDate
     title
     difficulty
   }

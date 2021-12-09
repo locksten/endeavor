@@ -3,7 +3,7 @@ import { t } from "schema/typesFactory"
 import { Invite as QInvite } from "zapatos/schema"
 
 export { Invite as QInvite } from "zapatos/schema"
-export type Invite = QInvite.JSONSelectable & { _type?: "Invite" }
+export type Invite = QInvite.JSONSelectable
 
 export const mutationInviteToParty = t.field({
   name: "inviteToParty",

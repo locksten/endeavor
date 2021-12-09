@@ -58,5 +58,4 @@ fun RewardListItem(reward: Reward, gold: Int) {
     }
     if (isUpdateDialogOpen) CUpdateRewardModal(reward) { isUpdateDialogOpen = false }
     if (isBuyDialogOpen) CBuyRewardModal(reward, gold) { isBuyDialogOpen = false }
-
 }

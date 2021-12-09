@@ -1,89 +1,63 @@
 package com.example.endeavor.ui.todo.task
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
-import com.example.endeavor.LocalGQLClient
+import com.example.endeavor.MutationComposable
 import com.example.endeavor.TasksQuery
 import com.example.endeavor.UpdateTaskMutation
 import com.example.endeavor.type.UpdateTaskInput
-import com.example.endeavor.ui.MyTextField
-import com.example.endeavor.ui.theme.Theme
-import com.example.endeavor.ui.todo.TodoDifficultySelector
+import com.example.endeavor.ui.CDeleteTodoButton
+import com.example.endeavor.ui.SaveButton
+import com.example.endeavor.ui.ColumnDialog
+import com.example.endeavor.ui.todo.TodoInput
+import com.example.endeavor.ui.todo.TodoInputData
+import com.example.endeavor.ui.todo.toUpdateTodoInput
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
 fun CUpdateTaskModal(task: TasksQuery.Task, onDismissRequest: () -> Unit) {
-    val scope = rememberCoroutineScope()
-    val gql = LocalGQLClient.current
-    var difficulty by remember { mutableStateOf<Int?>(null) }
-    var title by remember { mutableStateOf<String?>(null) }
-    val titleFocusRequester = remember { FocusRequester() }
-    LaunchedEffect(true) {
-        titleFocusRequester.requestFocus()
-    }
-
-    Dialog(onDismissRequest) {
-        Box(
-            modifier = Modifier
-                .background(Theme.colors.background)
-                .fillMaxWidth()
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(16.dp)
-            ) {
-                MyTextField(
-                    title ?: task.title, titleFocusRequester, label = "Title",
-                    keyboardActions = KeyboardActions(onDone = {
-                        scope.launch {
-                            updateTask(gql, task.id, title, difficulty)
-                            onDismissRequest()
-                        }
-                    }),
-                ) { title = it }
-                TodoDifficultySelector(
-                    value = difficulty ?: task.difficulty,
-                    onChange = { difficulty = it })
-                CDeleteTaskButton(task, onDismissRequest)
-                Button(
-                    onClick = {
-                        scope.launch {
-                            updateTask(gql, task.id, title, difficulty)
-                            onDismissRequest()
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Save")
-                }
+    MutationComposable { gql, scope ->
+        var todoInputData by remember { mutableStateOf(TodoInputData()) }
+        fun update() {
+            scope.launch {
+                updateTask(
+                    gql,
+                    UpdateTaskInput(task.id, todoInputData.toUpdateTodoInput())
+                )
+                onDismissRequest()
             }
+        }
+
+        ColumnDialog(onDismissRequest) {
+            TodoInput(
+                defaultValue = TodoInputData(
+                    title = task.title,
+                    difficulty = task.difficulty
+                ),
+                value = todoInputData,
+                onChange = { todoInputData = it },
+                onDone = { update() },
+                keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Sentences)
+            )
+            CDeleteTodoButton(task.id, onDismissRequest) { gql ->
+                gql.query(TasksQuery()).await()
+            }
+            SaveButton { update() }
         }
     }
 }
 
-suspend fun updateTask(gql: ApolloClient, id: String, title: String?, difficulty: Int?) {
+suspend fun updateTask(gql: ApolloClient, updateTaskInput: UpdateTaskInput) {
     try {
         gql.mutate(
             UpdateTaskMutation(
-                UpdateTaskInput(
-                    id,
-                    title = Input.optional(title),
-                    difficulty = Input.optional(difficulty)
-                )
+                updateTaskInput
             )
         ).await()
         gql.query(TasksQuery()).await()

@@ -7,7 +7,7 @@ import {
   AuthTokensType,
   makeAuthTokens,
 } from "schema/auth/authToken"
-import { t, typeResolver } from "schema/typesFactory"
+import { t, _typeResolver } from "schema/typesFactory"
 import { User, UserType } from "schema/user"
 
 type FailedLoginResult = {
@@ -19,7 +19,7 @@ export const FailedLoginResultType: ObjectType<AppContext, FailedLoginResult> =
   t.objectType<FailedLoginResult>({
     name: "FailedLoginResult",
     fields: () => [
-      typeResolver("FailedLoginResult"),
+      _typeResolver("FailedLoginResult"),
       t.field({
         name: "reason",
         type: t.NonNull(t.String),
@@ -39,7 +39,7 @@ export const SuccessfulLoginResultType: ObjectType<
 > = t.objectType<SuccessfulLoginResult>({
   name: "SuccessfulLoginResult",
   fields: () => [
-    typeResolver("SuccessfulLoginResult"),
+    _typeResolver("SuccessfulLoginResult"),
     t.field({ name: "user", type: t.NonNull(UserType) }),
     t.field({ name: "authTokens", type: t.NonNull(AuthTokensType) }),
   ],

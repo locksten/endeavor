@@ -2,18 +2,18 @@ import { AppContext } from "context"
 import { db, dc } from "database"
 import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
-import { idResolver, t, typeResolver } from "schema/typesFactory"
+import { idResolver, t, _typeResolver } from "schema/typesFactory"
 import { isObjectEmpty } from "utils"
 import { Reward as QReward } from "zapatos/schema"
 
 export { Reward as QReward } from "zapatos/schema"
-export type Reward = QReward.JSONSelectable & { _type?: "Reward" }
+export type Reward = QReward.JSONSelectable
 
 export const RewardType: ObjectType<AppContext, Reward> = t.objectType<Reward>({
   name: "Reward",
   fields: () => [
     idResolver,
-    typeResolver("Reward"),
+    _typeResolver("Reward"),
     t.field({ name: "title", type: t.NonNull(t.String) }),
     t.field({ name: "createdAt", type: t.NonNull(DateType) }),
     t.field({ name: "price", type: t.NonNull(t.Int) }),
@@ -78,10 +78,7 @@ export const mutationBuyReward = t.field({
   resolve: async (_, { id }, ctx) => {
     const { pool, auth } = ctx
 
-    const reward = (await db.select("Reward", { id: Number(id) }).run(pool)).at(
-      0,
-    )
-
+    const reward = await db.selectOne("Reward", { id: Number(id) }).run(pool)
     if (reward === undefined) return
 
     const user = (

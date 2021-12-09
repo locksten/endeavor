@@ -35,9 +35,9 @@ type User {
 
 scalar Date
 
-type Habit {
+type Habit implements Todo {
   id: ID!
-  _type: String!
+  type: String!
   title: String!
   difficulty: Int!
   positiveCount: Int
@@ -45,9 +45,16 @@ type Habit {
   createdAt: Date!
 }
 
-type Daily {
+interface Todo {
   id: ID!
-  _type: String!
+  title: String!
+  difficulty: Int!
+  createdAt: Date!
+}
+
+type Daily implements Todo {
+  id: ID!
+  type: String!
   isCompleted: Boolean!
   lastCompletionDate: Date
   title: String!
@@ -55,13 +62,13 @@ type Daily {
   createdAt: Date!
 }
 
-type Task {
+type Task implements Todo {
+  type: String!
   id: ID!
-  _type: String!
   isCompleted: Boolean!
-  completionDate: Date
   title: String!
   difficulty: Int!
+  completionDate: Date
   createdAt: Date!
 }
 
@@ -77,15 +84,13 @@ type Mutation {
   register(username: String!, password: String!): RegistrationResult!
   login(username: String!, password: String!): LoginResult!
   createTask(createTaskInput: CreateTaskInput!): Task
-  deleteTask(id: ID!): ID
+  deleteTodo(id: ID!): ID
   completeTask(id: ID!): Task
   updateTask(updateTaskInput: UpdateTaskInput!): Task
   createDaily(createDailyInput: CreateDailyInput!): Daily
-  deleteDaily(id: ID!): ID
   completeDaily(id: ID!): Daily
   updateDaily(updateDailyInput: UpdateDailyInput!): Daily
   createHabit(createHabitInput: CreateHabitInput!): Habit
-  deleteHabit(id: ID!): ID
   updateHabit(updateHabitInput: UpdateHabitInput!): Habit
   doPositiveHabit(id: ID!): Habit
   doNegativeHabit(id: ID!): Habit
@@ -110,7 +115,6 @@ type SuccessfulLoginResult {
 }
 
 type AuthTokens {
-  _type: String!
   accessToken: String!
 }
 
@@ -127,40 +131,44 @@ type FailedLoginResult {
 }
 
 input CreateTaskInput {
+  createTodoInput: CreateTodoInput!
+}
+
+input CreateTodoInput {
   title: String!
   difficulty: Int!
 }
 
 input UpdateTaskInput {
   id: ID!
+  updateTodoInput: UpdateTodoInput!
+}
+
+input UpdateTodoInput {
   title: String
   difficulty: Int
 }
 
 input CreateDailyInput {
-  title: String!
-  difficulty: Int!
+  createTodoInput: CreateTodoInput!
 }
 
 input UpdateDailyInput {
   id: ID!
-  title: String
-  difficulty: Int
+  updateTodoInput: UpdateTodoInput!
 }
 
 input CreateHabitInput {
-  title: String!
-  difficulty: Int!
   positiveCount: Boolean!
   negativeCount: Boolean!
+  createTodoInput: CreateTodoInput!
 }
 
 input UpdateHabitInput {
   id: ID!
-  title: String
-  difficulty: Int
   positiveCount: Boolean
   negativeCount: Boolean
+  updateTodoInput: UpdateTodoInput!
 }
 
 input CreateRewardInput {

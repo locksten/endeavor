@@ -1,14 +1,15 @@
 package com.example.endeavor.ui
 
 import android.content.res.Configuration
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
@@ -19,6 +20,8 @@ import com.example.endeavor.UserSearchQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.EndeavorTheme
 
+@ExperimentalFoundationApi
+@ExperimentalComposeUiApi
 @Preview(
     name = "Light Mode",
     device = Devices.PIXEL_2
@@ -61,15 +64,19 @@ fun User(user: UserSearchQuery.UserSearch) {
     }
 }
 
+@ExperimentalComposeUiApi
+@ExperimentalFoundationApi
 @Composable
 fun UserList(users: List<UserSearchQuery.UserSearch>) {
-    LazyColumn {
+    AppLazyColumn {
         items(users) {
             User(it)
         }
     }
 }
 
+@ExperimentalFoundationApi
+@ExperimentalComposeUiApi
 @Composable
 fun CUserSearchList(searchTerm: String) {
     val users = gqlWatchQuery(UserSearchQuery(searchTerm))?.userSearch

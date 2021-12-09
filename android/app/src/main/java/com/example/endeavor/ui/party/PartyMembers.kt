@@ -1,18 +1,17 @@
 package com.example.endeavor.ui.party
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.*
+import com.example.endeavor.ui.AppLazyColumn
 import com.example.endeavor.ui.ButtonWithConfirmation
 import kotlinx.coroutines.launch
 
@@ -38,16 +37,8 @@ fun CPartyMemberList() {
 @ExperimentalComposeUiApi
 @Composable
 fun PartyMemberList(users: List<User>, userId: String, isPartyLeader: Boolean) {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 8.dp)
-    ) {
-        item { Spacer(Modifier.height(14.dp)) }
-        items(
-            users.sortedWith(compareBy { it.username })
-        )
+    AppLazyColumn {
+        items(users.sortedWith(compareBy { it.username }))
         {
             UserListItem(it) {
                 if (it.id == userId) {
@@ -57,7 +48,6 @@ fun PartyMemberList(users: List<User>, userId: String, isPartyLeader: Boolean) {
                 }
             }
         }
-        item { Spacer(Modifier.height(14.dp)) }
     }
 }
 
