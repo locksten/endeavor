@@ -3,11 +3,14 @@ query Vitals {
     id
     user {
       id
+      username
       hitpoints
       maxEnergy
       maxHitpoints
       energy
-      experience
+      level
+      experienceInCurrentLevel
+      experienceForNexLevel
     }
   }
 }

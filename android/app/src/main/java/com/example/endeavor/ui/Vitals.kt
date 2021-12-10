@@ -15,7 +15,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.endeavor.VitalsQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.Theme
@@ -23,18 +26,33 @@ import com.example.endeavor.ui.theme.Theme
 @Composable
 fun CVitals() {
     val vitals = gqlWatchQuery(VitalsQuery())?.me?.user
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
+    vitals?.let {
+        Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            HitpointRing(value = vitals?.hitpoints, maxValue = vitals?.maxHitpoints)
-            EnergyRing(value = vitals?.energy, maxValue = vitals?.maxEnergy)
-            ExperienceRing(value = vitals?.experience, maxValue = 1000)
+            Text(
+                text = "lvl ${vitals.level} ${vitals.username}",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 32.dp)
+            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                HitpointRing(value = vitals.hitpoints, maxValue = vitals.maxHitpoints)
+                EnergyRing(value = vitals.energy, maxValue = vitals.maxEnergy)
+                ExperienceRing(
+                    value = vitals.experienceInCurrentLevel,
+                    maxValue = vitals.experienceForNexLevel
+                )
+            }
         }
     }
+
 }
 
 @Composable

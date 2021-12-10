@@ -29,7 +29,9 @@ type User {
   maxHitpoints: Int!
   energy: Int!
   maxEnergy: Int!
-  experience: Int!
+  level: Int!
+  experienceInCurrentLevel: Int!
+  experienceForNexLevel: Int!
   gold: Int!
 }
 

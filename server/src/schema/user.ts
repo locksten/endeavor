@@ -8,6 +8,21 @@ import { User as QUser } from "zapatos/schema"
 export { User as QUser } from "zapatos/schema"
 export type User = QUser.JSONSelectable
 
+const experienceConstant = 0.25
+
+const levelFromExperience = (xp: number) =>
+  Math.floor(experienceConstant * Math.sqrt(xp)) + 1
+
+const experienceFromLevel = (level: number) =>
+  Math.pow((level - 1) / experienceConstant, 2)
+
+const experienceInCurrentLevel = (xp: number) =>
+  xp - experienceFromLevel(levelFromExperience(xp))
+
+const experienceForNextLevel = (xp: number) =>
+  experienceFromLevel(levelFromExperience(xp) + 1) -
+  experienceFromLevel(levelFromExperience(xp))
+
 export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
   {
     name: "User",
@@ -31,7 +46,27 @@ export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
       t.field({ name: "maxHitpoints", type: t.NonNull(t.Int) }),
       t.field({ name: "energy", type: t.NonNull(t.Int) }),
       t.field({ name: "maxEnergy", type: t.NonNull(t.Int) }),
-      t.field({ name: "experience", type: t.NonNull(t.Int) }),
+      t.field({
+        name: "level",
+        type: t.NonNull(t.Int),
+        resolve: async ({ experience }, _args, _ctx) => {
+          return levelFromExperience(experience)
+        },
+      }),
+      t.field({
+        name: "experienceInCurrentLevel",
+        type: t.NonNull(t.Int),
+        resolve: async ({ experience }, _args, _ctx) => {
+          return experienceInCurrentLevel(experience)
+        },
+      }),
+      t.field({
+        name: "experienceForNexLevel",
+        type: t.NonNull(t.Int),
+        resolve: async ({ experience }, _args, _ctx) => {
+          return experienceForNextLevel(experience)
+        },
+      }),
       t.field({ name: "gold", type: t.NonNull(t.Int) }),
     ],
   },
