@@ -1,0 +1,25 @@
+query Battle {
+    me {
+        battle {
+            id
+            creatureHitpoints
+            partyMembers {
+                id
+                username
+                hitpoints
+                maxHitpoints
+                energy
+                maxEnergy
+                level
+            }
+            creature {
+                name
+                emoji
+                id
+                createdAt
+                maxHitpoints
+                strength
+            }
+        }
+    }
+}

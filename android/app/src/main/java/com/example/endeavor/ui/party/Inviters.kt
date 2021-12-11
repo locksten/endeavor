@@ -44,7 +44,7 @@ fun CInviterList() {
 @Composable
 fun InviterList(users: List<User>) {
     AppLazyColumn {
-        items(users.sortedWith(compareBy { it.username }))
+        items(users.sortedWith(compareBy { it.username }), { it.id })
         { UserListItem(it) { CAcceptDeclineInvitationButtons(it) } }
     }
 }

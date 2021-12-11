@@ -1,6 +1,7 @@
 import { AppContext } from "context"
 import { db, dc } from "database"
 import { ObjectType } from "gqtx"
+import { BattleType } from "schema/battle"
 import { DailyType } from "schema/daily"
 import { HabitType } from "schema/habit"
 import { QInvite } from "schema/invite"
@@ -107,6 +108,19 @@ export const MeType: ObjectType<AppContext, User> = t.objectType<Me>({
       type: t.NonNull(t.List(t.NonNull(RewardType))),
       resolve: async (me, _args, { pool }) => {
         return await db.select("Reward", { userId: me.id }).run(pool)
+      },
+    }),
+    t.field({
+      name: "battle",
+      type: BattleType,
+      resolve: async (me, _args, { pool }) => {
+        return await db
+          .selectOne("Battle", {
+            partyLeaderId: db.sql<QUser.SQL>`
+              ${db.self} = (SELECT ${"partyLeaderOrUserId"} FROM ${"User"}
+                            WHERE ${"User"}.${"id"} = ${db.param(me.id)})`,
+          })
+          .run(pool)
       },
     }),
   ],

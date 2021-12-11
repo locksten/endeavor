@@ -74,8 +74,8 @@ export const mutationRegister = t.field({
           password: await hash(password, 10),
           hitpoints: 10,
           maxHitpoints: 10,
-          energy: 0,
-          maxEnergy: 10,
+          energy: 3,
+          maxEnergy: 3,
           experience: 0,
           gold: 0,
         })

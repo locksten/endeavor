@@ -13,7 +13,7 @@ import com.example.endeavor.ui.AppLazyColumn
 @Composable
 fun UserList(users: List<User>) {
     AppLazyColumn {
-        items(users.sortedWith(compareBy { it.username }))
+        items(users.sortedWith(compareBy { it.username }), { it.id })
         { UserListItem(it) }
     }
 }

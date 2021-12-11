@@ -1,0 +1,10 @@
+query Creatures {
+    creatures {
+        id
+        createdAt
+        name
+        emoji
+        maxHitpoints
+        strength
+    }
+}

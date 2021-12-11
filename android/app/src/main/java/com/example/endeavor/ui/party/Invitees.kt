@@ -43,7 +43,7 @@ fun CInviteeList() {
 @Composable
 fun InviteeList(users: List<User>) {
     AppLazyColumn(fabPadding = true) {
-        items(users.sortedWith(compareBy { it.username }))
+        items(users.sortedWith(compareBy { it.username }), { it.id })
         { UserListItem(it) { CCancelInvitationButton(it) } }
     }
 }

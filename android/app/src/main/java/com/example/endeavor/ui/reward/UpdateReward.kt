@@ -16,8 +16,8 @@ import com.example.endeavor.RewardsQuery
 import com.example.endeavor.UpdateRewardMutation
 import com.example.endeavor.type.UpdateRewardInput
 import com.example.endeavor.ui.AppTextField
-import com.example.endeavor.ui.SaveButton
 import com.example.endeavor.ui.ColumnDialog
+import com.example.endeavor.ui.SaveButton
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi

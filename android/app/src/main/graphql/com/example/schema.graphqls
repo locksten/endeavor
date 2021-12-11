@@ -4,6 +4,7 @@ type Query {
   userById(id: ID!): User
   userByName(username: String!): User
   userSearch(searchTerm: String!): [User!]!
+  creatures: [Creature!]!
 }
 
 type Me {
@@ -17,6 +18,7 @@ type Me {
   inviters: [User!]!
   invitees: [User!]!
   rewards: [Reward!]!
+  battle: Battle
 }
 
 type User {
@@ -82,7 +84,27 @@ type Reward {
   price: Int!
 }
 
+type Battle {
+  id: ID!
+  _type: String!
+  creature: Creature
+  createdAt: Date!
+  creatureHitpoints: Int!
+  partyMembers: [User!]!
+}
+
+type Creature {
+  id: ID!
+  _type: String!
+  name: String!
+  emoji: String!
+  createdAt: Date!
+  maxHitpoints: Int!
+  strength: Int!
+}
+
 type Mutation {
+  initializeDatabase: String
   register(username: String!, password: String!): RegistrationResult!
   login(username: String!, password: String!): LoginResult!
   createTask(createTaskInput: CreateTaskInput!): Task
@@ -106,6 +128,8 @@ type Mutation {
   deleteReward(id: ID!): ID
   updateReward(updateRewardInput: UpdateRewardInput!): Reward
   buyReward(id: ID!): ID
+  createCreature(createCreatureInput: CreateCreatureInput!): Creature
+  createBattle(createBattleInput: CreateBattleInput!): Battle
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult
@@ -182,6 +206,17 @@ input UpdateRewardInput {
   id: ID!
   title: String
   price: Int
+}
+
+input CreateCreatureInput {
+  name: String!
+  emoji: String!
+  maxHitpoints: Int!
+  strength: Int!
+}
+
+input CreateBattleInput {
+  creatureId: ID!
 }
 
 schema {

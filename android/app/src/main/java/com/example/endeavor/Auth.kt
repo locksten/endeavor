@@ -39,7 +39,6 @@ class Authentication(private val context: Context) {
         return username.collectAsState()
     }
 
-
     @Composable
     fun isLoggedIn(): State<Boolean?> {
         return (authToken.map {

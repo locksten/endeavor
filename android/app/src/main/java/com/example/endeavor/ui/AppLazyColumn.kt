@@ -21,7 +21,7 @@ fun AppLazyColumn(
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(spacedBy),
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(horizontal = 8.dp)
     ) {
         item { Spacer(Modifier.height(14.dp)) }

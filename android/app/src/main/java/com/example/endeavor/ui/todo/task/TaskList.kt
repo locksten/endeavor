@@ -25,7 +25,7 @@ fun TaskList(tasks: List<TasksQuery.Task>) {
             tasks.sortedWith(
                 compareBy<TasksQuery.Task> { it.isCompleted }
                     .thenByDescending { (it.completionDate ?: it.createdAt) as String? }
-            )
+            ), { it.id }
         ) { Task(it) }
     }
 }

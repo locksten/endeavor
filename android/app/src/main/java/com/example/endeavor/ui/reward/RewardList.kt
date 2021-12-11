@@ -60,7 +60,7 @@ fun RewardList(rewards: List<Reward>, gold: Int) {
         items(
             rewards.sortedWith(
                 compareByDescending<Reward> { it.price }.thenBy { it.createdAt }
-            )
+            ), { it.id }
         ) { RewardListItem(it, gold) }
     }
 }

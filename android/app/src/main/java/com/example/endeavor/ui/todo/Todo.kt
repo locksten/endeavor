@@ -1,7 +1,9 @@
 package com.example.endeavor.ui.todo
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -86,7 +88,9 @@ fun TodosScreen() {
                 state = pagerState,
                 modifier = Modifier.weight(1f)
             ) {
-                todoTabs[it].composable()
+                Box(Modifier.fillMaxSize()) {
+                    todoTabs[it].composable()
+                }
             }
         }
     }

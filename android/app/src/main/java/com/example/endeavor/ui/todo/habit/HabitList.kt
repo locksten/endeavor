@@ -19,7 +19,7 @@ fun CHabitList() {
 @ExperimentalComposeUiApi
 @Composable
 fun HabitList(habits: List<HabitsQuery.Habit>) {
-    val grouped = habits.sortedBy { it.createdAt as String }.groupBy {
+    val grouped = habits.sortedWith(compareBy({ it.createdAt as String }, { it.id })).groupBy {
         when {
             isHabitPos(it) -> 0
             isHabitPosNeg(it) -> 1
@@ -28,9 +28,9 @@ fun HabitList(habits: List<HabitsQuery.Habit>) {
         }
     }
     AppLazyColumn(fabPadding = true) {
-        grouped[0]?.let { habits -> items(habits) { Habit(it) } }
-        grouped[1]?.let { habits -> items(habits) { Habit(it) } }
-        grouped[2]?.let { habits -> items(habits) { Habit(it) } }
-        grouped[3]?.let { habits -> items(habits) { Habit(it) } }
+        grouped[0]?.let { habits -> items(habits, { it.id }) { Habit(it) } }
+        grouped[1]?.let { habits -> items(habits, { it.id }) { Habit(it) } }
+        grouped[2]?.let { habits -> items(habits, { it.id }) { Habit(it) } }
+        grouped[3]?.let { habits -> items(habits, { it.id }) { Habit(it) } }
     }
 }

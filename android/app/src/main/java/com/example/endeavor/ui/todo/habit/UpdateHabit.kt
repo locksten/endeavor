@@ -10,11 +10,11 @@ import com.example.endeavor.HabitsQuery
 import com.example.endeavor.MutationComposable
 import com.example.endeavor.UpdateHabitMutation
 import com.example.endeavor.type.UpdateHabitInput
-import com.example.endeavor.ui.SaveButton
+import com.example.endeavor.ui.CDeleteTodoButton
 import com.example.endeavor.ui.ColumnDialog
+import com.example.endeavor.ui.SaveButton
 import com.example.endeavor.ui.todo.TodoInput
 import com.example.endeavor.ui.todo.TodoInputData
-import com.example.endeavor.ui.CDeleteTodoButton
 import com.example.endeavor.ui.todo.toUpdateTodoInput
 import kotlinx.coroutines.launch
 

@@ -1,11 +1,14 @@
 import { buildGraphQLSchema } from "gqtx"
 import { mutationLogin } from "schema/auth/login"
 import { mutationRegister } from "schema/auth/register"
+import { mutationCreateBattle } from "schema/battle"
+import { mutationCreateCreature, queryCreatures } from "schema/creature"
 import {
   mutationCreateDaily,
   mutationCompleteDaily,
   mutationUpdateDaily,
 } from "schema/daily"
+import { mutationInitializeDatabase } from "schema/databaseInitialization"
 import {
   mutationCreateHabit,
   mutationDoNegativeHabit,
@@ -51,11 +54,13 @@ const query = t.queryType({
     queryUserById,
     queryUserByName,
     queryUserSearch,
+    queryCreatures,
   ],
 })
 
 const mutation = t.mutationType({
   fields: () => [
+    mutationInitializeDatabase,
     mutationRegister,
     mutationLogin,
     mutationCreateTask,
@@ -79,6 +84,8 @@ const mutation = t.mutationType({
     mutationDeleteReward,
     mutationUpdateReward,
     mutationBuyReward,
+    mutationCreateCreature,
+    mutationCreateBattle,
   ],
 })
 

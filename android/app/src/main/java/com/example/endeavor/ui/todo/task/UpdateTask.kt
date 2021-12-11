@@ -12,8 +12,8 @@ import com.example.endeavor.TasksQuery
 import com.example.endeavor.UpdateTaskMutation
 import com.example.endeavor.type.UpdateTaskInput
 import com.example.endeavor.ui.CDeleteTodoButton
-import com.example.endeavor.ui.SaveButton
 import com.example.endeavor.ui.ColumnDialog
+import com.example.endeavor.ui.SaveButton
 import com.example.endeavor.ui.todo.TodoInput
 import com.example.endeavor.ui.todo.TodoInputData
 import com.example.endeavor.ui.todo.toUpdateTodoInput

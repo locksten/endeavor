@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import com.example.endeavor.ui.BaseDialog
 
 @Composable
 fun ColumnDialog(onDismissRequest: () -> Unit, Content: @Composable () -> Unit) {

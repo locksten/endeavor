@@ -62,7 +62,10 @@ private fun HitpointRing(value: Int?, maxValue: Int?) {
         color = Theme.colors.hitpoints,
         backgroundColor = Theme.colors.faintHitpoints,
         value = value,
-        maxValue = maxValue
+        maxValue = maxValue,
+        width = 70f,
+        thickness = 40f,
+        full = false
     )
 }
 
@@ -73,7 +76,10 @@ private fun EnergyRing(value: Int?, maxValue: Int?) {
         color = Theme.colors.energy,
         backgroundColor = Theme.colors.faintEnergy,
         value = value,
-        maxValue = maxValue
+        maxValue = maxValue,
+        width = 70f,
+        thickness = 40f,
+        full = false
     )
 }
 
@@ -85,22 +91,39 @@ private fun ExperienceRing(value: Int?, maxValue: Int?) {
         color = Theme.colors.experience,
         backgroundColor = Theme.colors.faintExperience,
         value = value,
-        maxValue = maxValue
+        maxValue = maxValue,
+        width = 70f,
+        thickness = 40f,
+        full = false
     )
 }
 
 
 @Composable
-private fun VitalRing(
+fun VitalRing(
     color: Color,
     backgroundColor: Color,
     value: Int?,
     maxValue: Int?,
-    label: String,
+    label: String?,
     countLabel: String? = "${value ?: 0} / ${maxValue ?: 0}",
+    width: Float? = null,
+    thickness: Float,
+    full: Boolean
 ) {
-    val width = 70f
-    Box(Modifier.size((width * 1.5f).dp, (width * 1.2f).dp)) {
+    Box(
+        modifier = if (width == null) {
+            Modifier.aspectRatio(
+                if (full) {
+                    1f
+                } else {
+                    1.55f
+                }
+            )
+        } else {
+            Modifier.size((width * 1.5f).dp, (width * 1.2f).dp)
+        }
+    ) {
         AnimatedRing(
             color = color,
             backgroundColor = backgroundColor,
@@ -108,7 +131,9 @@ private fun VitalRing(
                 null
             } else {
                 value.toFloat() / maxValue.toFloat()
-            }
+            },
+            thickness = thickness,
+            full = full
         )
         Column(
             verticalArrangement = Arrangement.Center,
@@ -123,14 +148,20 @@ private fun VitalRing(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ) {
-            Text(text = label)
+            label?.let { Text(it) }
         }
     }
 }
 
 
 @Composable
-private fun AnimatedRing(color: Color, backgroundColor: Color, targetValue: Float?) {
+private fun AnimatedRing(
+    color: Color,
+    backgroundColor: Color,
+    targetValue: Float?,
+    thickness: Float,
+    full: Boolean
+) {
     var lastFinish by rememberSaveable { mutableStateOf(0f) }
     val animateFloat = remember { Animatable(lastFinish) }
     LaunchedEffect(animateFloat, targetValue) {
@@ -139,27 +170,42 @@ private fun AnimatedRing(color: Color, backgroundColor: Color, targetValue: Floa
             animationSpec = tween(durationMillis = 500, easing = LinearEasing)
         ).endState.value
     }
-    RingWithBackground(color = color, backgroundColor = backgroundColor, value = animateFloat.value)
+    RingWithBackground(
+        color = color,
+        backgroundColor = backgroundColor,
+        value = animateFloat.value,
+        thickness = thickness,
+        full = full
+    )
 }
 
 @Composable
-private fun RingWithBackground(color: Color, backgroundColor: Color, value: Float) {
+private fun RingWithBackground(
+    color: Color,
+    backgroundColor: Color,
+    value: Float,
+    thickness: Float,
+    full: Boolean
+) {
     Box {
-        Ring(color = backgroundColor, value = 1f)
-        Ring(color = color, value = value)
+        Ring(color = backgroundColor, value = 1f, thickness = thickness, full = full)
+        Ring(color = color, value = value, thickness = thickness, full = full)
     }
 }
 
 @Composable
-private fun Ring(color: Color, value: Float) {
-    val thickness = 40f
+private fun Ring(color: Color, value: Float, thickness: Float, full: Boolean) {
     Canvas(
         modifier = Modifier.fillMaxSize()
     ) {
         drawArc(
             color = color,
             startAngle = 165f,
-            sweepAngle = 210f * value,
+            sweepAngle = (if (full) {
+                360f
+            } else {
+                210f
+            }) * value,
             useCenter = false,
             size = Size(
                 this.size.width - thickness,

@@ -3,6 +3,7 @@ import { db, dc } from "database"
 import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
 import { idResolver, t, _typeResolver } from "schema/typesFactory"
+import { levelFromExperience } from "schema/user"
 import { isObjectEmpty } from "utils"
 import { Reward as QReward } from "zapatos/schema"
 
@@ -141,24 +142,75 @@ export const giveRewardForTodo = async (
   { auth, pool }: AppContext,
   difficulty: number,
 ) => {
-  await db
-    .update(
-      "User",
-      {
-        energy: db.sql`LEAST(${"maxEnergy"}, ${db.self} + ${db.param(
-          Math.round(difficulty / 20),
-        )})`,
-        hitpoints: db.sql`LEAST(${"maxHitpoints"}, ${db.self} + ${db.param(
-          Math.round(difficulty / 20),
-        )})`,
-        experience: db.sql`LEAST(1000, ${db.self} + ${db.param(
-          Math.round(difficulty / 20),
-        )})`,
-        gold: dc.add(Math.round(difficulty / 20)),
-      },
-      { id: Number(auth.id) },
-    )
-    .run(pool)
+  if (!auth.id) return
+
+  await db.serializable(pool, async (txnClient) => {
+    const user = await db.selectOne("User", { id: auth.id }).run(txnClient)
+    if (user === undefined) return
+
+    const level = levelFromExperience(user.experience)
+    const rewardAmount = Math.round(difficulty / 20) * (1 + level / 10)
+
+    const experienceReward = rewardAmount
+
+    const newExperience = user.experience + Math.round(experienceReward)
+    const newLevel = levelFromExperience(newExperience)
+    const leveledUp = level != newLevel
+
+    const newMaxEnergy = newLevel * 3
+    const newMaxHitpoints = newLevel * 10
+
+    const hitpointsReward = Math.max(1, rewardAmount / 2)
+    const energyReward = Math.max(1, rewardAmount / 5)
+    const goldReward = Math.max(1, rewardAmount)
+
+    const damage = Math.round(Math.max(1, rewardAmount / 2))
+
+    const battle = (
+      await db
+        .update(
+          "Battle",
+          { creatureHitpoints: dc.subtract(damage) },
+          { partyLeaderId: Number(user.partyLeaderOrUserId) },
+        )
+        .run(txnClient)
+    ).at(0)
+    if (battle !== undefined) {
+      if (battle.creatureHitpoints <= 0) {
+        await db
+          .deletes("Battle", {
+            partyLeaderId: Number(user.partyLeaderOrUserId),
+          })
+          .run(txnClient)
+        console.log("VICTORY")
+      }
+    }
+
+    await db
+      .update(
+        "User",
+        {
+          maxEnergy: newMaxEnergy,
+          maxHitpoints: newMaxHitpoints,
+          hitpoints: Math.round(
+            Math.min(
+              newMaxHitpoints,
+              leveledUp ? newMaxHitpoints : user.hitpoints + hitpointsReward,
+            ),
+          ),
+          energy: Math.round(
+            Math.min(
+              newMaxEnergy,
+              leveledUp ? newMaxEnergy : user.energy + energyReward,
+            ),
+          ),
+          experience: newExperience,
+          gold: Math.round(user.gold + goldReward),
+        },
+        { id: Number(auth.id) },
+      )
+      .run(txnClient)
+  })
 }
 
 export const givePenaltyForTodo = async (

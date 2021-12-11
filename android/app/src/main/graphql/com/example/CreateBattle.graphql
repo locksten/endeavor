@@ -1,0 +1,13 @@
+mutation CreateBattle($createBattleInput: CreateBattleInput!) {
+  createBattle(createBattleInput: $createBattleInput) {
+    id
+    creature {
+      id
+      name
+      createdAt
+      maxHitpoints
+      strength
+    }
+    creatureHitpoints
+  }
+}

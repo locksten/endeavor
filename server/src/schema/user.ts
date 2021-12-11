@@ -10,16 +10,16 @@ export type User = QUser.JSONSelectable
 
 const experienceConstant = 0.25
 
-const levelFromExperience = (xp: number) =>
+export const levelFromExperience = (xp: number) =>
   Math.floor(experienceConstant * Math.sqrt(xp)) + 1
 
-const experienceFromLevel = (level: number) =>
+export const experienceFromLevel = (level: number) =>
   Math.pow((level - 1) / experienceConstant, 2)
 
-const experienceInCurrentLevel = (xp: number) =>
+export const experienceInCurrentLevel = (xp: number) =>
   xp - experienceFromLevel(levelFromExperience(xp))
 
-const experienceForNextLevel = (xp: number) =>
+export const experienceForNextLevel = (xp: number) =>
   experienceFromLevel(levelFromExperience(xp) + 1) -
   experienceFromLevel(levelFromExperience(xp))
 

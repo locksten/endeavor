@@ -1,7 +1,9 @@
 package com.example.endeavor.ui.party
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -78,8 +80,9 @@ fun PartyScreen() {
             state = pagerState,
             modifier = Modifier.weight(1f)
         ) {
-            partyTabs[it].composable()
+            Box(Modifier.fillMaxSize()) {
+                partyTabs[it].composable()
+            }
         }
     }
-
 }

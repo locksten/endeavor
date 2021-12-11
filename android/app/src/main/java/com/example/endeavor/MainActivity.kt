@@ -3,6 +3,7 @@ package com.example.endeavor
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -13,6 +14,7 @@ import com.example.endeavor.ui.theme.Theme
 import com.google.accompanist.pager.ExperimentalPagerApi
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalFoundationApi
     @ExperimentalComposeUiApi
     @ExperimentalPagerApi
     @ExperimentalMaterialApi

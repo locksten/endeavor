@@ -37,8 +37,11 @@ fun CPartyMemberList() {
 @ExperimentalComposeUiApi
 @Composable
 fun PartyMemberList(users: List<User>, userId: String, isPartyLeader: Boolean) {
+    val loggedInUsername = LocalAuth.current.loggedInUsernameState().value
     AppLazyColumn {
-        items(users.sortedWith(compareBy { it.username }))
+        items(
+            users.sortedWith(compareBy({ it.username != loggedInUsername }, { it.username })),
+            { it.id })
         {
             UserListItem(it) {
                 if (it.id == userId) {

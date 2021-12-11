@@ -28,7 +28,7 @@ fun DailyList(dailies: List<DailiesQuery.Daily>) {
             dailies.sortedWith(
                 compareBy<DailiesQuery.Daily> { it.isCompleted }
                     .thenByDescending { (it.lastCompletionDate ?: it.createdAt) as String? }
-            )
+            ), { it.id }
         )
         { Daily(it) }
     }
