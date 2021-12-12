@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.endeavor.LocalAuth
 import com.example.endeavor.LocalGQLClient
+import com.example.endeavor.MutationComposable
 import com.example.endeavor.ui.theme.LocalMyDarkMode
+import kotlinx.coroutines.launch
 
 @Composable
 fun Settings() {
@@ -46,14 +48,17 @@ private fun ThemeButton() {
 
 @Composable
 private fun LogOutButton() {
-    val gql = LocalGQLClient.current
-    val auth = LocalAuth.current
-    Button(
-        onClick = {
-            auth.logOut(gql)
-        },
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text("Log out")
+    MutationComposable { gql, scope ->
+        val auth = LocalAuth.current
+        Button(
+            onClick = {
+                scope.launch {
+                    auth.logOut(gql)
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Log out")
+        }
     }
 }

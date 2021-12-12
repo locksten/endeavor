@@ -1,0 +1,13 @@
+mutation UsePartyHeal {
+  usePartyHeal {
+    id
+    creatureHitpoints
+    partyMembers {
+      id
+      hitpoints
+      maxHitpoints
+      energy
+      maxEnergy
+    }
+  }
+}

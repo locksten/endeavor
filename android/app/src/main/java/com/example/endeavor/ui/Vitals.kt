@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.sp
 import com.example.endeavor.VitalsQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.Theme
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @Composable
 fun CVitals() {
     val vitals = gqlWatchQuery(VitalsQuery())?.me?.user

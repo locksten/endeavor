@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.endeavor.BattleQuery
@@ -26,20 +28,20 @@ import com.example.endeavor.ui.theme.Theme
 fun BattlePartyMembers(partyMembers: List<BattleQuery.PartyMember>) {
     val loggedInUsername = LocalAuth.current.loggedInUsernameState().value
     Box(Modifier.fillMaxWidth()) {
-        AppLazyColumn {
+        AppLazyColumn(topPadding = 0.dp) {
             items(
                 partyMembers.sortedWith(
                     compareBy(
                         { it.username != loggedInUsername },
                         { it.username })
                 ),
-                { it.id }) { BattlePartyMember(it) }
+                { it.id }) { BattlePartyMember(it, loggedIn = it.username == loggedInUsername) }
         }
     }
 }
 
 @Composable
-fun BattlePartyMember(member: BattleQuery.PartyMember) {
+fun BattlePartyMember(member: BattleQuery.PartyMember, loggedIn: Boolean = false) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
@@ -55,28 +57,57 @@ fun BattlePartyMember(member: BattleQuery.PartyMember) {
         Text(
             text = member.username,
             color = Theme.colors.onGraySurface,
+            fontWeight = if (loggedIn) {
+                FontWeight.Bold
+            } else {
+                FontWeight.Normal
+            },
             fontSize = 20.sp,
         )
-        BattleMemberHitpointRing(value = member.hitpoints, maxValue = member.maxHitpoints)
+        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            BattleMemberVitalRing(
+                value = member.energy, maxValue = member.maxEnergy,
+                color = Theme.colors.energy,
+                faintColor = Theme.colors.faintEnergy,
+                loggedIn = loggedIn
+            )
+            BattleMemberVitalRing(
+                value = member.hitpoints, maxValue = member.maxHitpoints,
+                color = Theme.colors.hitpoints,
+                faintColor = Theme.colors.faintHitpoints,
+                loggedIn = loggedIn
+            )
+        }
     }
 }
 
 @Composable
-fun BattleMemberHitpointRing(value: Int?, maxValue: Int?) {
+fun BattleMemberVitalRing(
+    value: Int?,
+    maxValue: Int?,
+    loggedIn: Boolean,
+    color: Color,
+    faintColor: Color
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(vertical = 4.dp)
     ) {
         Text(
             text = "${value ?: 0}",
-            color = Theme.colors.hitpoints,
+            color = color,
+            fontWeight = if (loggedIn) {
+                FontWeight.Bold
+            } else {
+                FontWeight.Normal
+            },
             fontSize = 16.sp,
         )
         Spacer(Modifier.width(8.dp))
         VitalRing(
             label = null,
-            color = Theme.colors.hitpoints,
-            backgroundColor = Theme.colors.faintHitpoints,
+            color = color,
+            backgroundColor = faintColor,
             value = value,
             maxValue = maxValue,
             countLabel = null,

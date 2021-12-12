@@ -31,7 +31,7 @@ fun CAuthScreen() {
     val passwordFocusRequester = remember { FocusRequester() }
     val gql = LocalGQLClient.current
     val auth = LocalAuth.current
-    var username by remember { mutableStateOf("alice") }
+    var username by remember { mutableStateOf("Alice") }
     var password by remember {
         mutableStateOf(
             TextFieldValue(

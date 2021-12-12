@@ -1,5 +1,6 @@
 package com.example.endeavor.ui
 
+import androidx.compose.animation.core.estimateAnimationDurationMillis
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +53,7 @@ fun MainScreen() {
             val body = msg.notification?.body
             scaffoldState.snackbarHostState.showSnackbar(
                 message = "$title$body",
-                duration = SnackbarDuration.Long,
+                duration = SnackbarDuration.Short
             )
         }
     }

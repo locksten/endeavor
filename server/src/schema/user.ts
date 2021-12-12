@@ -23,6 +23,9 @@ export const experienceForNextLevel = (xp: number) =>
   experienceFromLevel(levelFromExperience(xp) + 1) -
   experienceFromLevel(levelFromExperience(xp))
 
+export const maxEnergyFromLevel = (level: number) => level * 3
+export const maxHitpointsFromLevel = (level: number) => level * 10
+
 export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
   {
     name: "User",
@@ -76,14 +79,16 @@ export const mutationUpdateFirebaseToken = t.field({
   name: "updateFirebaseToken",
   type: UserType,
   args: {
-    token: t.arg(t.NonNullInput(t.String)),
+    token: t.arg(t.String),
   },
   resolve: async (_, { token }, { auth, pool }) => {
     if (!auth.id) return
     return await db.serializable(pool, async (txnClient) => {
-      await db
-        .update("User", { firebaseToken: null }, { firebaseToken: token })
-        .run(txnClient)
+      if (token) {
+        await db
+          .update("User", { firebaseToken: null }, { firebaseToken: token })
+          .run(txnClient)
+      }
       return (
         await db
           .update("User", { firebaseToken: token }, { id: auth.id })

@@ -1,4 +1,4 @@
-mutation UpdateFirebaseToken($token: String!) {
+mutation UpdateFirebaseToken($token: String) {
     updateFirebaseToken(token: $token) {
         id
     }

@@ -1,26 +1,64 @@
+import { hash } from "bcrypt"
 import { AppContext } from "context"
 import { db } from "database"
+import { Pool } from "pg"
 import { QHabit } from "schema/habit"
 import { createTodo } from "schema/todo"
-import { t } from "schema/typesFactory"
+import {
+  experienceForNextLevel,
+  experienceFromLevel,
+  maxEnergyFromLevel,
+  maxHitpointsFromLevel,
+} from "schema/user"
 
-export const mutationInitializeDatabase = t.field({
-  name: "initializeDatabase",
-  type: t.String,
-  resolve: async (_, _args, ctx) => {
-    if (!ctx.auth.id) return "Unauthorized"
+export const initializeDbIfNotInitialized = async (pool: Pool) => {
+  const isInitialized = (await db.select("User", db.all).run(pool)).length > 0
+  if (isInitialized) return
 
-    Promise.all([
-      habits(ctx),
-      dailies(ctx),
-      tasks(ctx),
-      rewards(ctx),
-      creatures(ctx),
-    ])
+  console.log(`📨 Database Initializing`)
 
-    return "Initialized"
-  },
-})
+  await creatures(pool)
+
+  const alice = await user(pool, undefined, "Alice", 4, 0.7, 0.8)
+  const luz = await user(pool, alice.id, "Luz", 4, 0.4, 1)
+  const amity = await user(pool, alice.id, "Amity", 4, 0.6, 0.7)
+  const willow = await user(pool, alice.id, "Willow", 4, 0.9, 0.6)
+  const gus = await user(pool, alice.id, "Gus", 2, 0.8, 0.7)
+
+  const users = [alice, luz, amity, willow, gus]
+
+  users.forEach((user) => {
+    const ctx = { pool, auth: { id: user.id } }
+    Promise.all([habits(ctx), dailies(ctx), tasks(ctx), rewards(ctx)])
+  })
+
+  console.log(`🚀 Database Initialized`)
+}
+
+const user = async (
+  pool: Pool,
+  partyLeaderId: number | undefined,
+  username: string,
+  level: number,
+  hitpointPercent: number,
+  energyPercent: number,
+) => {
+  return await db
+    .insert("User", {
+      username,
+      password: await hash("passwordpassword", 10),
+      partyLeaderId: partyLeaderId,
+      hitpoints: Math.floor(maxHitpointsFromLevel(level) * hitpointPercent),
+      maxHitpoints: maxHitpointsFromLevel(level),
+      energy: Math.floor(maxEnergyFromLevel(level) * energyPercent),
+      maxEnergy: maxEnergyFromLevel(level),
+      experience:
+        experienceFromLevel(level) +
+        Math.floor(experienceForNextLevel(experienceFromLevel(level)) / 3),
+      gold: 50,
+    })
+    .run(pool)
+}
 
 const rewards = async ({ auth, pool }: AppContext) => {
   const userId = Number(auth.id)
@@ -36,11 +74,11 @@ const rewards = async ({ auth, pool }: AppContext) => {
     .run(pool)
 }
 
-const creatures = async ({ pool }: AppContext) =>
+const creatures = async (pool: Pool) =>
   await db
     .insert("Creature", [
       { strength: 1, maxHitpoints: 10, emoji: "🐀", name: "Rat" },
-      { strength: 2, maxHitpoints: 20, emoji: "🦀", name: "Crab" },
+      { strength: 2, maxHitpoints: 30, emoji: "🦀", name: "Crab" },
       { strength: 3, maxHitpoints: 70, emoji: "🐺", name: "Wolf" },
       { strength: 5, maxHitpoints: 80, emoji: "🐊", name: "Crocodile" },
       { strength: 8, maxHitpoints: 100, emoji: "🦁", name: "Lion" },

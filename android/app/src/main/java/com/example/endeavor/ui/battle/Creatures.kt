@@ -8,7 +8,9 @@ import androidx.compose.ui.unit.dp
 import com.example.endeavor.CreaturesQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.AppLazyColumn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @ExperimentalComposeUiApi
 @ExperimentalFoundationApi
 @Composable

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 fun AppLazyColumn(
     fabPadding: Boolean = false,
     spacedBy: Dp = 4.dp,
+    topPadding: Dp = 14.dp,
     scope: LazyListScope.() -> Unit
 ) {
     LazyColumn(
@@ -24,7 +25,7 @@ fun AppLazyColumn(
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
     ) {
-        item { Spacer(Modifier.height(14.dp)) }
+        item { Spacer(Modifier.height(topPadding)) }
         scope()
         item {
             Spacer(

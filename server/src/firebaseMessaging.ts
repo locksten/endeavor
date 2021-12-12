@@ -9,27 +9,16 @@ const app = admin.initializeApp({
 })
 
 export const sendNotification = async (
-  recipeientToken: string,
+  recipeientTokenOrTokens: string | string[] | undefined,
   payload: MessagingPayload,
 ) => {
+  if (recipeientTokenOrTokens === undefined) return
   try {
     const response = await app
       .messaging()
-      .sendToDevice(recipeientToken, payload)
+      .sendToDevice(recipeientTokenOrTokens, payload)
     console.log("Successfully sent message:", response)
   } catch (e) {
     console.log("Error sending message:", e)
   }
 }
-
-export const mutationNotify = t.field({
-  name: "notify",
-  type: t.String,
-  resolve: async (_, _args, { auth }) => {
-    if (!auth.id) return "Unauthorized"
-
-    // sendNotification()
-
-    return "Sent?"
-  },
-})

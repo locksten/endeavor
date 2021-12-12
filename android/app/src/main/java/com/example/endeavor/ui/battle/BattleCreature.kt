@@ -17,9 +17,9 @@ fun BattleCreature(creature: BattleQuery.Creature, hitpoints: Int) {
     Box(
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier
+            .widthIn(max = 300.dp)
             .fillMaxWidth()
-            .padding(horizontal = 32.dp)
-            .padding(top = 16.dp)
+            .padding(horizontal = 32.dp, vertical = 16.dp)
     ) {
         CreatureHitpointRing(value = hitpoints, maxValue = creature.maxHitpoints)
         Column(

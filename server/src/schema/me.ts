@@ -73,9 +73,8 @@ export const MeType: ObjectType<AppContext, User> = t.objectType<Me>({
         return await db.sql<QUser.SQL, User[]>`
             SELECT ${"User"}.*
             FROM ${"User"}
-            WHERE ${"partyLeaderId"} IS NOT NULL
-            AND ${"partyLeaderId"} =
-            (SELECT ${"partyLeaderId"}
+            WHERE ${"partyLeaderOrUserId"} =
+            (SELECT ${"partyLeaderOrUserId"}
              FROM ${"User"}
              WHERE ${"User"}.${"id"} = ${db.param(me.id)})
             `.run(pool)

@@ -3,12 +3,13 @@ import {
   minifyIntrospectionQuery,
 } from "@urql/introspection"
 import { ApolloServer } from "apollo-server-express/dist/ApolloServer"
-import { newAppContext } from "context"
+import { getPool, newAppContext } from "context"
 import express from "express"
 import { Express } from "express-serve-static-core"
 import * as fs from "fs"
 import { getIntrospectionQuery } from "graphql"
 import fetch from "node-fetch"
+import { initializeDbIfNotInitialized } from "schema/databaseInitialization"
 import { schema } from "schema/schema"
 
 const server = new ApolloServer({
@@ -42,5 +43,6 @@ const listen = (app: Express) => {
       })
 
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+    initializeDbIfNotInitialized(getPool())
   })
 }

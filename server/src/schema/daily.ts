@@ -2,7 +2,7 @@ import { AppContext } from "context"
 import { db, dc } from "database"
 import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
-import { giveRewardForTodo } from "schema/reward"
+import { giveRewardForTodo } from "schema/todoConsequences"
 import {
   createTodo,
   CreateTodoInput,

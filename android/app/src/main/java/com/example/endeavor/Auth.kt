@@ -1,14 +1,20 @@
 package com.example.endeavor
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -56,7 +62,7 @@ class Authentication(private val context: Context) {
         val success = response?.asSuccessfulLoginResult
         val failure = response?.asFailedRegistrationResult
 
-        return when {
+        val error = when {
             failure?.reason != null -> {
                 failure.reason
             }
@@ -69,6 +75,16 @@ class Authentication(private val context: Context) {
                 "Unknown error"
             }
         }
+        if (error != null) {
+            return error
+        }
+
+        Log.d("rova", "gql updating token, globalToken: $globalFirebaseToken")
+        globalFirebaseToken?.let {
+            client.mutate(UpdateFirebaseTokenMutation(Input.optional(it))).await()
+        }
+
+        return null
     }
 
     suspend fun logIn(client: ApolloClient, username: String, password: String): String? {
@@ -80,7 +96,7 @@ class Authentication(private val context: Context) {
         val success = response?.asSuccessfulLoginResult
         val failure = response?.asFailedLoginResult
 
-        return when {
+        val error = when {
             failure?.reason != null -> {
                 failure.reason
             }
@@ -93,9 +109,22 @@ class Authentication(private val context: Context) {
                 "Unknown error"
             }
         }
+        if (error != null) {
+            return error
+        }
+
+        Log.d("rova", "gql updating token, globalToken: $globalFirebaseToken")
+        globalFirebaseToken?.let {
+            client.mutate(UpdateFirebaseTokenMutation(Input.optional(it))).await()
+        }
+
+        return null
     }
 
-    fun logOut(client: ApolloClient) {
+    suspend fun logOut(client: ApolloClient) {
+        Log.d("rova", "gql updating user token to null, globalToken: $globalFirebaseToken")
+        client.mutate(UpdateFirebaseTokenMutation(Input.fromNullable(null))).await()
+
         removeAuthToken()
         removeUsername()
         client.apolloStore.clearAll()

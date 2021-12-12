@@ -1,0 +1,14 @@
+mutation UseSpecialAttack {
+  useSpecialAttack {
+    id
+    creatureHitpoints
+    partyMembers {
+      id
+      hitpoints
+      energy
+      maxHitpoints
+      maxEnergy
+      level
+    }
+  }
+}

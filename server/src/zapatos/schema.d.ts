@@ -1718,7 +1718,7 @@ declare module 'zapatos/schema' {
       * - `int4` in database
       * - Generated column
       */
-      partyLeaderOrUserId: number | null;
+      partyLeaderOrUserId: number;
       /**
       * **User.gold**
       * - `int4` in database
@@ -1798,7 +1798,7 @@ declare module 'zapatos/schema' {
       * - `int4` in database
       * - Generated column
       */
-      partyLeaderOrUserId: number | null;
+      partyLeaderOrUserId: number;
       /**
       * **User.gold**
       * - `int4` in database
