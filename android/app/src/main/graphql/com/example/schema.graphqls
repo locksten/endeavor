@@ -104,9 +104,11 @@ type Creature {
 }
 
 type Mutation {
+  notify: String
   initializeDatabase: String
   register(username: String!, password: String!): RegistrationResult!
   login(username: String!, password: String!): LoginResult!
+  updateFirebaseToken(token: String!): User
   createTask(createTaskInput: CreateTaskInput!): Task
   deleteTodo(id: ID!): ID
   completeTask(id: ID!): Task

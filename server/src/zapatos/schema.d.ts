@@ -191,7 +191,7 @@ declare module 'zapatos/schema' {
       */
       creatureHitpoints?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
     }
-    export type UniqueIndex = 'Battle_partyLeaderId_creatureId_key' | 'Battle_pkey';
+    export type UniqueIndex = 'Battle_partyLeaderId_key' | 'Battle_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -1702,6 +1702,12 @@ declare module 'zapatos/schema' {
       */
       createdAt: Date;
       /**
+      * **User.firebaseToken**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      firebaseToken: string | null;
+      /**
       * **User.partyLeaderId**
       * - `int4` in database
       * - Nullable, no default
@@ -1775,6 +1781,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `now()`
       */
       createdAt: db.TimestampTzString;
+      /**
+      * **User.firebaseToken**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      firebaseToken: string | null;
       /**
       * **User.partyLeaderId**
       * - `int4` in database
@@ -1850,6 +1862,12 @@ declare module 'zapatos/schema' {
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **User.firebaseToken**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      firebaseToken?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **User.partyLeaderId**
       * - `int4` in database
       * - Nullable, no default
@@ -1924,6 +1942,12 @@ declare module 'zapatos/schema' {
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
       /**
+      * **User.firebaseToken**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      firebaseToken?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
       * **User.partyLeaderId**
       * - `int4` in database
       * - Nullable, no default
@@ -1991,6 +2015,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, default: `now()`
       */
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **User.firebaseToken**
+      * - `text` in database
+      * - Nullable, no default
+      */
+      firebaseToken?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **User.partyLeaderId**
       * - `int4` in database

@@ -14,7 +14,7 @@ export const levelFromExperience = (xp: number) =>
   Math.floor(experienceConstant * Math.sqrt(xp)) + 1
 
 export const experienceFromLevel = (level: number) =>
-  Math.pow((level - 1) / experienceConstant, 2)
+  Math.ceil(Math.pow((level - 1) / experienceConstant, 2))
 
 export const experienceInCurrentLevel = (xp: number) =>
   xp - experienceFromLevel(levelFromExperience(xp))
@@ -71,6 +71,27 @@ export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
     ],
   },
 )
+
+export const mutationUpdateFirebaseToken = t.field({
+  name: "updateFirebaseToken",
+  type: UserType,
+  args: {
+    token: t.arg(t.NonNullInput(t.String)),
+  },
+  resolve: async (_, { token }, { auth, pool }) => {
+    if (!auth.id) return
+    return await db.serializable(pool, async (txnClient) => {
+      await db
+        .update("User", { firebaseToken: null }, { firebaseToken: token })
+        .run(txnClient)
+      return (
+        await db
+          .update("User", { firebaseToken: token }, { id: auth.id })
+          .run(txnClient)
+      ).at(0)
+    })
+  },
+})
 
 export const queryUserById = t.field({
   name: "userById",

@@ -27,7 +27,9 @@ class MainActivity : ComponentActivity() {
                     this.window.statusBarColor = colors.primary.toArgb()
                 }
                 EndeavorGQL {
-                    InitialScreen()
+                    FirebaseTokenRegistration {
+                        InitialScreen()
+                    }
                 }
             }
         }

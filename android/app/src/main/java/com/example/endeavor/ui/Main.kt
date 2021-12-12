@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,11 +18,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.endeavor.LocalAuth
+import com.example.endeavor.globalAppMessageHandler
 import com.example.endeavor.ui.battle.CBattleOrCreatureScreen
 import com.example.endeavor.ui.party.PartyScreen
 import com.example.endeavor.ui.reward.CRewardList
 import com.example.endeavor.ui.todo.TodosScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.launch
 
 sealed class MainScreenTab(val route: String, val label: String, val icon: ImageVector) {
     object Todos : MainScreenTab("todos", "Todos", Icons.Rounded.List)
@@ -37,22 +40,38 @@ sealed class MainScreenTab(val route: String, val label: String, val icon: Image
 @ExperimentalMaterialApi
 @Composable
 fun MainScreen() {
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    Scaffold(bottomBar = {
-        BottomNav(
-            currentDestination?.route
-        ) { destination ->
-            navController.navigate(route = destination) {
-                popUpTo(navController.graph.startDestinationId) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+
+    globalAppMessageHandler = { msg ->
+        scope.launch {
+            val title = msg.notification?.title?.plus(" ")
+            val body = msg.notification?.body
+            scaffoldState.snackbarHostState.showSnackbar(
+                message = "$title$body",
+                duration = SnackbarDuration.Long,
+            )
         }
-    }) { padding ->
+    }
+
+    Scaffold(
+        scaffoldState = scaffoldState,
+        bottomBar = {
+            BottomNav(
+                currentDestination?.route
+            ) { destination ->
+                navController.navigate(route = destination) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+        }) { padding ->
         Column(
             Modifier
                 .fillMaxSize()

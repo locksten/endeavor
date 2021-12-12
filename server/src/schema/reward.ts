@@ -1,9 +1,17 @@
 import { AppContext } from "context"
 import { db, dc } from "database"
+import { sendNotification } from "firebaseMessaging"
 import { ObjectType } from "gqtx"
+import { Battle } from "schema/battle"
+import { Creature } from "schema/creature"
 import { DateType } from "schema/date"
 import { idResolver, t, _typeResolver } from "schema/typesFactory"
-import { levelFromExperience } from "schema/user"
+import {
+  experienceFromLevel,
+  levelFromExperience,
+  QUser,
+  User,
+} from "schema/user"
 import { isObjectEmpty } from "utils"
 import { Reward as QReward } from "zapatos/schema"
 
@@ -139,9 +147,10 @@ export const mutationUpdateReward = t.field({
 })
 
 export const giveRewardForTodo = async (
-  { auth, pool }: AppContext,
+  ctx: AppContext,
   difficulty: number,
 ) => {
+  const { auth, pool } = ctx
   if (!auth.id) return
 
   await db.serializable(pool, async (txnClient) => {
@@ -177,12 +186,7 @@ export const giveRewardForTodo = async (
     ).at(0)
     if (battle !== undefined) {
       if (battle.creatureHitpoints <= 0) {
-        await db
-          .deletes("Battle", {
-            partyLeaderId: Number(user.partyLeaderOrUserId),
-          })
-          .run(txnClient)
-        console.log("VICTORY")
+        await battleVictory({ ...ctx, pool: txnClient }, battle, user)
       }
     }
 
@@ -218,32 +222,101 @@ export const givePenaltyForTodo = async (
   difficulty: number,
 ) => {
   const { auth, pool } = ctx
+  if (!auth.id) return
 
-  const user = (
-    await db
-      .update(
-        "User",
-        {
-          hitpoints: db.sql`GREATEST(${db.param(0)}, ${db.self} - ${db.param(
-            difficulty / 10,
-          )})`,
-        },
-        { id: Number(auth.id) },
-      )
-      .run(pool)
-  ).at(0)
+  await db.serializable(pool, async (txnClient) => {
+    const user = await db.selectOne("User", { id: auth.id }).run(txnClient)
+    if (user === undefined) return
 
-  if (user === undefined) return
+    const level = levelFromExperience(user.experience)
 
-  if (user.hitpoints === 0) await die(ctx)
+    let penaltyAmount = (difficulty / 20) * (1 + level / 10)
+
+    let creature: Creature | undefined = undefined
+    const battle = await db
+      .selectOne("Battle", { partyLeaderId: Number(user.partyLeaderOrUserId) })
+      .run(txnClient)
+    if (battle !== undefined) {
+      creature = await db
+        .selectOne("Creature", { id: Number(battle.creatureId) })
+        .run(txnClient)
+      if (creature !== undefined)
+        penaltyAmount += (difficulty / 20) * (1 + creature.strength / 20)
+    }
+
+    const hitpointsPenalty = Math.max(1, penaltyAmount / 2)
+
+    const newHitpoints = Math.max(
+      0,
+      Math.round(user.hitpoints - hitpointsPenalty),
+    )
+
+    if (newHitpoints == 0) {
+      die({ ...ctx, pool: txnClient }, user, creature)
+    } else {
+      await db
+        .update(
+          "User",
+          {
+            hitpoints: newHitpoints,
+          },
+          { id: Number(auth.id) },
+        )
+        .run(txnClient)
+    }
+  })
 }
 
-const die = async ({ auth, pool }: AppContext) => {
+const die = async (
+  { auth, pool }: AppContext,
+  user: User,
+  creature?: Creature,
+) => {
   await db
     .update(
       "User",
-      { experience: 0, hitpoints: 5, energy: 0 },
+      {
+        experience: experienceFromLevel(levelFromExperience(user.experience)),
+        hitpoints: db.sql<QUser.SQL>`${"maxHitpoints"} / 2`,
+        energy: 0,
+      },
       { id: Number(auth.id) },
     )
     .run(pool)
+
+  if (!user?.firebaseToken) return
+  if (creature === undefined) return
+
+  const payload = {
+    notification: {
+      title: "Defeat!",
+      body: `You were defeated by a ${creature.name} ${creature.emoji} !`,
+    },
+  }
+
+  user.firebaseToken && sendNotification(user.firebaseToken, payload)
+}
+
+async function battleVictory({ pool }: AppContext, battle: Battle, user: User) {
+  await db
+    .deletes("Battle", {
+      partyLeaderId: Number(user.partyLeaderOrUserId),
+    })
+    .run(pool)
+
+  const creature = await db
+    .selectOne("Creature", { id: battle.creatureId })
+    .run(pool)
+  if (creature === undefined) return
+
+  if (!user.firebaseToken) return
+
+  const payload = {
+    notification: {
+      title: "Victory!",
+      body: `You defeated a ${creature.name} ${creature.emoji} !`,
+    },
+  }
+
+  user.firebaseToken && sendNotification(user.firebaseToken, payload)
 }

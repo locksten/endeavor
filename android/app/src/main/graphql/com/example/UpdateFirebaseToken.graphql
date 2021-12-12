@@ -1,0 +1,5 @@
+mutation UpdateFirebaseToken($token: String!) {
+    updateFirebaseToken(token: $token) {
+        id
+    }
+}

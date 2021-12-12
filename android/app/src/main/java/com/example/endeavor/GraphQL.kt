@@ -9,6 +9,7 @@ import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo.coroutines.toFlow
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import okhttp3.OkHttpClient
 
@@ -41,6 +42,7 @@ fun EndeavorGQL(content: @Composable () -> Unit) {
     }
 }
 
+@ExperimentalCoroutinesApi
 @Composable
 fun <D : Operation.Data, T, V : Operation.Variables> gqlWatchQuery(query: Query<D, T, V>): T? {
     val gql = LocalGQLClient.current

@@ -4,6 +4,7 @@ create table "User" (
     "username" text not null unique,
     "password" text not null,
     "createdAt" timestamp with time zone not null default now(),
+    "firebaseToken" text,
     "partyLeaderId" integer references "User" ("id") on delete set null,
     "partyLeaderOrUserId" integer generated always as (coalesce("partyLeaderId", "id")) STORED,
     "gold" integer not null,

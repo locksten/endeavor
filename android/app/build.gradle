@@ -1,6 +1,7 @@
 plugins {
     id("com.apollographql.apollo").version("2.5.9")
     id 'com.android.application'
+    id 'com.google.gms.google-services'
     id 'kotlin-android'
 }
 
@@ -50,7 +51,6 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.5.21'
     }
     packagingOptions {
         resources {
@@ -61,6 +61,10 @@ android {
 
 
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+
     implementation 'com.apollographql.apollo:apollo-runtime:2.5.9'
     implementation("com.apollographql.apollo:apollo-coroutines-support:2.5.9")
     implementation 'com.apollographql.apollo:apollo-normalized-cache:2.5.9'

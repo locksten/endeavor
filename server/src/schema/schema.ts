@@ -1,3 +1,4 @@
+import { mutationNotify } from "firebaseMessaging"
 import { buildGraphQLSchema } from "gqtx"
 import { mutationLogin } from "schema/auth/login"
 import { mutationRegister } from "schema/auth/register"
@@ -37,7 +38,12 @@ import {
 } from "schema/task"
 import { mutationDeleteTodo } from "schema/todo"
 import { t } from "schema/typesFactory"
-import { queryUserById, queryUserByName, queryUserSearch } from "schema/user"
+import {
+  mutationUpdateFirebaseToken,
+  queryUserById,
+  queryUserByName,
+  queryUserSearch,
+} from "schema/user"
 
 const queryRNG = t.field({
   name: "RNG",
@@ -60,9 +66,11 @@ const query = t.queryType({
 
 const mutation = t.mutationType({
   fields: () => [
+    mutationNotify,
     mutationInitializeDatabase,
     mutationRegister,
     mutationLogin,
+    mutationUpdateFirebaseToken,
     mutationCreateTask,
     mutationDeleteTodo,
     mutationCompleteTask,

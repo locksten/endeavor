@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "164005717368",
+    "project_id": "endeavor-32807",
+    "storage_bucket": "endeavor-32807.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164005717368:android:fc64af643ceedfebc6148d",
+        "android_client_info": {
+          "package_name": "com.example.endeavor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164005717368-iv1etniep20uns0s3psb4tfm8o4562j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsL5ilAa0cKWXMbhcMXrAvWlZCMaGIrCQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "164005717368-iv1etniep20uns0s3psb4tfm8o4562j5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
