@@ -16,8 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.endeavor.ui.theme.Theme
+import java.time.OffsetDateTime
 
-data class Reward(val id: String, val title: String, val price: Int, val createdAt: String)
+data class Reward(val id: String, val title: String, val price: Int, val createdAt: OffsetDateTime)
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi

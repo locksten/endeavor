@@ -1,4 +1,3 @@
-import { t } from "schema/typesFactory"
 import * as admin from "firebase-admin"
 import { serviceAccount } from "PRIVATEserviceAccount"
 import { ServiceAccount } from "firebase-admin"
@@ -13,12 +12,8 @@ export const sendNotification = async (
   payload: MessagingPayload,
 ) => {
   if (recipeientTokenOrTokens === undefined) return
-  try {
-    const response = await app
-      .messaging()
-      .sendToDevice(recipeientTokenOrTokens, payload)
-    console.log("Successfully sent message:", response)
-  } catch (e) {
-    console.log("Error sending message:", e)
-  }
+  const response = await app
+    .messaging()
+    .sendToDevice(recipeientTokenOrTokens, payload)
+  console.log("Successfully sent message:", response)
 }

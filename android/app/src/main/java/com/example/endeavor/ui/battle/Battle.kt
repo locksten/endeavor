@@ -3,9 +3,8 @@ package com.example.endeavor.ui.battle
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -18,6 +17,7 @@ import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.*
 import com.example.endeavor.ui.theme.Theme
+import com.example.endeavor.ui.todo.task.CUpdateTaskModal
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
@@ -34,7 +34,7 @@ fun CBattleScreen(battle: BattleQuery.Battle) {
         ) {
             BattleCreature(creature, battle.creatureHitpoints)
             Column {
-                CAbilities()
+                CAbilities(creature)
                 Spacer(Modifier.height(8.dp))
                 BattlePartyMembers(battle.partyMembers)
             }
@@ -42,10 +42,12 @@ fun CBattleScreen(battle: BattleQuery.Battle) {
     }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalCoroutinesApi
 @Composable
-fun CAbilities() {
+fun CAbilities(creature: BattleQuery.Creature) {
     MutationComposable { gql, scope ->
+        var isDialogOpen by remember { mutableStateOf(false) }
         val vitalsResponse = gqlWatchQuery(VitalsQuery())?.me?.user
         vitalsResponse?.let { vitals ->
             Row(
@@ -53,10 +55,16 @@ fun CAbilities() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 AbilityButton("Special Attack", vitals.maxEnergy / 2, vitals.energy) {
-                    scope.launch { useSpecialAttack(gql) }
+                    isDialogOpen = true
                 }
                 AbilityButton("Party Heal", vitals.maxEnergy, vitals.energy) {
                     scope.launch { usePartyHeal(gql) }
+                }
+                if (isDialogOpen) {
+                    SpecialAttackMinigame(creature.emoji) { multiplier ->
+                        isDialogOpen = false
+                        scope.launch { useSpecialAttack(gql, multiplier) }
+                    }
                 }
             }
         }
@@ -90,9 +98,9 @@ private fun RowScope.AbilityButton(
     }
 }
 
-suspend fun useSpecialAttack(gql: ApolloClient) {
+suspend fun useSpecialAttack(gql: ApolloClient, multiplier: Float) {
     try {
-        gql.mutate(UseSpecialAttackMutation()).await()
+        gql.mutate(UseSpecialAttackMutation(multiplier.toDouble())).await()
         gql.query(BattleQuery()).await()
         gql.query(VitalsQuery()).await()
     } catch (e: ApolloNetworkException) {

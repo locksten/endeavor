@@ -182,7 +182,7 @@ private fun AnimatedRing(
 }
 
 @Composable
-private fun RingWithBackground(
+fun RingWithBackground(
     color: Color,
     backgroundColor: Color,
     value: Float,

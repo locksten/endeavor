@@ -73,8 +73,10 @@ export const mutationCreateBattle = t.field({
 export const mutationUseSpecialAttack = t.field({
   name: "useSpecialAttack",
   type: BattleType,
-  args: {},
-  resolve: async (_, _args, ctx) => {
+  args: {
+    multiplier: t.arg(t.NonNullInput(t.Float)),
+  },
+  resolve: async (_, { multiplier }, ctx) => {
     const { auth, pool } = ctx
     if (!auth.id) return
 
@@ -84,7 +86,7 @@ export const mutationUseSpecialAttack = t.field({
 
       const energyCost = Math.floor(user.maxEnergy / 2)
       if (user.energy < energyCost) return
-      const damage = energyCost * 2
+      const damage = Math.round(energyCost * multiplier)
 
       const newUser = (
         await db

@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.sp
 import com.example.endeavor.RewardsQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.AppLazyColumn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -42,7 +44,7 @@ fun CRewardList() {
                             id = it.id,
                             title = it.title,
                             price = it.price,
-                            createdAt = it.createdAt as String
+                            createdAt = it.createdAt
                         )
                     }, me.user.gold
                 )

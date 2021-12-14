@@ -15,6 +15,9 @@ apollo {
             schemaFile.set(file("src/main/graphql/com/example/schema.graphqls"))
         }
     }
+    customTypeMapping = [
+            "Date": "java.time.OffsetDateTime"
+    ]
 }
 
 android {
@@ -39,6 +42,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -61,6 +65,9 @@ android {
 
 
 dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.6.1"
+
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'

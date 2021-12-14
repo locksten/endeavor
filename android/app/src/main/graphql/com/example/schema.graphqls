@@ -73,6 +73,7 @@ type Task implements Todo {
   title: String!
   difficulty: Int!
   completionDate: Date
+  reminderDate: Date
   createdAt: Date!
 }
 
@@ -104,7 +105,6 @@ type Creature {
 }
 
 type Mutation {
-  notify: String
   register(username: String!, password: String!): RegistrationResult!
   login(username: String!, password: String!): LoginResult!
   updateFirebaseToken(token: String): User
@@ -131,7 +131,7 @@ type Mutation {
   buyReward(id: ID!): ID
   createCreature(createCreatureInput: CreateCreatureInput!): Creature
   createBattle(createBattleInput: CreateBattleInput!): Battle
-  useSpecialAttack: Battle
+  useSpecialAttack(multiplier: Float!): Battle
   usePartyHeal: Battle
 }
 
@@ -160,6 +160,7 @@ type FailedLoginResult {
 }
 
 input CreateTaskInput {
+  reminderDate: Date
   createTodoInput: CreateTodoInput!
 }
 
@@ -170,6 +171,7 @@ input CreateTodoInput {
 
 input UpdateTaskInput {
   id: ID!
+  reminderDate: Date
   updateTodoInput: UpdateTodoInput!
 }
 

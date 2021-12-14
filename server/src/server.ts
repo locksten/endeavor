@@ -9,8 +9,10 @@ import { Express } from "express-serve-static-core"
 import * as fs from "fs"
 import { getIntrospectionQuery } from "graphql"
 import fetch from "node-fetch"
+import { sendReminderNotifications } from "reminderNotifications"
 import { initializeDbIfNotInitialized } from "schema/databaseInitialization"
 import { schema } from "schema/schema"
+import { setInterval } from "timers"
 
 const server = new ApolloServer({
   schema,
@@ -43,6 +45,11 @@ const listen = (app: Express) => {
       })
 
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+
     initializeDbIfNotInitialized(getPool())
+
+    setInterval(() => {
+      sendReminderNotifications()
+    }, 5 * 1000)
   })
 }

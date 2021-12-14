@@ -7,7 +7,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import com.example.endeavor.HabitsQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.AppLazyColumn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @Composable
@@ -19,7 +21,7 @@ fun CHabitList() {
 @ExperimentalComposeUiApi
 @Composable
 fun HabitList(habits: List<HabitsQuery.Habit>) {
-    val grouped = habits.sortedWith(compareBy({ it.createdAt as String }, { it.id })).groupBy {
+    val grouped = habits.sortedWith(compareBy({ it.createdAt }, { it.id })).groupBy {
         when {
             isHabitPos(it) -> 0
             isHabitPosNeg(it) -> 1

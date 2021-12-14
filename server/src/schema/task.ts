@@ -7,7 +7,6 @@ import {
   createTodo,
   CreateTodoInput,
   dcTodoIdBelongsToUser,
-  QTodo,
   Todo,
   TodoInterface,
   updateTodo,
@@ -16,6 +15,8 @@ import {
 import { idResolver, t, typeResolver } from "schema/typesFactory"
 
 import { Task as QTask } from "zapatos/schema"
+import { isObjectEmpty, Nullable } from "utils"
+import { TimestampTzString } from "zapatos/db"
 export { Task as QTask } from "zapatos/schema"
 export type Task = QTask.JSONSelectable
 
@@ -44,6 +45,7 @@ export const TaskType: ObjectType<AppContext, TodoTask> =
       t.field({ name: "title", type: t.NonNull(t.String) }),
       t.field({ name: "difficulty", type: t.NonNull(t.Int) }),
       t.field({ name: "completionDate", type: DateType }),
+      t.field({ name: "reminderDate", type: DateType }),
       t.field({ name: "createdAt", type: t.NonNull(DateType) }),
     ],
   })
@@ -51,6 +53,7 @@ export const TaskType: ObjectType<AppContext, TodoTask> =
 export const createTaskInput = t.inputObjectType({
   name: "CreateTaskInput",
   fields: () => ({
+    reminderDate: t.arg(DateType),
     createTodoInput: t.arg(t.NonNullInput(CreateTodoInput)),
   }),
 })
@@ -61,11 +64,15 @@ export const mutationCreateTask = t.field({
   args: {
     createTaskInput: t.arg(t.NonNullInput(createTaskInput)),
   },
-  resolve: async (_, { createTaskInput: { createTodoInput } }, ctx) => {
+  resolve: async (
+    _,
+    { createTaskInput: { reminderDate, createTodoInput } },
+    ctx,
+  ) => {
     const { pool, auth } = ctx
     if (!auth.id) return
 
-    const id = await createTodo(ctx, "Task", {}, createTodoInput)
+    const id = await createTodo(ctx, "Task", { reminderDate }, createTodoInput)
     if (id === undefined) return
 
     return await db.selectOne("TodoTask", { id }).run(pool)
@@ -76,6 +83,7 @@ export const updateTaskInput = t.inputObjectType({
   name: "UpdateTaskInput",
   fields: () => ({
     id: t.arg(t.NonNullInput(t.ID)),
+    reminderDate: t.arg(DateType),
     updateTodoInput: t.arg(t.NonNullInput(UpdateTodoInput)),
   }),
 })
@@ -86,16 +94,48 @@ export const mutationUpdateTask = t.field({
   args: {
     updateTaskInput: t.arg(t.NonNullInput(updateTaskInput)),
   },
-  resolve: async (_, { updateTaskInput: { id, updateTodoInput } }, ctx) => {
+  resolve: async (
+    _,
+    { updateTaskInput: { id, reminderDate, updateTodoInput } },
+    ctx,
+  ) => {
     const { auth, pool } = ctx
     if (!auth.id) return
 
-    const todo = await updateTodo(ctx, Number(id), updateTodoInput)
+    const [todo, _task] = await db.serializable(pool, (txnClient) =>
+      Promise.all([
+        updateTodo({ ...ctx, pool: txnClient }, Number(id), updateTodoInput),
+        updateTask({ ...ctx, pool: txnClient }, Number(id), {
+          reminderDate,
+        }),
+      ]),
+    )
     if (todo?.at(0) === undefined) return
 
     return await db.selectOne("TodoTask", { id: Number(id) }).run(pool)
   },
 })
+
+export const updateTask = async (
+  { pool, auth }: AppContext,
+  id: number,
+  { reminderDate }: Partial<Nullable<{ reminderDate: TimestampTzString }>>,
+) => {
+  if (!auth.id) return
+
+  const patch: QTask.Updatable = {
+    ...(reminderDate === undefined
+      ? undefined
+      : { reminderDate: reminderDate ? reminderDate : null }),
+  }
+  if (isObjectEmpty(patch)) return
+
+  return await db
+    .update("Task", patch, {
+      id: dcTodoIdBelongsToUser(Number(id), auth.id),
+    })
+    .run(pool)
+}
 
 export const mutationCompleteTask = t.field({
   name: "completeTask",

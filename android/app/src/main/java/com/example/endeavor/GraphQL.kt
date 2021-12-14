@@ -3,15 +3,20 @@ package com.example.endeavor
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.CustomTypeAdapter
+import com.apollographql.apollo.api.CustomTypeValue
 import com.apollographql.apollo.api.Operation
 import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory
 import com.apollographql.apollo.coroutines.toFlow
 import com.apollographql.apollo.fetcher.ApolloResponseFetchers
+import com.example.endeavor.type.CustomType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
 import okhttp3.OkHttpClient
+import java.text.ParseException
+import java.time.OffsetDateTime
 
 
 val LocalGQLClient = staticCompositionLocalOf<ApolloClient> { null!! }
@@ -22,8 +27,26 @@ fun EndeavorGQL(content: @Composable () -> Unit) {
     val context = LocalContext.current
     val authentication = Authentication(context)
     val cacheFactory = SqlNormalizedCacheFactory(LocalContext.current)
+
+    val dateCustomTypeAdapter = object : CustomTypeAdapter<OffsetDateTime> {
+        override fun decode(value: CustomTypeValue<*>): OffsetDateTime {
+            return try {
+                OffsetDateTime.parse(value.value.toString())
+            } catch (e: ParseException) {
+                OffsetDateTime.now()
+                throw RuntimeException(e)
+            }
+        }
+
+        override fun encode(value: OffsetDateTime): CustomTypeValue<*> {
+            return CustomTypeValue.GraphQLString(value.toString())
+        }
+    }
+
     val apolloClient =
-        ApolloClient.builder().defaultResponseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
+        ApolloClient.builder()
+            .addCustomTypeAdapter(CustomType.DATE, dateCustomTypeAdapter)
+            .defaultResponseFetcher(ApolloResponseFetchers.CACHE_AND_NETWORK)
             .serverUrl("http://192.168.0.118:4000/graphql")
             .okHttpClient(
                 OkHttpClient.Builder()

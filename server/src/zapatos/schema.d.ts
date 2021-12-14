@@ -932,6 +932,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate: Date | null;
+      /**
+      * **Task.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate: Date | null;
     }
     export interface JSONSelectable {
       /**
@@ -946,6 +952,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate: db.TimestampTzString | null;
+      /**
+      * **Task.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate: db.TimestampTzString | null;
     }
     export interface Whereable {
       /**
@@ -960,6 +972,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Task.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -974,6 +992,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **Task.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -988,6 +1012,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Task.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
@@ -1568,6 +1598,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate: Date | null;
+      /**
+      * **TodoTask.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate: Date | null;
     }
     export interface JSONSelectable {
       /**
@@ -1612,6 +1648,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate: db.TimestampTzString | null;
+      /**
+      * **TodoTask.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate: db.TimestampTzString | null;
     }
     export interface Whereable {
       /**
@@ -1656,6 +1698,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       completionDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **TodoTask.reminderDate**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      reminderDate?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       [key: string]: never;

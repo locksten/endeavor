@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 fun ColumnDialog(onDismissRequest: () -> Unit, Content: @Composable () -> Unit) {
     BaseDialog(onDismissRequest) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Content()
         }

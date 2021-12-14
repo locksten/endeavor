@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.example.endeavor.UserSearchQuery
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.theme.EndeavorTheme
+import java.time.OffsetDateTime
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
@@ -39,8 +40,8 @@ fun UsersPreview() {
 }
 
 val testUsers = listOf(
-    UserSearchQuery.UserSearch(id = "1", username = "username", createdAt = "date"),
-    UserSearchQuery.UserSearch(id = "2", username = "username2", createdAt = "date")
+    UserSearchQuery.UserSearch(id = "1", username = "username", createdAt = OffsetDateTime.now()),
+    UserSearchQuery.UserSearch(id = "2", username = "username2", createdAt = OffsetDateTime.now())
 )
 
 @Composable

@@ -1,5 +1,6 @@
 import { AppContext } from "context"
 import { db, dc } from "database"
+import { auth } from "firebase-admin"
 import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
 import { idResolver, t, _typeResolver } from "schema/typesFactory"
@@ -37,12 +38,8 @@ export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
       t.field({
         name: "isPartyLeader",
         type: t.NonNull(t.Boolean),
-        resolve: async ({ id, partyLeaderId }, _args, { auth, pool }) => {
-          const authUser = await db
-            .selectOne("User", { id: Number(auth.id) })
-            .run(pool)
-          if (authUser?.partyLeaderId !== partyLeaderId) return false
-          return id === partyLeaderId
+        resolve: async ({ id, partyLeaderOrUserId }, _args, _ctx) => {
+          return id === partyLeaderOrUserId
         },
       }),
       t.field({ name: "hitpoints", type: t.NonNull(t.Int) }),

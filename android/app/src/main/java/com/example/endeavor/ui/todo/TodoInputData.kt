@@ -63,5 +63,4 @@ fun TodoInput(
     TodoDifficultySelector(
         value = value.difficulty.value ?: defaultValue.difficulty.value!!,
         onChange = { onChange(value.copy(difficulty = Input.fromNullable(it))) })
-
 }

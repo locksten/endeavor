@@ -22,6 +22,7 @@ import com.apollographql.apollo.coroutines.await
 import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.CompleteTaskMutation
 import com.example.endeavor.LocalGQLClient
+import com.example.endeavor.MutationComposable
 import com.example.endeavor.TasksQuery
 import com.example.endeavor.ui.theme.Theme
 import kotlinx.coroutines.launch
@@ -68,25 +69,24 @@ fun Task(task: TasksQuery.Task) {
 
 @Composable
 private fun CTaskCheckbox(task: TasksQuery.Task) {
-    val scope = rememberCoroutineScope()
-    val gql = LocalGQLClient.current
-    Checkbox(
-        checked = task.isCompleted,
-        onCheckedChange = {
-            if (it) {
-                scope.launch {
-                    completeTask(gql, task.id)
+    MutationComposable { gql, scope ->
+        Checkbox(
+            checked = task.isCompleted,
+            onCheckedChange = {
+                if (it) {
+                    scope.launch {
+                        completeTask(gql, task.id)
+                    }
                 }
-            }
-        },
-        modifier = Modifier
-            .fillMaxHeight(),
-        colors = CheckboxDefaults.colors(
-            uncheckedColor = Theme.colors.onBackground,
-            checkmarkColor = Theme.colors.onBackground,
-            checkedColor = Color.Transparent
+            },
+            modifier = Modifier.height(8.dp),
+            colors = CheckboxDefaults.colors(
+                uncheckedColor = Theme.colors.onBackground,
+                checkmarkColor = Theme.colors.onBackground,
+                checkedColor = Color.Transparent
+            )
         )
-    )
+    }
 }
 
 suspend fun completeTask(gql: ApolloClient, id: String) {

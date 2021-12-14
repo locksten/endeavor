@@ -63,7 +63,8 @@ select * from "Todo" join "Daily" using("id");
 drop table if exists "Task" cascade;
 create table "Task" (
     "id" integer not null references "Todo" ("id") on delete cascade,
-    "completionDate" timestamp with time zone
+    "completionDate" timestamp with time zone,
+    "reminderDate" timestamp with time zone
 );
 
 drop view if exists "TodoTask";

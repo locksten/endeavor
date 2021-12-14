@@ -1,14 +1,14 @@
-mutation UseSpecialAttack {
-  useSpecialAttack {
-    id
-    creatureHitpoints
-    partyMembers {
-      id
-      hitpoints
-      energy
-      maxHitpoints
-      maxEnergy
-      level
+mutation UseSpecialAttack($multiplier: Float!) {
+    useSpecialAttack(multiplier: $multiplier) {
+        id
+        creatureHitpoints
+        partyMembers {
+            id
+            hitpoints
+            energy
+            maxHitpoints
+            maxEnergy
+            level
+        }
     }
-  }
 }
