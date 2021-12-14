@@ -11,6 +11,7 @@ import {
   maxEnergyFromLevel,
   maxHitpointsFromLevel,
 } from "schema/user"
+import { select } from "zapatos/db"
 
 export const giveRewardForTodo = async (
   ctx: AppContext,
@@ -198,7 +199,34 @@ const battleVictory = async (ctx: AppContext, battle: Battle, user: User) => {
   }
   sendNotification(tokens, message)
 
+  battleVictoryRecordStat(ctx, user, creature)
   battleVictoryReward(ctx, user, battle, creature)
+}
+
+const battleVictoryRecordStat = async (
+  { pool }: AppContext,
+  user: User,
+  creature: Creature,
+) => {
+  const userCreature = await db
+    .selectOne("UserCreature", { userId: user.id, creatureId: creature.id })
+    .run(pool)
+
+  console.log("userCreature", userCreature)
+  if (!userCreature) {
+    const k = await db
+      .insert("UserCreature", { userId: user.id, creatureId: creature.id })
+      .run(pool)
+    console.log(k)
+  }
+  const v = await db
+    .update(
+      "UserCreature",
+      { victoryCount: dc.add(1) },
+      { userId: user.id, creatureId: creature.id },
+    )
+    .run(pool)
+  console.log("victory logged", v)
 }
 
 const battleVictoryReward = async (
@@ -221,10 +249,29 @@ const battleVictoryReward = async (
   ).at(0)
   if (newUser === undefined) return
 
+  const itemReward = await getRandomItem(ctx)
+  console.log("itemReward", itemReward)
+  if (itemReward === undefined) return
+
+  let isRewardItemDuplicate = false
+  try {
+    const userItem = await db
+      .insert("UserItem", { itemId: itemReward.id, userId: newUser.id })
+      .run(pool)
+    console.log("userItem", userItem)
+  } catch (e) {
+    console.log("EEE", e)
+    if (db.isDatabaseError(e, "IntegrityConstraintViolation_UniqueViolation")) {
+      isRewardItemDuplicate = true
+    }
+  }
+
   const message = {
     notification: {
       title: "Victory!",
-      body: `You received  💰 ${goldReward} !`,
+      body: `You ${isRewardItemDuplicate ? "found another" : "received"} ${
+        itemReward.emoji
+      } ${itemReward.name} !`,
     },
   }
   const tokens = await getPartysFirebaseTokens(ctx, newUser.partyLeaderOrUserId)
@@ -255,4 +302,14 @@ const getPartysFirebaseTokens = async (
     .filter((token) => token) as string[]
 
   return tokens.length == 0 ? undefined : tokens
+}
+
+const getRandomItemId = async ({ pool }: AppContext) => {
+  const itemCount = (await db.select("Item", db.all).run(pool)).length
+  return Math.floor(Math.random() * itemCount)
+}
+
+const getRandomItem = async (ctx: AppContext) => {
+  const id = await getRandomItemId(ctx)
+  return await db.selectOne("Item", { id }).run(ctx.pool)
 }

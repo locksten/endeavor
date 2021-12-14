@@ -17,8 +17,10 @@ import com.example.endeavor.InviteesQuery
 import com.example.endeavor.MutationComposable
 import com.example.endeavor.gqlWatchQuery
 import com.example.endeavor.ui.AppLazyColumn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -30,7 +32,8 @@ fun CInviteeList() {
                 User(
                     id = it.id,
                     username = it.username,
-                    isPartyLeader = false
+                    isPartyLeader = false,
+                    trophyCount = null
                 )
             })
         }

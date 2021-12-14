@@ -1,16 +1,18 @@
 query Vitals {
-  me {
-    id
-    user {
-      id
-      username
-      hitpoints
-      maxEnergy
-      maxHitpoints
-      energy
-      level
-      experienceInCurrentLevel
-      experienceForNexLevel
+    me {
+        id
+        totalEquipmentStats
+        user {
+            id
+            username
+            hitpoints
+            maxEnergy
+            maxHitpoints
+            energy
+            level
+            experienceInCurrentLevel
+            experienceForNexLevel
+            trophyCount
+        }
     }
-  }
 }

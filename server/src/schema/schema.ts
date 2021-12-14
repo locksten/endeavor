@@ -26,6 +26,7 @@ import {
   mutationLeaveParty,
   mutationRemoveFromParty,
 } from "schema/invite"
+import { mutationEquipItem } from "schema/item"
 import { queryMe } from "schema/me"
 import {
   mutationBuyReward,
@@ -96,6 +97,7 @@ const mutation = t.mutationType({
     mutationCreateBattle,
     mutationUseSpecialAttack,
     mutationUsePartyHeal,
+    mutationEquipItem,
   ],
 })
 

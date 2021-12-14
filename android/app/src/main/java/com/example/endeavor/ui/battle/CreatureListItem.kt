@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.apollographql.apollo.ApolloClient
@@ -57,13 +58,24 @@ fun CreatureListItem(creature: CreaturesQuery.Creature) {
                     fontSize = 25.sp,
                 )
             }
-            Column(
-                horizontalAlignment = Alignment.End,
-                modifier = Modifier.padding(end = 8.dp)
-            ) {
-                Text("${creature.maxHitpoints} ♥️")
-                Spacer(Modifier.height(4.dp))
-                Text("${creature.strength} 🗡️")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                if (creature.victoryCount > 0) {
+                    Text(
+                        text = "${creature.victoryCount}️ 🏆",
+                        fontWeight = FontWeight.Bold,
+                        color = Theme.colors.onSurface,
+                        fontSize = 20.sp
+                    )
+                    Spacer(Modifier.width(16.dp))
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier.padding(end = 8.dp)
+                ) {
+                    Text("${creature.maxHitpoints} ♥️")
+                    Spacer(Modifier.height(4.dp))
+                    Text("${creature.strength} 🗡️")
+                }
             }
         }
     }

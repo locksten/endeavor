@@ -18,12 +18,18 @@ export const initializeDbIfNotInitialized = async (pool: Pool) => {
   console.log(`📨 Database Initializing`)
 
   await creatures(pool)
+  await items(pool)
 
   const alice = await user(pool, undefined, "Alice", 4, 0.7, 0.8)
   const luz = await user(pool, alice.id, "Luz", 4, 0.4, 1)
   const amity = await user(pool, alice.id, "Amity", 4, 0.6, 0.7)
   const willow = await user(pool, alice.id, "Willow", 4, 0.9, 0.6)
   const gus = await user(pool, alice.id, "Gus", 2, 0.8, 0.7)
+
+  await db.insert("UserItem", { userId: 1, itemId: 1 }).run(pool)
+  await db.insert("UserItem", { userId: 1, itemId: 5 }).run(pool)
+  await db.insert("UserItem", { userId: 1, itemId: 7 }).run(pool)
+  await db.insert("UserItem", { userId: 1, itemId: 9 }).run(pool)
 
   const users = [alice, luz, amity, willow, gus]
 
@@ -73,6 +79,75 @@ const rewards = async ({ auth, pool }: AppContext) => {
     ])
     .run(pool)
 }
+
+const items = async (pool: Pool) =>
+  await db
+    .insert("Item", [
+      {
+        emoji: "💍",
+        name: "Ring",
+        defenseBonus: 2,
+        strengthBonus: 2,
+        slot: "Accessory",
+      },
+      {
+        emoji: "🎀",
+        name: "Ribbon",
+        defenseBonus: 3,
+        strengthBonus: 1,
+        slot: "Accessory",
+      },
+      {
+        emoji: "👓",
+        name: "Glasses",
+        defenseBonus: 1,
+        strengthBonus: 3,
+        slot: "Accessory",
+      },
+      {
+        emoji: "📌",
+        name: "Pushpin",
+        defenseBonus: null,
+        strengthBonus: 1,
+        slot: "Offense",
+      },
+      {
+        emoji: "✂️",
+        name: "Scrissors",
+        defenseBonus: null,
+        strengthBonus: 5,
+        slot: "Offense",
+      },
+      {
+        emoji: "🖋️",
+        name: "The Pen",
+        defenseBonus: null,
+        strengthBonus: 9,
+        slot: "Offense",
+      },
+      {
+        emoji: "🔫",
+        name: "Pistol",
+        defenseBonus: null,
+        strengthBonus: 10,
+        slot: "Offense",
+      },
+      {
+        emoji: "👚",
+        name: "Cotton T-Shirt",
+        defenseBonus: 1,
+        strengthBonus: null,
+        slot: "Defense",
+      },
+      {
+        emoji: "👘",
+        name: "Kimono",
+        defenseBonus: 7,
+        strengthBonus: null,
+        slot: "Defense",
+      },
+    ])
+    .run(pool)
 
 const creatures = async (pool: Pool) =>
   await db

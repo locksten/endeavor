@@ -17,6 +17,8 @@ type Me {
   partyMembers: [User!]!
   inviters: [User!]!
   invitees: [User!]!
+  totalEquipmentStats: String!
+  inventory: [Item!]!
   rewards: [Reward!]!
   battle: Battle
 }
@@ -35,6 +37,7 @@ type User {
   experienceInCurrentLevel: Int!
   experienceForNexLevel: Int!
   gold: Int!
+  trophyCount: Int!
 }
 
 scalar Date
@@ -77,6 +80,17 @@ type Task implements Todo {
   createdAt: Date!
 }
 
+type Item {
+  id: ID!
+  _type: String!
+  name: String!
+  emoji: String!
+  defenseBonus: Int
+  strengthBonus: Int
+  createdAt: Date!
+  isEquiped: Boolean!
+}
+
 type Reward {
   id: ID!
   _type: String!
@@ -102,6 +116,7 @@ type Creature {
   createdAt: Date!
   maxHitpoints: Int!
   strength: Int!
+  victoryCount: Int!
 }
 
 type Mutation {
@@ -133,6 +148,7 @@ type Mutation {
   createBattle(createBattleInput: CreateBattleInput!): Battle
   useSpecialAttack(multiplier: Float!): Battle
   usePartyHeal: Battle
+  equipItem(id: ID!): ID
 }
 
 union RegistrationResult = SuccessfulLoginResult | FailedRegistrationResult

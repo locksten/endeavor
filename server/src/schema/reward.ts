@@ -96,7 +96,7 @@ export const mutationBuyReward = t.field({
           "User",
           { gold: db.sql`${db.self} - ${db.param(reward.price)}` },
           {
-            id: Number(auth.id),
+            id: auth.id,
             gold: dc.gte(reward.price),
           },
         )

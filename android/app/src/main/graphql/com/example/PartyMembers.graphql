@@ -8,6 +8,7 @@ query PartyMembers {
       id
       username
       isPartyLeader
+      trophyCount
     }
   }
 }

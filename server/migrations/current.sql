@@ -1,3 +1,17 @@
+drop type if exists "EquipmentSlot" cascade;
+create type "EquipmentSlot" AS ENUM ('Offense', 'Defense', 'Accessory');
+
+drop table if exists "Item" cascade;
+create table "Item" (
+    "id" serial primary key,
+    "createdAt" timestamp with time zone not null default now(),
+    "emoji" text not null unique,
+    "name" text not null unique,
+    "strengthBonus" integer,
+    "defenseBonus" integer,
+    "slot" "EquipmentSlot" not null
+);
+
 drop table if exists "User" cascade;
 create table "User" (
     "id" serial primary key,
@@ -12,7 +26,28 @@ create table "User" (
     "maxHitpoints" integer not null,
     "energy" integer not null,
     "maxEnergy" integer not null,
-    "experience" integer not null
+    "experience" integer not null,
+    "offenseSlot" integer references "Item" ("id") on delete set null,
+    "defenseSlot" integer references "Item" ("id") on delete set null,
+    "accessorySlot" integer references "Item" ("id") on delete set null
+);
+
+drop table if exists "UserItem" cascade;
+create table "UserItem" (
+    "id" serial primary key,
+    "userId" integer not null references "User" ("id") on delete cascade,
+    "itemId" integer not null references "Item" ("id") on delete cascade,
+    "createdAt" timestamp with time zone not null default now(),
+    unique ("userId", "itemId")
+);
+
+drop table if exists "UserCreature" cascade;
+create table "UserCreature" (
+    "id" serial primary key,
+    "userId" integer not null references "User" ("id") on delete cascade,
+    "creatureId" integer not null references "Creature" ("id") on delete cascade,
+    "victoryCount" integer not null default 0,
+    unique ("userId", "creatureId")
 );
 
 drop table if exists "Invite" cascade;

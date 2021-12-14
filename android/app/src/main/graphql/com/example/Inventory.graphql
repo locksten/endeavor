@@ -1,0 +1,13 @@
+query Inventory {
+    me {
+        inventory {
+            id
+            name
+            emoji
+            defenseBonus
+            strengthBonus
+            isEquiped
+            createdAt
+        }
+    }
+}

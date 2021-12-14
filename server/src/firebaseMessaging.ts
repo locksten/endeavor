@@ -15,5 +15,4 @@ export const sendNotification = async (
   const response = await app
     .messaging()
     .sendToDevice(recipeientTokenOrTokens, payload)
-  console.log("Successfully sent message:", response)
 }

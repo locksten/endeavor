@@ -5,11 +5,13 @@ import { BattleType } from "schema/battle"
 import { DailyType } from "schema/daily"
 import { HabitType } from "schema/habit"
 import { QInvite } from "schema/invite"
+import { Item, ItemType, QItem } from "schema/item"
 import { RewardType } from "schema/reward"
 import { TaskType } from "schema/task"
 import { idResolver, t } from "schema/typesFactory"
 import { QUser, User, UserType } from "schema/user"
 import { getLastMidnight } from "utils"
+import { UserItem } from "zapatos/schema"
 
 export type Me = { id: number }
 
@@ -100,6 +102,51 @@ export const MeType: ObjectType<AppContext, User> = t.objectType<Me>({
             FROM ${"Invite"}
             JOIN ${"User"} ON ${"Invite"}.${"inviteeId"} = ${"User"}.${"id"}
             WHERE ${"inviterId"} = ${db.param(me.id)}`.run(pool)
+      },
+    }),
+    t.field({
+      name: "totalEquipmentStats",
+      type: t.NonNull(t.String),
+      resolve: async (me, _args, { pool }) => {
+        const user = await db.selectOne("User", { id: me.id }).run(pool)
+        if (user === undefined) return
+
+        let totalDefense = 0
+        let totalStrength = 0
+
+        if (user.offenseSlot !== null) {
+          const item = await db
+            .selectOne("Item", { id: user.offenseSlot })
+            .run(pool)
+          totalDefense += item?.defenseBonus ?? 0
+          totalStrength += item?.strengthBonus ?? 0
+        }
+        if (user.defenseSlot !== null) {
+          const item = await db
+            .selectOne("Item", { id: user.defenseSlot })
+            .run(pool)
+          totalDefense += item?.defenseBonus ?? 0
+          totalStrength += item?.strengthBonus ?? 0
+        }
+        if (user.accessorySlot !== null) {
+          const item = await db
+            .selectOne("Item", { id: user.accessorySlot })
+            .run(pool)
+          totalDefense += item?.defenseBonus ?? 0
+          totalStrength += item?.strengthBonus ?? 0
+        }
+        return `🗡️ ${totalStrength}  🛡️ ${totalDefense}`
+      },
+    }),
+    t.field({
+      name: "inventory",
+      type: t.NonNull(t.List(t.NonNull(ItemType))),
+      resolve: async (me, _args, { pool }) => {
+        return await db.sql<QItem.SQL | UserItem.SQL, Item[]>`
+            SELECT ${"Item"}.*
+            FROM ${"UserItem"}
+            JOIN ${"Item"} ON ${"UserItem"}.${"itemId"} = ${"Item"}.${"id"}
+            WHERE ${"userId"} = ${db.param(me.id)}`.run(pool)
       },
     }),
     t.field({

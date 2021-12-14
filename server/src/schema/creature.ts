@@ -20,6 +20,19 @@ export const CreatureType: ObjectType<AppContext, Creature> =
       t.field({ name: "createdAt", type: t.NonNull(DateType) }),
       t.field({ name: "maxHitpoints", type: t.NonNull(t.Int) }),
       t.field({ name: "strength", type: t.NonNull(t.Int) }),
+      t.field({
+        name: "victoryCount",
+        type: t.NonNull(t.Int),
+        resolve: async ({ id }, _args, { pool, auth }) => {
+          return (
+            (
+              await db
+                .selectOne("UserCreature", { userId: auth.id, creatureId: id })
+                .run(pool)
+            )?.victoryCount ?? 0
+          )
+        },
+      }),
     ],
   })
 

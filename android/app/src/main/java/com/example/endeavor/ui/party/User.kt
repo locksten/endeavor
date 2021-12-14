@@ -11,11 +11,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.endeavor.ui.theme.Theme
 
-data class User(val id: String, val username: String, val isPartyLeader: Boolean)
+data class User(
+    val id: String,
+    val username: String,
+    val isPartyLeader: Boolean,
+    val trophyCount: Int? = null
+)
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -46,6 +52,15 @@ fun UserListItem(user: User, Content: (@Composable () -> Unit)? = null) {
                 color = Theme.colors.onGraySurface,
                 fontSize = 20.sp,
             )
+            Spacer(Modifier.width(16.dp))
+            user.trophyCount?.let { trophies ->
+                Text(
+                    text = "${trophies}️ 🏆",
+                    fontWeight = FontWeight.Bold,
+                    color = Theme.colors.onSurface,
+                    fontSize = 20.sp
+                )
+            }
         }
         Content?.invoke()
     }

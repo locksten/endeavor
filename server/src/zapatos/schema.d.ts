@@ -18,6 +18,10 @@ declare module 'zapatos/schema' {
 
   /* --- enums --- */
 
+  export type EquipmentSlot = 'Accessory' | 'Defense' | 'Offense';
+  export namespace every {
+    export type EquipmentSlot = ['Accessory', 'Defense', 'Offense'];
+  }
   export type TodoType = 'Daily' | 'Habit' | 'Task';
   export namespace every {
     export type TodoType = ['Daily', 'Habit', 'Task'];
@@ -734,6 +738,239 @@ declare module 'zapatos/schema' {
       createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'Invite_inviterId_inviteeId_key' | 'Invite_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **Item**
+   * - Table in database
+   */
+  export namespace Item {
+    export type Table = 'Item';
+    export interface Selectable {
+      /**
+      * **Item.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Item_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Item.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: Date;
+      /**
+      * **Item.emoji**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      emoji: string;
+      /**
+      * **Item.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **Item.strengthBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      strengthBonus: number | null;
+      /**
+      * **Item.defenseBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseBonus: number | null;
+      /**
+      * **Item.slot**
+      * - `EquipmentSlot` in database
+      * - `NOT NULL`, no default
+      */
+      slot: EquipmentSlot;
+    }
+    export interface JSONSelectable {
+      /**
+      * **Item.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Item_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **Item.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: db.TimestampTzString;
+      /**
+      * **Item.emoji**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      emoji: string;
+      /**
+      * **Item.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **Item.strengthBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      strengthBonus: number | null;
+      /**
+      * **Item.defenseBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseBonus: number | null;
+      /**
+      * **Item.slot**
+      * - `EquipmentSlot` in database
+      * - `NOT NULL`, no default
+      */
+      slot: EquipmentSlot;
+    }
+    export interface Whereable {
+      /**
+      * **Item.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Item_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Item.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Item.emoji**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      emoji?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Item.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Item.strengthBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      strengthBonus?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Item.defenseBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseBonus?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **Item.slot**
+      * - `EquipmentSlot` in database
+      * - `NOT NULL`, no default
+      */
+      slot?: EquipmentSlot | db.Parameter<EquipmentSlot> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, EquipmentSlot | db.Parameter<EquipmentSlot> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **Item.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Item_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **Item.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+      /**
+      * **Item.emoji**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      emoji: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **Item.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **Item.strengthBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      strengthBonus?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **Item.defenseBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseBonus?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **Item.slot**
+      * - `EquipmentSlot` in database
+      * - `NOT NULL`, no default
+      */
+      slot: EquipmentSlot | db.Parameter<EquipmentSlot> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **Item.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"Item_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Item.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Item.emoji**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      emoji?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **Item.name**
+      * - `text` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **Item.strengthBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      strengthBonus?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Item.defenseBonus**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseBonus?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **Item.slot**
+      * - `EquipmentSlot` in database
+      * - `NOT NULL`, no default
+      */
+      slot?: EquipmentSlot | db.Parameter<EquipmentSlot> | db.SQLFragment | db.SQLFragment<any, EquipmentSlot | db.Parameter<EquipmentSlot> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'Item_emoji_key' | 'Item_name_key' | 'Item_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
@@ -1803,6 +2040,24 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       experience: number;
+      /**
+      * **User.offenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      offenseSlot: number | null;
+      /**
+      * **User.defenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseSlot: number | null;
+      /**
+      * **User.accessorySlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      accessorySlot: number | null;
     }
     export interface JSONSelectable {
       /**
@@ -1883,6 +2138,24 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       experience: number;
+      /**
+      * **User.offenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      offenseSlot: number | null;
+      /**
+      * **User.defenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseSlot: number | null;
+      /**
+      * **User.accessorySlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      accessorySlot: number | null;
     }
     export interface Whereable {
       /**
@@ -1963,6 +2236,24 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       experience?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.offenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      offenseSlot?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.defenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseSlot?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **User.accessorySlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      accessorySlot?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -2037,6 +2328,24 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       experience: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **User.offenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      offenseSlot?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **User.defenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseSlot?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **User.accessorySlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      accessorySlot?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2111,6 +2420,24 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       experience?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **User.offenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      offenseSlot?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **User.defenseSlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      defenseSlot?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **User.accessorySlot**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      accessorySlot?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'User_pkey' | 'User_username_key';
     export type Column = keyof Selectable;
@@ -2119,21 +2446,307 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
+  /**
+   * **UserCreature**
+   * - Table in database
+   */
+  export namespace UserCreature {
+    export type Table = 'UserCreature';
+    export interface Selectable {
+      /**
+      * **UserCreature.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserCreature_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **UserCreature.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **UserCreature.creatureId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      creatureId: number;
+      /**
+      * **UserCreature.victoryCount**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      victoryCount: number;
+    }
+    export interface JSONSelectable {
+      /**
+      * **UserCreature.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserCreature_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **UserCreature.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **UserCreature.creatureId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      creatureId: number;
+      /**
+      * **UserCreature.victoryCount**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      victoryCount: number;
+    }
+    export interface Whereable {
+      /**
+      * **UserCreature.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserCreature_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **UserCreature.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **UserCreature.creatureId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      creatureId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **UserCreature.victoryCount**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      victoryCount?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **UserCreature.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserCreature_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **UserCreature.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **UserCreature.creatureId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      creatureId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **UserCreature.victoryCount**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      victoryCount?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **UserCreature.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserCreature_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **UserCreature.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **UserCreature.creatureId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      creatureId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **UserCreature.victoryCount**
+      * - `int4` in database
+      * - `NOT NULL`, default: `0`
+      */
+      victoryCount?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'UserCreature_pkey' | 'UserCreature_userId_creatureId_key';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **UserItem**
+   * - Table in database
+   */
+  export namespace UserItem {
+    export type Table = 'UserItem';
+    export interface Selectable {
+      /**
+      * **UserItem.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserItem_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **UserItem.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **UserItem.itemId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      itemId: number;
+      /**
+      * **UserItem.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **UserItem.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserItem_id_seq"'::regclass)`
+      */
+      id: number;
+      /**
+      * **UserItem.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number;
+      /**
+      * **UserItem.itemId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      itemId: number;
+      /**
+      * **UserItem.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt: db.TimestampTzString;
+    }
+    export interface Whereable {
+      /**
+      * **UserItem.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserItem_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **UserItem.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **UserItem.itemId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      itemId?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **UserItem.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **UserItem.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserItem_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **UserItem.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **UserItem.itemId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      itemId: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **UserItem.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **UserItem.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('"UserItem_id_seq"'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **UserItem.userId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      userId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **UserItem.itemId**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      itemId?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **UserItem.createdAt**
+      * - `timestamptz` in database
+      * - `NOT NULL`, default: `now()`
+      */
+      createdAt?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'UserItem_pkey' | 'UserItem_userId_itemId_key';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = db.GenericSQLExpression | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Table | Whereable | Column;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
   /* === cross-table types === */
 
-  export type Table = Battle.Table | Creature.Table | Daily.Table | Habit.Table | Invite.Table | Reward.Table | Task.Table | Todo.Table | TodoDaily.Table | TodoHabit.Table | TodoTask.Table | User.Table;
-  export type Selectable = Battle.Selectable | Creature.Selectable | Daily.Selectable | Habit.Selectable | Invite.Selectable | Reward.Selectable | Task.Selectable | Todo.Selectable | TodoDaily.Selectable | TodoHabit.Selectable | TodoTask.Selectable | User.Selectable;
-  export type JSONSelectable = Battle.JSONSelectable | Creature.JSONSelectable | Daily.JSONSelectable | Habit.JSONSelectable | Invite.JSONSelectable | Reward.JSONSelectable | Task.JSONSelectable | Todo.JSONSelectable | TodoDaily.JSONSelectable | TodoHabit.JSONSelectable | TodoTask.JSONSelectable | User.JSONSelectable;
-  export type Whereable = Battle.Whereable | Creature.Whereable | Daily.Whereable | Habit.Whereable | Invite.Whereable | Reward.Whereable | Task.Whereable | Todo.Whereable | TodoDaily.Whereable | TodoHabit.Whereable | TodoTask.Whereable | User.Whereable;
-  export type Insertable = Battle.Insertable | Creature.Insertable | Daily.Insertable | Habit.Insertable | Invite.Insertable | Reward.Insertable | Task.Insertable | Todo.Insertable | TodoDaily.Insertable | TodoHabit.Insertable | TodoTask.Insertable | User.Insertable;
-  export type Updatable = Battle.Updatable | Creature.Updatable | Daily.Updatable | Habit.Updatable | Invite.Updatable | Reward.Updatable | Task.Updatable | Todo.Updatable | TodoDaily.Updatable | TodoHabit.Updatable | TodoTask.Updatable | User.Updatable;
-  export type UniqueIndex = Battle.UniqueIndex | Creature.UniqueIndex | Daily.UniqueIndex | Habit.UniqueIndex | Invite.UniqueIndex | Reward.UniqueIndex | Task.UniqueIndex | Todo.UniqueIndex | TodoDaily.UniqueIndex | TodoHabit.UniqueIndex | TodoTask.UniqueIndex | User.UniqueIndex;
-  export type Column = Battle.Column | Creature.Column | Daily.Column | Habit.Column | Invite.Column | Reward.Column | Task.Column | Todo.Column | TodoDaily.Column | TodoHabit.Column | TodoTask.Column | User.Column;
-  export type AllBaseTables = [Battle.Table, Creature.Table, Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, Todo.Table, User.Table];
+  export type Table = Battle.Table | Creature.Table | Daily.Table | Habit.Table | Invite.Table | Item.Table | Reward.Table | Task.Table | Todo.Table | TodoDaily.Table | TodoHabit.Table | TodoTask.Table | User.Table | UserCreature.Table | UserItem.Table;
+  export type Selectable = Battle.Selectable | Creature.Selectable | Daily.Selectable | Habit.Selectable | Invite.Selectable | Item.Selectable | Reward.Selectable | Task.Selectable | Todo.Selectable | TodoDaily.Selectable | TodoHabit.Selectable | TodoTask.Selectable | User.Selectable | UserCreature.Selectable | UserItem.Selectable;
+  export type JSONSelectable = Battle.JSONSelectable | Creature.JSONSelectable | Daily.JSONSelectable | Habit.JSONSelectable | Invite.JSONSelectable | Item.JSONSelectable | Reward.JSONSelectable | Task.JSONSelectable | Todo.JSONSelectable | TodoDaily.JSONSelectable | TodoHabit.JSONSelectable | TodoTask.JSONSelectable | User.JSONSelectable | UserCreature.JSONSelectable | UserItem.JSONSelectable;
+  export type Whereable = Battle.Whereable | Creature.Whereable | Daily.Whereable | Habit.Whereable | Invite.Whereable | Item.Whereable | Reward.Whereable | Task.Whereable | Todo.Whereable | TodoDaily.Whereable | TodoHabit.Whereable | TodoTask.Whereable | User.Whereable | UserCreature.Whereable | UserItem.Whereable;
+  export type Insertable = Battle.Insertable | Creature.Insertable | Daily.Insertable | Habit.Insertable | Invite.Insertable | Item.Insertable | Reward.Insertable | Task.Insertable | Todo.Insertable | TodoDaily.Insertable | TodoHabit.Insertable | TodoTask.Insertable | User.Insertable | UserCreature.Insertable | UserItem.Insertable;
+  export type Updatable = Battle.Updatable | Creature.Updatable | Daily.Updatable | Habit.Updatable | Invite.Updatable | Item.Updatable | Reward.Updatable | Task.Updatable | Todo.Updatable | TodoDaily.Updatable | TodoHabit.Updatable | TodoTask.Updatable | User.Updatable | UserCreature.Updatable | UserItem.Updatable;
+  export type UniqueIndex = Battle.UniqueIndex | Creature.UniqueIndex | Daily.UniqueIndex | Habit.UniqueIndex | Invite.UniqueIndex | Item.UniqueIndex | Reward.UniqueIndex | Task.UniqueIndex | Todo.UniqueIndex | TodoDaily.UniqueIndex | TodoHabit.UniqueIndex | TodoTask.UniqueIndex | User.UniqueIndex | UserCreature.UniqueIndex | UserItem.UniqueIndex;
+  export type Column = Battle.Column | Creature.Column | Daily.Column | Habit.Column | Invite.Column | Item.Column | Reward.Column | Task.Column | Todo.Column | TodoDaily.Column | TodoHabit.Column | TodoTask.Column | User.Column | UserCreature.Column | UserItem.Column;
+  export type AllBaseTables = [Battle.Table, Creature.Table, Daily.Table, Habit.Table, Invite.Table, Item.Table, Reward.Table, Task.Table, Todo.Table, User.Table, UserCreature.Table, UserItem.Table];
   export type AllForeignTables = [];
   export type AllViews = [TodoDaily.Table, TodoHabit.Table, TodoTask.Table];
   export type AllMaterializedViews = [];
-  export type AllTablesAndViews = [Battle.Table, Creature.Table, Daily.Table, Habit.Table, Invite.Table, Reward.Table, Task.Table, Todo.Table, TodoDaily.Table, TodoHabit.Table, TodoTask.Table, User.Table];
+  export type AllTablesAndViews = [Battle.Table, Creature.Table, Daily.Table, Habit.Table, Invite.Table, Item.Table, Reward.Table, Task.Table, Todo.Table, TodoDaily.Table, TodoHabit.Table, TodoTask.Table, User.Table, UserCreature.Table, UserItem.Table];
 
 
   export type SelectableForTable<T extends Table> = {
@@ -2142,6 +2755,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Selectable;
     Habit: Habit.Selectable;
     Invite: Invite.Selectable;
+    Item: Item.Selectable;
     Reward: Reward.Selectable;
     Task: Task.Selectable;
     Todo: Todo.Selectable;
@@ -2149,6 +2763,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.Selectable;
     TodoTask: TodoTask.Selectable;
     User: User.Selectable;
+    UserCreature: UserCreature.Selectable;
+    UserItem: UserItem.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
@@ -2157,6 +2773,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.JSONSelectable;
     Habit: Habit.JSONSelectable;
     Invite: Invite.JSONSelectable;
+    Item: Item.JSONSelectable;
     Reward: Reward.JSONSelectable;
     Task: Task.JSONSelectable;
     Todo: Todo.JSONSelectable;
@@ -2164,6 +2781,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.JSONSelectable;
     TodoTask: TodoTask.JSONSelectable;
     User: User.JSONSelectable;
+    UserCreature: UserCreature.JSONSelectable;
+    UserItem: UserItem.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
@@ -2172,6 +2791,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Whereable;
     Habit: Habit.Whereable;
     Invite: Invite.Whereable;
+    Item: Item.Whereable;
     Reward: Reward.Whereable;
     Task: Task.Whereable;
     Todo: Todo.Whereable;
@@ -2179,6 +2799,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.Whereable;
     TodoTask: TodoTask.Whereable;
     User: User.Whereable;
+    UserCreature: UserCreature.Whereable;
+    UserItem: UserItem.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
@@ -2187,6 +2809,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Insertable;
     Habit: Habit.Insertable;
     Invite: Invite.Insertable;
+    Item: Item.Insertable;
     Reward: Reward.Insertable;
     Task: Task.Insertable;
     Todo: Todo.Insertable;
@@ -2194,6 +2817,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.Insertable;
     TodoTask: TodoTask.Insertable;
     User: User.Insertable;
+    UserCreature: UserCreature.Insertable;
+    UserItem: UserItem.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
@@ -2202,6 +2827,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Updatable;
     Habit: Habit.Updatable;
     Invite: Invite.Updatable;
+    Item: Item.Updatable;
     Reward: Reward.Updatable;
     Task: Task.Updatable;
     Todo: Todo.Updatable;
@@ -2209,6 +2835,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.Updatable;
     TodoTask: TodoTask.Updatable;
     User: User.Updatable;
+    UserCreature: UserCreature.Updatable;
+    UserItem: UserItem.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
@@ -2217,6 +2845,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.UniqueIndex;
     Habit: Habit.UniqueIndex;
     Invite: Invite.UniqueIndex;
+    Item: Item.UniqueIndex;
     Reward: Reward.UniqueIndex;
     Task: Task.UniqueIndex;
     Todo: Todo.UniqueIndex;
@@ -2224,6 +2853,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.UniqueIndex;
     TodoTask: TodoTask.UniqueIndex;
     User: User.UniqueIndex;
+    UserCreature: UserCreature.UniqueIndex;
+    UserItem: UserItem.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
@@ -2232,6 +2863,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.Column;
     Habit: Habit.Column;
     Invite: Invite.Column;
+    Item: Item.Column;
     Reward: Reward.Column;
     Task: Task.Column;
     Todo: Todo.Column;
@@ -2239,6 +2871,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.Column;
     TodoTask: TodoTask.Column;
     User: User.Column;
+    UserCreature: UserCreature.Column;
+    UserItem: UserItem.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
@@ -2247,6 +2881,7 @@ declare module 'zapatos/schema' {
     Daily: Daily.SQL;
     Habit: Habit.SQL;
     Invite: Invite.SQL;
+    Item: Item.SQL;
     Reward: Reward.SQL;
     Task: Task.SQL;
     Todo: Todo.SQL;
@@ -2254,6 +2889,8 @@ declare module 'zapatos/schema' {
     TodoHabit: TodoHabit.SQL;
     TodoTask: TodoTask.SQL;
     User: User.SQL;
+    UserCreature: UserCreature.SQL;
+    UserItem: UserItem.SQL;
   }[T];
 
 }

@@ -13,8 +13,10 @@ import com.apollographql.apollo.exception.ApolloNetworkException
 import com.example.endeavor.*
 import com.example.endeavor.ui.AppLazyColumn
 import com.example.endeavor.ui.ButtonWithConfirmation
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
+@ExperimentalCoroutinesApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -26,7 +28,8 @@ fun CPartyMemberList() {
             User(
                 id = it.id,
                 username = it.username,
-                isPartyLeader = it.isPartyLeader
+                isPartyLeader = it.isPartyLeader,
+                trophyCount = it.trophyCount
             )
         }, me.user.id, me.user.isPartyLeader)
     }

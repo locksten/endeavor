@@ -32,7 +32,8 @@ fun CInviterList() {
             User(
                 id = it.id,
                 username = it.username,
-                isPartyLeader = false
+                isPartyLeader = false,
+                trophyCount = null
             )
         })
     }

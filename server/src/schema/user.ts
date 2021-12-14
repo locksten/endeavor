@@ -1,10 +1,9 @@
 import { AppContext } from "context"
 import { db, dc } from "database"
-import { auth } from "firebase-admin"
 import { ObjectType } from "gqtx"
 import { DateType } from "schema/date"
 import { idResolver, t, _typeResolver } from "schema/typesFactory"
-import { User as QUser } from "zapatos/schema"
+import { User as QUser, UserCreature } from "zapatos/schema"
 
 export { User as QUser } from "zapatos/schema"
 export type User = QUser.JSONSelectable
@@ -68,6 +67,24 @@ export const UserType: ObjectType<AppContext, User | null> = t.objectType<User>(
         },
       }),
       t.field({ name: "gold", type: t.NonNull(t.Int) }),
+      t.field({
+        name: "trophyCount",
+        type: t.NonNull(t.Int),
+        resolve: async ({ id }, _args, { pool }) => {
+          return (
+            (
+              await db.sql<
+                QUser.SQL | UserCreature.SQL,
+                ({ sum: number } | undefined)[]
+              >`
+            SELECT SUM(${"victoryCount"})
+            FROM ${"UserCreature"}
+            WHERE ${"userId"} = ${db.param(id)}
+            `.run(pool)
+            ).at(0)?.sum ?? 0
+          )
+        },
+      }),
     ],
   },
 )

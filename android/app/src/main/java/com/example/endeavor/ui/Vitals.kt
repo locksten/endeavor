@@ -33,6 +33,16 @@ fun CVitals() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
+                text = "${vitals.trophyCount}️ 🏆",
+                fontWeight = FontWeight.Bold,
+                color = Theme.colors.onSurface,
+                fontSize = 30.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 32.dp)
+            )
+            Text(
                 text = "lvl ${vitals.level} ${vitals.username}",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,

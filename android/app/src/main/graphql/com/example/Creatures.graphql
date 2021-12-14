@@ -6,5 +6,6 @@ query Creatures {
         emoji
         maxHitpoints
         strength
+        victoryCount
     }
 }
